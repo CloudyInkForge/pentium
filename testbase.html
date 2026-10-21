@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPECTRA 四色 · 杂志草样 210 × 285 mm</title>
+<style>
+/* =========================================================
+   基础重置
+   ========================================================= */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* =========================================================
+   颜色体系 —— 全部由 device-cmyk() 定义
+   ========================================================= */
+:root {
+  --serif: "Songti SC", "SimSun", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  --sans: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", Arial, sans-serif;
+
+  /* --- sRGB 回退 --- */
+  --paper:   #ffffff;
+  --ink:     #101010;
+  --ink-70:  #5a5a5a;
+  --ink-25:  #cccccc;
+  --ink-10:  #ebebeb;
+  --cyan:    #00a0e9;
+  --magenta: #e5007e;
+  --yellow:  #fff200;
+}
+
+/* --- 正式色值：device-cmyk --- */
+@supports (color: device-cmyk(0% 0% 0% 0%)) {
+  :root {
+    --paper:   device-cmyk(0% 0% 0% 0%);
+    --ink:     device-cmyk(0% 0% 0% 100%);
+    --ink-70:  device-cmyk(0% 0% 0% 70%);
+    --ink-25:  device-cmyk(0% 0% 0% 25%);
+    --ink-10:  device-cmyk(0% 0% 0% 10%);
+    --cyan:    device-cmyk(100% 0% 0% 0%);
+    --magenta: device-cmyk(0% 100% 0% 0%);
+    --yellow:  device-cmyk(0% 0% 100% 0%);
+  }
+}
+
+/* =========================================================
+   页面尺寸：210 × 285 mm
+   ========================================================= */
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html { background: #3a3a3a; }
+
+body {
+  margin: 0;
+  padding: 14mm 0;
+  font-family: var(--serif);
+  color: var(--ink);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  margin: 0 auto 12mm;
+  background: var(--paper);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4mm 14mm rgba(0, 0, 0, .45);
+}
+
+/* =========================================================
+   公共排版元件
+   ========================================================= */
+.rubric {
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 0.3mm solid var(--ink-25);
+  padding-bottom: 2.5mm;
+  margin-bottom: 9mm;
+}
+
+.page-foot {
+  position: absolute;
+  left: 18mm;
+  right: 18mm;
+  bottom: 11mm;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .18em;
+  color: var(--ink-70);
+}
+
+/* =========================================================
+   P1 · 封面
+   ========================================================= */
+.cover {
+  background: var(--magenta);
+  color: var(--paper);
+  padding: 14mm 16mm 12mm;
+  justify-content: space-between;
+}
+
+.cover-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .2em;
+}
+
+.cover-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cover-bars {
+  display: flex;
+  height: 6mm;
+  margin-bottom: 12mm;
+}
+.cover-bars span { flex: 1; }
+.cover-bars .c { background: var(--cyan); }
+.cover-bars .m { background: var(--magenta); }
+.cover-bars .y { background: var(--yellow); }
+.cover-bars .k { background: var(--ink); }
+
+.cover-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 74mm;
+  line-height: .84;
+  letter-spacing: .02em;
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-kicker {
+  font-family: var(--sans);
+  font-size: 9pt;
+  letter-spacing: .52em;
+  margin: 10mm 0 0;
+}
+
+.cover-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 0.3mm solid var(--paper);
+  padding-top: 4mm;
+}
+.cover-lead {
+  margin: 0;
+  font-size: 9pt;
+  line-height: 1.7;
+  letter-spacing: .04em;
+}
+.cover-price {
+  font-family: var(--sans);
+  font-size: 13pt;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+/* =========================================================
+   P2 · 目录
+   ========================================================= */
+.toc {
+  padding: 16mm 18mm 14mm;
+}
+
+.toc-title {
+  margin: 0 0 14mm;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 26mm;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-list li {
+  display: grid;
+  grid-template-columns: 12mm 1fr 14mm;
+  gap: 4mm;
+  align-items: start;
+  padding: 6mm 0;
+  border-bottom: 0.3mm solid var(--ink-25);
+}
+
+.toc-list .num {
+  font-family: var(--sans);
+  font-size: 9pt;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--cyan);
+  padding-top: 1mm;
+}
+
+.toc-list h3 {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 13pt;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.toc-list p {
+  margin: 2mm 0 0;
+  font-size: 8.5pt;
+  line-height: 1.6;
+  color: var(--ink-70);
+}
+
+.toc-list .pg {
+  font-family: var(--sans);
+  font-size: 11pt;
+  font-weight: 700;
+  text-align: right;
+  color: var(--magenta);
+}
+
+/* =========================================================
+   P3 · 专题开篇
+   ========================================================= */
+.article-open {
+  padding: 16mm 18mm 20mm;
+}
+
+.f-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 23mm;
+  line-height: 1.04;
+  letter-spacing: .01em;
+}
+
+.f-sub {
+  margin: 4mm 0 0;
+  font-family: var(--sans);
+  font-size: 8pt;
+  letter-spacing: .22em;
+  color: var(--magenta);
+}
+
+.f-hero {
+  display: flex;
+  height: 58mm;
+  margin: 11mm 0 11mm;
+}
+.f-hero span {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 3mm;
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .16em;
+}
+.f-hero .c { background: var(--cyan);    color: var(--paper); }
+.f-hero .m { background: var(--magenta); color: var(--paper); }
+.f-hero .y { background: var(--yellow);  color: var(--ink); }
+.f-hero .k { background: var(--ink);     color: var(--paper); }
+
+.f-body {
+  column-count: 2;
+  column-gap: 8mm;
+  font-size: 9pt;
+  line-height: 1.95;
+  text-align: justify;
+}
+.f-body p { margin: 0 0 3mm; }
+
+.f-body .lead::first-letter {
+  float: left;
+  font-family: var(--sans);
+  font-size: 26pt;
+  font-weight: 800;
+  line-height: .82;
+  padding: 1.5mm 2mm 0 0;
+  color: var(--magenta);
+}
+
+/* =========================================================
+   P4 · 整版图版
+   ========================================================= */
+.plate {
+  background: var(--cyan);
+  color: var(--paper);
+  padding: 16mm 18mm 14mm;
+  justify-content: space-between;
+}
+
+.plate-num {
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .3em;
+  color: var(--yellow);
+}
+
+.plate-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 34mm;
+  line-height: .96;
+  letter-spacing: .02em;
+}
+
+.plate-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 0.3mm solid var(--paper);
+  padding-top: 4mm;
+  font-size: 8pt;
+  letter-spacing: .06em;
+}
+.plate-foot small {
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .2em;
+  opacity: .9;
+}
+
+/* =========================================================
+   P5 · 引文页
+   ========================================================= */
+.quote {
+  padding: 34mm 18mm 14mm;
+}
+
+.quote-mark {
+  margin: 0 0 2mm;
+  font-family: var(--sans);
+  font-size: 40mm;
+  line-height: .6;
+  color: var(--yellow);
+}
+
+.quote blockquote {
+  margin: 0;
+  font-size: 15mm;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.quote-by {
+  margin: 10mm 0 0;
+  font-family: var(--sans);
+  font-size: 8pt;
+  letter-spacing: .2em;
+  color: var(--ink-70);
+}
+
+.quote-chips {
+  position: absolute;
+  left: 18mm;
+  bottom: 22mm;
+  display: flex;
+  gap: 2mm;
+}
+.quote-chips span {
+  width: 14mm;
+  height: 4mm;
+  display: block;
+}
+.quote-chips span:nth-child(1) { background: var(--cyan); }
+.quote-chips span:nth-child(2) { background: var(--magenta); }
+.quote-chips span:nth-child(3) { background: var(--yellow); }
+.quote-chips span:nth-child(4) { background: var(--ink); }
+
+/* =========================================================
+   P6 · 专题续（深底）
+   ========================================================= */
+.dark {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 16mm 18mm 20mm;
+}
+.dark .page-head { border-bottom-color: var(--ink-70); }
+.dark .page-foot { color: var(--ink-70); }
+
+.dark-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 22mm;
+  line-height: 1.05;
+}
+
+.dark-sub {
+  margin: 4mm 0 10mm;
+  font-family: var(--sans);
+  font-size: 8pt;
+  letter-spacing: .26em;
+  color: var(--yellow);
+}
+
+.dark-body {
+  column-count: 2;
+  column-gap: 8mm;
+  font-size: 9pt;
+  line-height: 1.95;
+  text-align: justify;
+  color: var(--paper);
+}
+.dark-body p { margin: 0 0 3mm; }
+
+.dark-callout {
+  margin-top: auto;
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 7mm 8mm;
+}
+.dark-callout .rubric { display: block; margin-bottom: 2mm; }
+.dark-callout p {
+  margin: 0;
+  font-size: 15pt;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+/* =========================================================
+   P7 · 封底
+   ========================================================= */
+.back {
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 18mm;
+  justify-content: space-between;
+}
+
+.back-logo {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 18mm;
+  line-height: 1;
+  letter-spacing: .04em;
+}
+
+.back-sub {
+  margin: 4mm 0 0;
+  font-family: var(--sans);
+  font-size: 8pt;
+  letter-spacing: .3em;
+}
+
+.back-mid {
+  display: flex;
+  align-items: flex-end;
+  gap: 8mm;
+}
+
+/* 修正：条形码完全不用渐变，改用 flex + 纯色子元素 */
+.barcode {
+  width: 44mm;
+  height: 15mm;
+  display: flex;
+  align-items: stretch;
+  background: var(--paper);
+  border: 0.15mm solid var(--ink);
+}
+
+.barcode span {
+  display: block;
+  height: 100%;
+}
+
+.barcode .bar { background: var(--ink); }
+.barcode .gap { background: var(--paper); }
+
+.back-meta {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 7.5pt;
+  line-height: 1.9;
+  letter-spacing: .12em;
+}
+
+.back-bottom {
+  display: flex;
+  justify-content: space-between;
+  border-top: 0.3mm solid var(--ink);
+  padding-top: 4mm;
+  font-family: var(--sans);
+  font-size: 7pt;
+  letter-spacing: .2em;
+}
+
+/* =========================================================
+   打印
+   ========================================================= */
+@media print {
+  html { background: #fff; }
+  body { padding: 0; margin: 0; }
+
+  .page {
+    margin: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="magazine">
+
+  <!-- =====================================================
+       P1 · 封面
+       ===================================================== -->
+  <section class="page cover">
+    <div class="cover-top">
+      <span>SPECTRA QUARTERLY</span>
+      <span>NO.07 / AUTUMN 2025</span>
+    </div>
+
+    <div class="cover-center">
+      <div class="cover-bars">
+        <span class="c"></span>
+        <span class="m"></span>
+        <span class="y"></span>
+        <span class="k"></span>
+      </div>
+
+      <h1 class="cover-title">
+        <span>四</span>
+        <span>色</span>
+      </h1>
+
+      <p class="cover-kicker">FOUR&nbsp;&nbsp;COLOURS</p>
+    </div>
+
+    <div class="cover-bottom">
+      <p class="cover-lead">
+        本期专题<br>
+        印刷的边界 —— 从 device-cmyk 到纸面
+      </p>
+      <span class="cover-price">¥ 68</span>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       P2 · 目录
+       ===================================================== -->
+  <section class="page toc">
+    <header class="page-head">
+      <span class="rubric">Contents</span>
+      <span class="rubric">Spectra · 07</span>
+    </header>
+
+    <h2 class="toc-title">本期<br>目录</h2>
+
+    <ol class="toc-list">
+      <li>
+        <span class="num">01</span>
+        <div>
+          <h3>印刷的边界</h3>
+          <p>从油墨到屏幕，一条颜色的迁移路径</p>
+        </div>
+        <span class="pg">03</span>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <div>
+          <h3>青色的重量</h3>
+          <p>C100 M0 Y0 K0 —— 一整版的静物</p>
+        </div>
+        <span class="pg">04</span>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <div>
+          <h3>纸的白</h3>
+          <p>0% 的四种写法，与留白的语法</p>
+        </div>
+        <span class="pg">05</span>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <div>
+          <h3>黑不是黑</h3>
+          <p>单黑与四色黑，一次关于密度的讨论</p>
+        </div>
+        <span class="pg">06</span>
+      </li>
+    </ol>
+
+    <footer class="page-foot">
+      <span>SPECTRA · 07</span>
+      <span>02</span>
+    </footer>
+  </section>
+
+
+  <!-- =====================================================
+       P3 · 专题开篇
+       ===================================================== -->
+  <section class="page article-open">
+    <header class="page-head">
+      <span class="rubric">Feature</span>
+      <span class="rubric">03</span>
+    </header>
+
+    <h2 class="f-title">印刷的边界</h2>
+    <p class="f-sub">The Edge of Print</p>
+
+    <div class="f-hero">
+      <span class="c">C 100</span>
+      <span class="m">M 100</span>
+      <span class="y">Y 100</span>
+      <span class="k">K 100</span>
+    </div>
+
+    <div class="f-body">
+      <p class="lead">四色印刷把世界拆成四个通道：青、品红、黄、黑。每一张图片、每一个色块、每一行字，最终都会被翻译成四张网点的叠加。</p>
+      <p>设计师在屏幕上看到的是 RGB，是光；落到纸上的却是 CMYK，是墨。这中间隔着一次换算，也隔着一次妥协：某些荧光色永远印不出来，某些深色必须靠四色叠印才能成立。</p>
+      <p>本期的四个专题，分别沿着这四条通道展开。我们试图回答一个很朴素的问题：当颜色被写成百分数，它还是原来的颜色吗？</p>
+    </div>
+
+    <footer class="page-foot">
+      <span>SPECTRA · 07</span>
+      <span>03</span>
+    </footer>
+  </section>
+
+
+  <!-- =====================================================
+       P4 · 整版图版
+       ===================================================== -->
+  <section class="page plate">
+    <span class="plate-num">PLATE 04</span>
+
+    <div>
+      <h2 class="plate-title">青色<br>的重量</h2>
+    </div>
+
+    <div class="plate-foot">
+      <small>C100 M0 Y0 K0 — 一只油墨罐的静物</small>
+      <span>04</span>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       P5 · 引文页
+       ===================================================== -->
+  <section class="page quote">
+    <p class="quote-mark">“</p>
+
+    <blockquote>
+      白不是没有颜色，<br>
+      是四色都还没来。
+    </blockquote>
+
+    <p class="quote-by">—— 关于纸的第四种想象</p>
+
+    <div class="quote-chips">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <footer class="page-foot">
+      <span>SPECTRA · 07</span>
+      <span>05</span>
+    </footer>
+  </section>
+
+
+  <!-- =====================================================
+       P6 · 专题续（深底）
+       ===================================================== -->
+  <section class="page dark">
+    <header class="page-head">
+      <span class="rubric">Feature</span>
+      <span class="rubric">06</span>
+    </header>
+
+    <h2 class="dark-title">黑不是黑</h2>
+    <p class="dark-sub">C40 M30 Y30 K100</p>
+
+    <div class="dark-body">
+      <p>单黑是 K100。它干净、锐利、边缘不晕，适合小字、适合细线、适合那些需要在纸面上保持清醒的部分。</p>
+      <p>四色黑是 C40 M30 Y30 K100。四种油墨同时压在同一个点上，纸面被压得更实，黑得发亮、发厚，适合大面积的色块与重影。</p>
+      <p>选错了，字会发虚；选对了，黑会呼吸。</p>
+    </div>
+
+    <div class="dark-callout">
+      <span class="rubric">MIX</span>
+      <p>黑，是四种颜色的合谋。</p>
+    </div>
+
+    <footer class="page-foot">
+      <span>SPECTRA · 07</span>
+      <span>06</span>
+    </footer>
+  </section>
+
+
+  <!-- =====================================================
+       P7 · 封底
+       ===================================================== -->
+  <section class="page back">
+    <div>
+      <p class="back-logo">SPECTRA</p>
+      <p class="back-sub">四色 / FOUR COLOURS</p>
+    </div>
+
+    <div class="back-mid">
+      <!-- 条形码：纯色条块，无渐变 -->
+      <div class="barcode">
+        <span class="bar" style="width:0.6mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:1.2mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.4mm"></span>
+        <span class="gap" style="width:0.6mm"></span>
+        <span class="bar" style="width:0.5mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:1.0mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.6mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:0.7mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.2mm"></span>
+        <span class="gap" style="width:0.6mm"></span>
+        <span class="bar" style="width:0.9mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:1.4mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:0.6mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:1.8mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.1mm"></span>
+        <span class="gap" style="width:0.6mm"></span>
+        <span class="bar" style="width:0.8mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:1.3mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.5mm"></span>
+        <span class="gap" style="width:0.5mm"></span>
+        <span class="bar" style="width:0.7mm"></span>
+        <span class="gap" style="width:0.4mm"></span>
+        <span class="bar" style="width:1.0mm"></span>
+      </div>
+
+      <p class="back-meta">
+        ISSN 2688-0714<br>
+        定价 ¥ 68.00
+      </p>
+    </div>
+
+    <div class="back-bottom">
+      <span>210 × 285 MM</span>
+      <span>DEVICE-CMYK</span>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
