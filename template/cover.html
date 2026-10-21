@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>封面</title>
+<style>
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 210mm;
+    height: 285mm;
+    background-color: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    overflow: hidden;
+    /* 底色使用 device-cmyk 定义 */
+    background-color: device-cmyk(0 0 0 0);
+    /* 背景图延伸铺满整页 */
+    background-image: url("bg.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+  <div class="page"></div>
+</body>
+</html>
