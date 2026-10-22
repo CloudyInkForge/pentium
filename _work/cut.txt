@@ -1,0 +1,335 @@
+﻿line=5.651mm  body_lines=41.6  col chars/line=25.5
+
+### 001: NO FLOW
+
+### 002  blocks=20 kept=19 moved=['pull']
+  [ 0] sec        ch=   6 L=  2.2 
+  [ 1]            ch= 106 L=  5.2 
+  [ 2]            ch=  93 L=  4.2 
+  [ 3]            ch=  92 L=  4.2 
+  [ 4]            ch=  90 L=  4.2 
+  [ 5]            ch=  50 L=  2.2 
+  [ 6]            ch=  69 L=  3.2 
+  [ 7] sec        ch=  13 L=  2.2 
+  [ 8]            ch=  66 L=  3.2 
+  [ 9]            ch=  28 L=  2.2 
+  [10]            ch=  76 L=  3.2 
+  [11]            ch=  77 L=  4.2 
+  [12]            ch= 143 L=  6.2 
+  [13] sec        ch=   6 L=  2.2 
+  [14]            ch=  32 L=  2.2 
+  [15]            ch=  85 L=  4.2 
+  [16]            ch=  95 L=  4.2 
+  [17]            ch=  49 L=  2.2 
+  [18]            ch= 152 L=  6.2 
+   total_lines=67.8 cap/page=83.2 (col 41.6)
+   cut after[9] diff=  1.8 L= 33.0 R= 34.8 
+   cut after[10] diff=  4.6 L= 36.2 R= 31.6 
+   cut after[8] diff=  6.2 L= 30.8 R= 37.0 
+   cut after[7] diff= 12.6 L= 27.6 R= 40.2 ends-sec
+   cut after[11] diff= 13.0 L= 40.4 R= 27.4 
+
+### 003  blocks=17 kept=17 moved=[]
+  [ 0] sec        ch=   6 L=  2.2 
+  [ 1]            ch=  67 L=  3.2 
+  [ 2]            ch= 134 L=  6.2 
+  [ 3]            ch=  56 L=  3.2 
+  [ 4]            ch=  55 L=  3.2 
+  [ 5]            ch=  73 L=  3.2 
+  [ 6]            ch= 139 L=  6.2 
+  [ 7]            ch=  94 L=  4.2 
+  [ 8]            ch=  99 L=  4.2 
+  [ 9]            ch=  48 L=  2.2 
+  [10]            ch=  52 L=  3.2 
+  [11] fig wide   ch=  24 L= 13.8 [49.8]
+  [12] sec        ch=   9 L=  2.2 
+  [13]            ch=  32 L=  2.2 
+  [14]            ch= 115 L=  5.2 
+  [15]            ch=  59 L=  3.2 
+  [16]            ch=  95 L=  4.2 
+   total_lines=72.0 cap/page=83.2 (col 41.6)
+   cut after[8] diff=  0.4 L= 35.8 R= 36.2 
+   cut after[9] diff=  4.0 L= 38.0 R= 34.0 
+   cut after[7] diff=  8.8 L= 31.6 R= 40.4 
+   cut after[10] diff= 10.4 L= 41.2 R= 30.8 
+   cut after[6] diff= 17.2 L= 27.4 R= 44.6 
+
+### 004  blocks=10 kept=9 moved=['closeq']
+  [ 0]            ch=  31 L=  2.2 
+  [ 1]            ch= 120 L=  5.2 
+  [ 2]            ch= 142 L=  6.2 
+  [ 3]            ch= 147 L=  6.2 
+  [ 4]            ch=  81 L=  4.2 
+  [ 5] sec        ch=   6 L=  2.2 
+  [ 6]            ch=  81 L=  4.2 
+  [ 7]            ch= 118 L=  5.2 
+  [ 8] em         ch=  96 L=  4.2 
+   total_lines=39.8 cap/page=83.2 (col 41.6)
+   cut after[3] diff=  0.2 L= 19.8 R= 20.0 
+   cut after[4] diff=  8.2 L= 24.0 R= 15.8 
+   cut after[2] diff= 12.6 L= 13.6 R= 26.2 
+   cut after[5] diff= 12.6 L= 26.2 R= 13.6 ends-sec
+   cut after[6] diff= 21.0 L= 30.4 R=  9.4 
+
+### 005: NO FLOW
+
+### 006  blocks=4 kept=4 moved=[]
+  [ 0] dc         ch= 196 L=  8.6 
+  [ 1]            ch= 275 L= 11.2 
+  [ 2] fig        ch=  46 L= 16.9 [67.4]
+  [ 3]            ch= 299 L= 12.2 
+   total_lines=48.9 cap/page=83.2 (col 41.6)
+   cut after[1] diff=  9.3 L= 19.8 R= 29.1 
+   cut after[2] diff= 24.5 L= 36.7 R= 12.2 
+   cut after[0] diff= 31.7 L=  8.6 R= 40.3 
+
+### 007  blocks=7 kept=6 moved=['pull']
+  [ 0]            ch= 415 L= 17.2 
+  [ 1]            ch= 275 L= 11.2 
+  [ 2]            ch= 191 L=  8.2 
+  [ 3] em         ch= 164 L=  7.2 
+  [ 4] op-head    ch=  46 L=  6.0 
+  [ 5]            ch= 182 L=  8.2 
+   total_lines=58.0 cap/page=83.2 (col 41.6)
+   cut after[1] diff=  1.2 L= 28.4 R= 29.6 
+   cut after[2] diff= 15.2 L= 36.6 R= 21.4 
+   cut after[0] diff= 23.6 L= 17.2 R= 40.8 
+   cut after[3] diff= 29.6 L= 43.8 R= 14.2 
+   cut after[4] diff= 41.6 L= 49.8 R=  8.2 ends-ophead
+
+### 008  blocks=6 kept=5 moved=['pull']
+  [ 0] dc         ch= 231 L= 10.6 
+  [ 1] fig        ch=  54 L= 16.4 [64.2]
+  [ 2]            ch= 236 L= 10.2 
+  [ 3]            ch= 256 L= 11.2 
+  [ 4]            ch= 435 L= 18.2 
+   total_lines=66.6 cap/page=83.2 (col 41.6)
+   cut after[2] diff=  7.8 L= 37.2 R= 29.4 
+   cut after[1] diff= 12.6 L= 27.0 R= 39.6 
+   cut after[3] diff= 30.2 L= 48.4 R= 18.2 
+   cut after[0] diff= 45.4 L= 10.6 R= 56.0 
+
+### 009  blocks=3 kept=2 moved=['closeq']
+  [ 0]            ch= 356 L= 14.2 
+  [ 1] em         ch= 270 L= 11.2 
+   total_lines=25.4 cap/page=83.2 (col 41.6)
+   cut after[0] diff=  3.0 L= 14.2 R= 11.2 
+
+### 010: NO FLOW
+
+### 011  blocks=10 kept=10 moved=[]
+  [ 0] dc         ch= 157 L=  7.6 
+  [ 1]            ch= 101 L=  4.2 
+  [ 2]            ch= 184 L=  8.2 
+  [ 3]            ch= 107 L=  5.2 
+  [ 4]            ch= 100 L=  4.2 
+  [ 5]            ch=  88 L=  4.2 
+  [ 6]            ch= 161 L=  7.2 
+  [ 7]            ch= 310 L= 13.2 
+  [ 8]            ch= 178 L=  7.2 
+  [ 9]            ch= 165 L=  7.2 
+   total_lines=68.4 cap/page=83.2 (col 41.6)
+   cut after[5] diff=  1.2 L= 33.6 R= 34.8 
+   cut after[4] diff=  9.6 L= 29.4 R= 39.0 
+   cut after[6] diff= 13.2 L= 40.8 R= 27.6 
+   cut after[3] diff= 18.0 L= 25.2 R= 43.2 
+   cut after[2] diff= 28.4 L= 20.0 R= 48.4 
+
+### 012  blocks=14 kept=12 moved=['pull', 'sep3']
+  [ 0] dc         ch= 138 L=  6.6 
+  [ 1]            ch= 181 L=  8.2 
+  [ 2]            ch=  60 L=  3.2 
+  [ 3]            ch=  24 L=  1.2 
+  [ 4]            ch= 161 L=  7.2 
+  [ 5]            ch= 172 L=  7.2 
+  [ 6]            ch= 162 L=  7.2 
+  [ 7]            ch=  63 L=  3.2 
+  [ 8]            ch=  62 L=  3.2 
+  [ 9]            ch= 218 L=  9.2 
+  [10] dc         ch=  26 L=  2.6 
+  [11]            ch= 340 L= 14.2 
+   total_lines=73.2 cap/page=83.2 (col 41.6)
+   cut after[5] diff=  6.0 L= 33.6 R= 39.6 
+   cut after[6] diff=  8.4 L= 40.8 R= 32.4 
+   cut after[7] diff= 14.8 L= 44.0 R= 29.2 
+   cut after[4] diff= 20.4 L= 26.4 R= 46.8 
+   cut after[8] diff= 21.2 L= 47.2 R= 26.0 
+
+### 013  blocks=8 kept=7 moved=['sep3']
+  [ 0]            ch= 218 L=  9.2 
+  [ 1]            ch= 259 L= 11.2 
+  [ 2] dc         ch= 326 L= 13.6 
+  [ 3]            ch= 301 L= 12.2 
+  [ 4]            ch= 149 L=  6.2 
+  [ 5]            ch= 346 L= 14.2 
+  [ 6]            ch=  75 L=  3.2 
+   total_lines=69.8 cap/page=83.2 (col 41.6)
+   cut after[2] diff=  1.8 L= 34.0 R= 35.8 
+   cut after[3] diff= 22.6 L= 46.2 R= 23.6 
+   cut after[1] diff= 29.0 L= 20.4 R= 49.4 
+   cut after[4] diff= 35.0 L= 52.4 R= 17.4 
+   cut after[0] diff= 51.4 L=  9.2 R= 60.6 
+
+### 014  blocks=7 kept=7 moved=[]
+  [ 0]            ch= 473 L= 19.2 
+  [ 1] display    ch=   8 L=  1.6 
+  [ 2]            ch=  77 L=  4.2 
+  [ 3]            ch= 249 L= 10.2 
+  [ 4] dc         ch= 512 L= 21.6 
+  [ 5]            ch=  73 L=  3.2 
+  [ 6]            ch= 176 L=  7.2 
+   total_lines=67.2 cap/page=83.2 (col 41.6)
+   cut after[3] diff=  3.2 L= 35.2 R= 32.0 
+   cut after[2] diff= 17.2 L= 25.0 R= 42.2 
+   cut after[1] diff= 25.6 L= 20.8 R= 46.4 
+   cut after[0] diff= 28.8 L= 19.2 R= 48.0 
+   cut after[4] diff= 46.4 L= 56.8 R= 10.4 
+
+### 015  blocks=13 kept=12 moved=['sep3']
+  [ 0]            ch= 548 L= 22.2 
+  [ 1]            ch= 271 L= 11.2 
+  [ 2]            ch= 114 L=  5.2 
+  [ 3]            ch=  20 L=  1.2 
+  [ 4]            ch=  95 L=  4.2 
+  [ 5]            ch=  12 L=  1.2 
+  [ 6]            ch= 143 L=  6.2 
+  [ 7]            ch=  17 L=  1.2 
+  [ 8]            ch= 112 L=  5.2 
+  [ 9]            ch= 121 L=  5.2 
+  [10]            ch=  11 L=  1.2 
+  [11] dc         ch= 274 L= 11.6 
+   total_lines=75.8 cap/page=83.2 (col 41.6)
+   cut after[2] diff=  1.4 L= 38.6 R= 37.2 
+   cut after[3] diff=  3.8 L= 39.8 R= 36.0 
+   cut after[1] diff=  9.0 L= 33.4 R= 42.4 
+   cut after[4] diff= 12.2 L= 44.0 R= 31.8 
+   cut after[5] diff= 14.6 L= 45.2 R= 30.6 
+
+### 016  blocks=7 kept=6 moved=['pull']
+  [ 0]            ch= 183 L=  8.2 
+  [ 1] display    ch=  10 L=  1.6 
+  [ 2]            ch= 201 L=  8.2 
+  [ 3]            ch= 505 L= 20.2 
+  [ 4]            ch= 426 L= 17.2 
+  [ 5]            ch= 252 L= 10.2 
+   total_lines=65.6 cap/page=83.2 (col 41.6)
+   cut after[3] diff= 10.8 L= 38.2 R= 27.4 
+   cut after[2] diff= 29.6 L= 18.0 R= 47.6 
+   cut after[4] diff= 45.2 L= 55.4 R= 10.2 
+   cut after[1] diff= 46.0 L=  9.8 R= 55.8 
+   cut after[0] diff= 49.2 L=  8.2 R= 57.4 
+
+### 017  blocks=13 kept=12 moved=['closeq']
+  [ 0] dc         ch= 186 L=  8.6 
+  [ 1]            ch= 122 L=  5.2 
+  [ 2]            ch= 173 L=  7.2 
+  [ 3]            ch=  78 L=  4.2 
+  [ 4]            ch= 150 L=  6.2 
+  [ 5]            ch=  89 L=  4.2 
+  [ 6]            ch=  87 L=  4.2 
+  [ 7]            ch= 150 L=  6.2 
+  [ 8]            ch=  30 L=  2.2 
+  [ 9]            ch=  92 L=  4.2 
+  [10]            ch= 265 L= 11.2 
+  [11] em         ch= 255 L= 10.2 
+   total_lines=73.8 cap/page=83.2 (col 41.6)
+   cut after[5] diff=  2.6 L= 35.6 R= 38.2 
+   cut after[6] diff=  5.8 L= 39.8 R= 34.0 
+   cut after[4] diff= 11.0 L= 31.4 R= 42.4 
+   cut after[7] diff= 18.2 L= 46.0 R= 27.8 
+   cut after[8] diff= 22.6 L= 48.2 R= 25.6 
+
+### 018  blocks=5 kept=5 moved=[]
+  [ 0]            ch=  68 L=  3.2 
+  [ 1]            ch=  62 L=  3.2 
+  [ 2] fig wide   ch=  51 L= 48.6 [108.0, 60.8, 60.8]
+  [ 3]            ch= 119 L=  5.2 
+  [ 4]            ch= 162 L=  7.2 
+   total_lines=67.4 cap/page=83.2 (col 41.6)
+   cut after[2] diff= 42.6 L= 55.0 R= 12.4 
+   cut after[3] diff= 53.0 L= 60.2 R=  7.2 
+   cut after[1] diff= 54.6 L=  6.4 R= 61.0 
+   cut after[0] diff= 61.0 L=  3.2 R= 64.2 
+
+### 019  blocks=6 kept=5 moved=['closeq']
+  [ 0] dc         ch= 184 L=  8.6 
+  [ 1]            ch= 131 L=  6.2 
+  [ 2]            ch= 305 L= 12.2 
+  [ 3]            ch= 101 L=  4.2 
+  [ 4] em         ch=  70 L=  3.2 
+   total_lines=34.4 cap/page=83.2 (col 41.6)
+   cut after[1] diff=  4.8 L= 14.8 R= 19.6 
+   cut after[0] diff= 17.2 L=  8.6 R= 25.8 
+   cut after[2] diff= 19.6 L= 27.0 R=  7.4 
+   cut after[3] diff= 28.0 L= 31.2 R=  3.2 
+
+### 020  blocks=8 kept=8 moved=[]
+  [ 0]            ch= 167 L=  7.2 
+  [ 1]            ch= 267 L= 11.2 
+  [ 2] sec        ch=  11 L=  2.2 
+  [ 3] sub        ch=  16 L=  1.9 
+  [ 4]            ch= 209 L=  9.2 
+  [ 5]            ch= 212 L=  9.2 
+  [ 6] sub        ch=  16 L=  1.9 
+  [ 7]            ch= 129 L=  6.2 
+   total_lines=49.0 cap/page=83.2 (col 41.6)
+   cut after[3] diff=  4.0 L= 22.5 R= 26.5 ends-sub
+   cut after[2] diff=  7.8 L= 20.6 R= 28.4 ends-sec
+   cut after[1] diff= 12.2 L= 18.4 R= 30.6 
+   cut after[4] diff= 14.4 L= 31.7 R= 17.3 
+   cut after[5] diff= 32.8 L= 40.9 R=  8.1 
+
+### 021  blocks=11 kept=11 moved=[]
+  [ 0]            ch= 226 L=  9.2 
+  [ 1] sec        ch=  13 L=  2.2 
+  [ 2] sub        ch=  16 L=  1.9 
+  [ 3]            ch= 109 L=  5.2 
+  [ 4]            ch= 139 L=  6.2 
+  [ 5] fig wide   ch=  12 L= 15.7 [60.6]
+  [ 6]            ch= 173 L=  7.2 
+  [ 7] sub        ch=  18 L=  1.9 
+  [ 8]            ch=  95 L=  4.2 
+  [ 9]            ch=  97 L=  4.2 
+  [10]            ch= 146 L=  6.2 
+   total_lines=64.1 cap/page=83.2 (col 41.6)
+   cut after[4] diff= 14.7 L= 24.7 R= 39.4 
+   cut after[5] diff= 16.7 L= 40.4 R= 23.7 
+   cut after[3] diff= 27.1 L= 18.5 R= 45.6 
+   cut after[6] diff= 31.1 L= 47.6 R= 16.5 
+   cut after[7] diff= 34.9 L= 49.5 R= 14.6 ends-sub
+
+### 022  blocks=11 kept=11 moved=[]
+  [ 0] fig wide   ch=  30 L= 17.3 [69.7]
+  [ 1]            ch= 109 L=  5.2 
+  [ 2] sub        ch=  16 L=  1.9 
+  [ 3]            ch= 168 L=  7.2 
+  [ 4]            ch= 156 L=  7.2 
+  [ 5]            ch= 145 L=  6.2 
+  [ 6]            ch= 127 L=  5.2 
+  [ 7] sec        ch=  11 L=  2.2 
+  [ 8] sub        ch=  22 L=  1.9 
+  [ 9]            ch=  64 L=  3.2 
+  [10]            ch= 247 L= 10.2 
+   total_lines=67.7 cap/page=83.2 (col 41.6)
+   cut after[3] diff=  4.5 L= 31.6 R= 36.1 
+   cut after[4] diff=  9.9 L= 38.8 R= 28.9 
+   cut after[2] diff= 18.9 L= 24.4 R= 43.3 ends-sub
+   cut after[5] diff= 22.3 L= 45.0 R= 22.7 
+   cut after[1] diff= 22.7 L= 22.5 R= 45.2 
+
+### 023  blocks=11 kept=9 moved=['closeq', 'endmark']
+  [ 0] fig wide   ch=  19 L= 19.3 [81.1]
+  [ 1]            ch=  73 L=  3.2 
+  [ 2] sub        ch=  16 L=  1.9 
+  [ 3]            ch= 130 L=  6.2 
+  [ 4]            ch= 135 L=  6.2 
+  [ 5]            ch= 123 L=  5.2 
+  [ 6] sub        ch=  18 L=  1.9 
+  [ 7]            ch= 146 L=  6.2 
+  [ 8]            ch= 130 L=  6.2 
+   total_lines=56.3 cap/page=83.2 (col 41.6)
+   cut after[3] diff=  4.9 L= 30.6 R= 25.7 
+   cut after[2] diff=  7.5 L= 24.4 R= 31.9 ends-sub
+   cut after[1] diff= 11.3 L= 22.5 R= 33.8 
+   cut after[4] diff= 17.3 L= 36.8 R= 19.5 
+   cut after[0] diff= 17.7 L= 19.3 R= 37.0 
