@@ -31,9 +31,65 @@
     background-position: center center;
     background-repeat: no-repeat;
   }
+
+  /* 右上角信息样式 */
+  .top-right-info {
+    position: absolute;
+    top: 8mm;
+    right: 5mm;
+    text-align: right;
+    font-family: "STSong", "SimSun", serif; /* 宋体，端庄雅致 */
+    color: #1d4a2b; /* 提取画面中的深绿色 */
+  }
+
+  .top-right-info .term {
+    font-size: 4.5mm;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 1mm;
+  }
+
+  .top-right-info .issue {
+    font-size: 4mm;
+    letter-spacing: 1.5px;
+    margin-bottom: 2.5mm;
+  }
+
+  .top-right-info .publisher {
+    font-size: 4mm;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding-top: 2mm;
+    border-top: 1px solid rgba(29, 74, 43, 0.6); /* 增加一条细线分隔，提升精致感 */
+    display: inline-block;
+  }
+
+  /* “奔腾”下方副标题样式 */
+  .subtitle {
+    position: absolute;
+    top: 89mm; /* 根据图片“奔腾”二字位置调整，使其处于其正下方 */
+    width: 100%;
+    text-align: center;
+    font-family: "STKaiti", "KaiTi", serif; /* 楷体，富有文化气息 */
+    color: #1d4a2b;
+    font-size: 5.2mm;
+    font-weight: bold;
+    letter-spacing: 6px; /* 增加字间距，显得舒展大气 */
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.7); /* 增加浅色阴影，确保在云层背景上清晰 */
+  }
 </style>
 </head>
 <body>
-  <div class="page"></div>
+  <div class="page">
+    <!-- 右上角杂志信息 -->
+    <div class="top-right-info">
+      <div class="term">2026年秋季</div>
+      <div class="issue">第一期</div>
+      <div class="publisher">常青藤中学奔藤杂志社</div>
+    </div>
+    
+    <!-- “奔腾”下方副标题 -->
+    <div class="subtitle">咏师德之骏烈，诵校训之清芬</div>
+  </div>
 </body>
 </html>

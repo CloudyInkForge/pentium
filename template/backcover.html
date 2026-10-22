@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>奔藤杂志社 · 背封</title>
+<style>
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 210mm;
+    height: 285mm;
+    background-color: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    overflow: hidden;
+    background-color: device-cmyk(0 0 0 0);
+    background-image: url("bc.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  /* ============ 底部白色蒙版：背封信息区 ============ */
+  .bottom-mask {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    padding: 12mm 16mm 11mm;
+    background-color: #ffffff;
+    background-color: device-cmyk(0 0 0 0);
+    color: #1a1a1a;
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB",
+                 "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+  }
+
+  .mask-kicker {
+    margin: 0 0 3.5mm;
+    font-size: 3mm;
+    line-height: 1;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+
+  .mask-title {
+    margin: 0 0 4mm;
+    font-size: 8.2mm;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .mask-desc {
+    margin: 0 0 6.5mm;
+    font-size: 3.4mm;
+    line-height: 1.75;
+    color: #4d4d4d;
+    max-width: 165mm;
+  }
+
+  .mask-desc strong {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  .mask-divider {
+    width: 100%;
+    height: 0;
+    margin: 0 0 5.5mm;
+    border: 0;
+    border-top: 0.25mm solid #e0e0e0;
+  }
+
+  .mask-meta {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4mm 12mm;
+    font-size: 3.2mm;
+    line-height: 1.5;
+    color: #1a1a1a;
+  }
+
+  .mask-meta li {
+    display: flex;
+    align-items: baseline;
+    gap: 2.5mm;
+  }
+
+  .mask-meta .label {
+    font-size: 2.7mm;
+    letter-spacing: 0.1em;
+    color: #9a9a9a;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- 底部白色蒙版：常青藤中学奔藤杂志社背封信息 -->
+    <section class="bottom-mask">
+      <p class="mask-kicker">常青藤中学 · 奔藤杂志社</p>
+
+      <h1 class="mask-title">创刊招新 · 欢迎投稿</h1>
+
+      <p class="mask-desc">
+        常青藤中学奔藤杂志社刚刚创办，现面向全校招新，开放
+        <strong>编辑、审稿、校对</strong> 岗位；同时长期欢迎投稿，
+        稿件一经采用即付稿费。欢迎热爱文字的你加入我们，或把作品投给我们。
+      </p>
+
+      <hr class="mask-divider">
+
+      <ul class="mask-meta">
+        <li><span class="label">招新岗位</span><span>编辑 / 审稿 / 校对</span></li>
+        <li><span class="label">投稿说明</span><span>欢迎投稿 · 录用有稿费</span></li>
+        <li><span class="label">咨询电话</span><span>13593293890</span></li>
+        <li><span class="label">联系地点</span><span>128教室</span></li>
+      </ul>
+    </section>
+
+  </div>
+</body>
+</html>
