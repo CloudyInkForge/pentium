@@ -21,8 +21,8 @@
   }
 
   /* ----------------------------------------------------------
-     页面容器：所有内容都锚定在绝对坐标上，兼容性最稳
-     版心：左右各 20mm，上 26mm，下 24mm → 170 × 235 mm
+     页面容器：只定义几何与印刷属性，不带任何字体 / 字号 /
+     行距 / 颜色规则，避免级联干预之后的正文排版。
      ---------------------------------------------------------- */
   .page {
     position: relative;
@@ -31,10 +31,6 @@
     box-sizing: border-box;
     overflow: hidden;
     background: device-cmyk(0 0 0 0);
-    color: device-cmyk(0 0 0 1);
-    font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "SimSun", serif;
-    font-size: 10pt;
-    line-height: 1.75;
     break-after: page;
     page-break-after: always;
     -webkit-print-color-adjust: exact;
@@ -42,7 +38,7 @@
   }
 
   /* ==========================================================
-     页眉
+     页眉：栏目名靠外，期号靠内，下方一条极细线
      ========================================================== */
   .page-header {
     position: absolute;
@@ -53,45 +49,27 @@
     font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", sans-serif;
     font-size: 7.5pt;
     line-height: 6mm;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
+    color: device-cmyk(0 0 0 0.72);
   }
 
-  .header-section {
-    position: absolute;
-    top: 0;
-    font-weight: 600;
-    color: device-cmyk(0.75 0.10 0.40 0.05);   /* 蓝绿主色 */
-  }
-
+  .header-section,
   .header-issue {
     position: absolute;
     top: 0;
-    letter-spacing: 0.10em;
-    color: device-cmyk(0 0 0 0.45);
   }
 
-  /* 页眉细线 + 蓝绿短线点缀 */
   .header-rule {
     position: absolute;
-    top: 20.5mm;
+    top: 20mm;
     left: 20mm;
     right: 20mm;
-    height: 0.4mm;
-    background: device-cmyk(0 0 0 0.12);
-  }
-
-  .header-rule::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 12mm;
-    height: 0.4mm;
-    background: device-cmyk(0.75 0.10 0.40 0.05);
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 1);
   }
 
   /* ==========================================================
-     正文区
+     版心：只锚定正文可用区域，内部不做任何样式预设
      ========================================================== */
   .page-body {
     position: absolute;
@@ -103,119 +81,47 @@
   }
 
   /* ==========================================================
-     页脚 / 页码
+     页脚：上方一条极细线，页码靠外，名言靠内
      ========================================================== */
+  .footer-rule {
+    position: absolute;
+    bottom: 19mm;
+    left: 20mm;
+    right: 20mm;
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 1);
+  }
+
   .page-footer {
     position: absolute;
     bottom: 12mm;
     left: 20mm;
     right: 20mm;
-    height: 7mm;
+    height: 6mm;
     font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", sans-serif;
     font-size: 7.5pt;
+    line-height: 6mm;
     letter-spacing: 0.12em;
-    color: device-cmyk(0 0 0 0.45);
-  }
-
-  .footer-name {
-    position: absolute;
-    bottom: 0;
-    height: 7mm;
-    line-height: 7mm;
-  }
-
-  .page-number {
-    position: absolute;
-    bottom: 0;
-    height: 7mm;
-    line-height: 7mm;
-    font-size: 9.5pt;
-    font-weight: 600;
-    letter-spacing: 0.10em;
-    color: device-cmyk(0.75 0.10 0.40 0.05);
-  }
-
-  /* 页码前的小色块 */
-  .page-number::before {
-    content: "";
-    display: inline-block;
-    width: 2mm;
-    height: 2mm;
-    margin-right: 2.2mm;
-    vertical-align: 0.15mm;
-    background: device-cmyk(0.75 0.10 0.40 0.05);
-  }
-
-  /* ---------------- 奇数页（右页）：页码在右外侧 ---------------- */
-  .page--odd .header-section { left: 0; }
-  .page--odd .header-issue   { right: 0; }
-  .page--odd .footer-name    { left: 0; }
-  .page--odd .page-number    { right: 0; }
-
-  /* ---------------- 偶数页（左页）：镜像翻转 ---------------- */
-  .page--even .header-section { right: 0; }
-  .page--even .header-issue   { left: 0; }
-  .page--even .footer-name    { right: 0; }
-  .page--even .page-number    { left: 0; }
-
-  /* 偶数页色块移到数字右侧，保持"朝外"的视觉方向一致 */
-  .page--even .page-number::before { display: none; }
-
-  .page--even .page-number::after {
-    content: "";
-    display: inline-block;
-    width: 2mm;
-    height: 2mm;
-    margin-left: 2.2mm;
-    vertical-align: 0.15mm;
-    background: device-cmyk(0.75 0.10 0.40 0.05);
-  }
-
-  /* ==========================================================
-     正文排版样式（供具体文章复用）
-     ========================================================== */
-  .kicker {
-    margin: 0 0 3mm;
-    font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif;
-    font-size: 7.5pt;
-    letter-spacing: 0.22em;
-    color: device-cmyk(0.75 0.10 0.40 0.05);
-  }
-
-  .article-title {
-    margin: 0 0 4mm;
-    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", sans-serif;
-    font-size: 17pt;
-    font-weight: 700;
-    line-height: 1.45;
-    letter-spacing: 0.02em;
-    color: device-cmyk(0 0 0 1);
-  }
-
-  .article-lead {
-    margin: 0 0 5mm;
-    font-size: 10.5pt;
-    line-height: 1.8;
     color: device-cmyk(0 0 0 0.72);
   }
 
-  .article-rule {
-    width: 14mm;
-    height: 0.8mm;
-    margin: 0 0 6mm;
-    background: device-cmyk(0.75 0.10 0.40 0.05);
+  .footer-page,
+  .footer-quote {
+    position: absolute;
+    top: 0;
   }
 
-  .page-body p {
-    margin: 0 0 3.2mm;
-    text-align: justify;
-    text-justify: inter-ideograph;
-    text-indent: 2em;
-  }
+  /* ---------------- 奇数页（右页）：外 = 右，内 = 左 ---------------- */
+  .page--odd .header-section { right: 0; }
+  .page--odd .header-issue   { left: 0; }
+  .page--odd .footer-page    { right: 0; }
+  .page--odd .footer-quote   { left: 0; }
 
-  .page-body p.no-indent {
-    text-indent: 0;
-  }
+  /* ---------------- 偶数页（左页）：外 = 左，内 = 右 ---------------- */
+  .page--even .header-section { left: 0; }
+  .page--even .header-issue   { right: 0; }
+  .page--even .footer-page    { left: 0; }
+  .page--even .footer-quote   { right: 0; }
 </style>
 </head>
 
@@ -223,15 +129,17 @@
 
   <!--
     ==========================================================
-    内容页母版（奇数页 / 右页）
+    内容页母版（奇数页 / 右页示例）
     使用方式：
       · 右页：<div class="page page--odd"> … </div>
       · 左页：<div class="page page--even"> … </div>
     修改项：
-      · .header-section 填本页所属栏目名
-      · .header-issue   填期号 / 书名
-      · .footer-name    填刊名（或留空）
-      · .page-number    填实际页码
+      · .header-section  栏目名（靠外）
+      · .header-issue    期号（靠内）
+      · .footer-page     页码（靠外）
+      · .footer-quote    名言（靠内）
+    版心（.page-body）内不设任何预设样式，
+    字体、字号、行距、缩进等均由具体页面自行决定。
     ==========================================================
   -->
   <div class="page page--odd">
@@ -243,20 +151,14 @@
     </div>
     <div class="header-rule"></div>
 
-    <!-- 正文 -->
-    <article class="page-body">
-      <p class="kicker no-indent">专题 · REPORT</p>
-      <h1 class="article-title">这里是文章主标题</h1>
-      <p class="article-lead no-indent">导语段落，用稍大的字号与更浅的灰度区别于正文，承上启下，控制在三行以内为宜。</p>
-      <div class="article-rule"></div>
-      <p>正文段落从这里开始。版心宽度 170 毫米，正文 10 磅、行距 1.75 倍，首行缩进两字，两端对齐并启用中文标点悬挂，保证整栏文字边缘整齐。</p>
-      <p>第二段继续排布正文内容，可直接用文章 txt 文本填充。图片可按需在正文中插入，宽度不超过 170 毫米，图注使用无衬线小字号，居左对齐于图片下方。</p>
-    </article>
+    <!-- 正文：内容由具体页面自行排版，此处不做任何预设 -->
+    <div class="page-body"></div>
 
     <!-- 页脚 -->
+    <div class="footer-rule"></div>
     <div class="page-footer">
-      <span class="footer-name">PEACH</span>
-      <span class="page-number">012</span>
+      <span class="footer-page">012</span>
+      <span class="footer-quote">图难于其易，为大于其细</span>
     </div>
 
   </div>
