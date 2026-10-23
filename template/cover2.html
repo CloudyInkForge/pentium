@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>封面</title>
+<style>
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    height: 285mm;
+    background-color: #F7F6F2;
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    overflow: hidden;
+    background-color: #F7F6F2;
+
+    --frame: 13mm;
+  }
+
+  /* ============================================================
+     1. 全封面图片
+     ============================================================ */
+  .image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 285mm;
+    overflow: hidden;
+
+    background-color: #F7F6F2;
+    background-image: url('cz2.jpg');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    z-index: 1;
+  }
+
+  /* ============================================================
+     2. 大黄边框
+     ============================================================ */
+  .frame {
+    position: absolute;
+    background-color: #FFC800;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    z-index: 2;
+  }
+
+  .frame-top    { top: 0;     left: 0;   right: 0;  height: var(--frame); }
+  .frame-bottom { bottom: 0;  left: 0;   right: 0;  height: var(--frame); }
+  .frame-left   { top: 0;     bottom: 0; left: 0;   width: var(--frame);  }
+  .frame-right  { top: 0;     bottom: 0; right: 0;  width: var(--frame);  }
+
+  /* ============================================================
+     3. 期号 11.2016
+     ============================================================ */
+  .issue-no {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: var(--frame);
+    line-height: var(--frame);
+    text-align: center;
+
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 6mm;
+    font-weight: bold;
+    letter-spacing: 0.8mm;
+    color: #2E3A2E;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    z-index: 3;
+  }
+
+  /* ============================================================
+     4. 标题 BT.PNG
+     —— 改为背景图方式，PDF 最稳
+     —— 固定 mm 宽高，background-size: contain 保持原比例
+     ============================================================ */
+  .title-wrap {
+    position: absolute;
+    top: 15mm;
+    left: 31.5mm;
+    width: 147mm;
+    height: 46mm;
+
+    background-image: url('BT.PNG');
+    background-size: contain;      /* 保持比例，完整显示 */
+    background-position: center;   /* 水平垂直居中 */
+    background-repeat: no-repeat;
+
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- 1. 全封面背景图 -->
+    <div class="image-container" role="img" aria-label="校园风景"></div>
+
+    <!-- 2. 大黄边框 -->
+    <div class="frame frame-top"></div>
+    <div class="frame frame-bottom"></div>
+    <div class="frame frame-left"></div>
+    <div class="frame frame-right"></div>
+
+    <!-- 3. 期号 -->
+    <div class="issue-no">11.2016</div>
+
+    <!-- 4. 标题（背景图方式） -->
+    <div class="title-wrap" role="img" aria-label="奔藤"></div>
+
+  </div>
+</body>
+</html>
