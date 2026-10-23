@@ -9,87 +9,164 @@
     margin: 0;
   }
 
-  html,
-  body {
+  /* 重置所有默认间距，确保容器尺寸严格精确 */
+  * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    width: 210mm;
-    height: 285mm;
-    background-color: device-cmyk(0 0 0 0);
   }
 
+  html,
+  body {
+    width: 210mm;
+    height: 285mm;
+    background-color: #F7F6F2; /* 米白/浅米色底 */
+  }
+
+  /* 页面主容器：严格固定尺寸，并禁止任何溢出，防止图片侵占外边框 */
   .page {
     position: relative;
     width: 210mm;
     height: 285mm;
     overflow: hidden;
-    /* 底色使用 device-cmyk 定义 */
-    background-color: device-cmyk(0 0 0 0);
-    /* 背景图延伸铺满整页 */
-    background-image: url("bg.png");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+    background-color: #F7F6F2;
   }
 
-  /* 右上角信息样式 */
-  .top-right-info {
+  /* ============================================================
+     1. 左上角 MAGAZINE 装饰
+     ============================================================ */
+  .magazine-mark {
     position: absolute;
-    top: 8mm;
-    right: 5mm;
-    text-align: right;
-    font-family: "STSong", "SimSun", serif; /* 宋体，端庄雅致 */
-    color: #1d4a2b; /* 提取画面中的深绿色 */
-  }
-
-  .top-right-info .term {
-    font-size: 4.5mm;
+    top: 10mm;
+    left: 5%;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 10mm;
     font-weight: bold;
-    letter-spacing: 1.5px;
-    margin-bottom: 1mm;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: #2E3A2E;
   }
 
-  .top-right-info .issue {
-    font-size: 4mm;
-    letter-spacing: 1.5px;
-    margin-bottom: 2.5mm;
+  /* ============================================================
+     2. 标题 BT.PNG —— 稍微缩小，更显精致
+     ============================================================ */
+  .title-wrap {
+    position: absolute;
+    top: 28mm;       /* 位置微调 */
+    left: 15%;
+    width: 70%;      /* 控制宽度 */
+    height: 46mm;    /* 缩小高度，图片随之缩小 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .top-right-info .publisher {
-    font-size: 4mm;
+  .title-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 严格等比缩放，不拉伸 */
+  }
+
+  /* ============================================================
+     3. 刊号信息栏（左侧刊号 + 右侧 SINCE 2024，与图片右边缘对齐）
+     ============================================================ */
+  .issue-bar {
+    position: absolute;
+    top: 102mm;       /* 位于标题下方，图片上方 */
+    left: 5%;
+    width: 90%;       /* 右侧正好落在 95%，与图片右边缘对齐 */
+    height: 12mm;
+    display: flex;
+    align-items: baseline;      /* 两端基线对齐，处在同一行 */
+    justify-content: space-between;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #2E3A2E;
+  }
+
+  .issue-left {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .issue-date {
+    font-size: 9mm;
     font-weight: bold;
     letter-spacing: 1px;
-    padding-top: 2mm;
-    border-top: 1px solid rgba(29, 74, 43, 0.6); /* 增加一条细线分隔，提升精致感 */
-    display: inline-block;
   }
 
-  /* “奔腾”下方副标题样式 */
-  .subtitle {
-    position: absolute;
-    top: 89mm; /* 根据图片“奔腾”二字位置调整，使其处于其正下方 */
-    width: 100%;
-    text-align: center;
-    font-family: "STKaiti", "KaiTi", serif; /* 楷体，富有文化气息 */
-    color: #1d4a2b;
-    font-size: 5.2mm;
-    font-weight: bold;
-    letter-spacing: 6px; /* 增加字间距，显得舒展大气 */
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.7); /* 增加浅色阴影，确保在云层背景上清晰 */
+  .issue-sep {
+    font-size: 8mm;
+    margin: 0 3mm;
+    font-weight: 300;
   }
+
+  .issue-vol {
+    font-size: 5mm;
+    font-weight: bold;
+    margin-left: 2mm;
+  }
+
+  /* 图片右上角的 SINCE 2024 */
+  .since-mark {
+    font-size: 4.2mm;
+    font-weight: bold;
+    letter-spacing: 0.8mm;
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     4. 图片容器（严格限制位置尺寸）
+     确保：宽90%，高60%，距左5%，距右5%，距下5%
+     ============================================================ */
+  .image-container {
+    position: absolute;
+    left: 5%;
+    bottom: 5%;
+    width: 90%;
+    height: 60%;
+    overflow: hidden;
+    background-color: #F7F6F2; /* 与页面底色一致，图片未加载或边缘留白时无突兀色块 */
+  }
+
+  .image-container .bg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* 图片等比例填充容器，多出部分被容器裁切 */
+    object-fit: cover;
+    object-position: center bottom;
+  }
+
 </style>
 </head>
 <body>
   <div class="page">
-    <!-- 右上角杂志信息 -->
-    <div class="top-right-info">
-      <div class="term">2026年秋季</div>
-      <div class="issue">第一期</div>
-      <div class="publisher">常青藤中学奔藤杂志社</div>
+
+    <!-- 1. 左上角 MAGAZINE 装饰 -->
+    <div class="magazine-mark">MAGAZINE</div>
+
+    <!-- 2. 标题（BT.PNG） -->
+    <div class="title-wrap">
+      <img src="BT.PNG" alt="奔藤">
     </div>
-    
-    <!-- “奔腾”下方副标题 -->
-    <div class="subtitle">咏师德之骏烈，诵校训之清芬</div>
+
+    <!-- 3. 刊号信息栏 + SINCE 2024（同行，右侧对齐图片右边缘） -->
+    <div class="issue-bar">
+      <div class="issue-left">
+        <span class="issue-date">2026</span>
+        <span class="issue-sep">|</span>
+        <span class="issue-date">11</span>
+        <span class="issue-vol">Vol. 3</span>
+      </div>
+      <div class="since-mark">SINCE 2024</div>
+    </div>
+
+    <!-- 4. 背景图严格容器 -->
+    <div class="image-container">
+      <img class="bg" src="cz.jpeg" alt="校园风景">
+    </div>
+
   </div>
 </body>
 </html>
