@@ -9,7 +9,6 @@
     margin: 0;
   }
 
-  /* 重置所有默认间距，确保容器尺寸严格精确 */
   * {
     box-sizing: border-box;
     margin: 0;
@@ -20,16 +19,20 @@
   body {
     width: 210mm;
     height: 285mm;
-    background-color: #F7F6F2; /* 米白/浅米色底 */
+    background-color: #F7F6F2;
   }
 
-  /* 页面主容器：严格固定尺寸，并禁止任何溢出，防止图片侵占外边框 */
   .page {
     position: relative;
     width: 210mm;
     height: 285mm;
     overflow: hidden;
     background-color: #F7F6F2;
+
+    /* 统一尺寸变量，全部用毫米，PDF 引擎计算最稳 */
+    --side: 10.5mm;        /* 左右边距 5% ≈ 10.5mm */
+    --img-top: 100mm;      /* 图片顶边：和原来 35%≈99.75mm 基本一致，不往下移 */
+    --img-bottom: 5mm;     /* 下间距：由 14.25mm 减到 5mm，图片因此加高 */
   }
 
   /* ============================================================
@@ -38,7 +41,7 @@
   .magazine-mark {
     position: absolute;
     top: 10mm;
-    left: 5%;
+    left: var(--side);
     font-family: "Times New Roman", Times, serif;
     font-size: 10mm;
     font-weight: bold;
@@ -48,14 +51,14 @@
   }
 
   /* ============================================================
-     2. 标题 BT.PNG —— 稍微缩小，更显精致
+     2. 标题 BT.PNG
      ============================================================ */
   .title-wrap {
     position: absolute;
-    top: 28mm;       /* 位置微调 */
-    left: 15%;
-    width: 70%;      /* 控制宽度 */
-    height: 46mm;    /* 缩小高度，图片随之缩小 */
+    top: 28mm;
+    left: 31.5mm;      /* 15% of 210mm */
+    width: 147mm;      /* 70% of 210mm */
+    height: 46mm;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,23 +68,26 @@
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* 严格等比缩放，不拉伸 */
+    object-fit: contain;
   }
 
   /* ============================================================
-     3. 刊号信息栏（左侧刊号 + 右侧 SINCE 2024，与图片右边缘对齐）
+     3. 刊号信息栏
+     —— 位置从 102mm 上移到 86mm，整体位于图片上方，不再压进图片
+     —— 高度 12mm，底部 98mm，与图片顶边 100mm 留 2mm 呼吸空间
      ============================================================ */
   .issue-bar {
     position: absolute;
-    top: 102mm;       /* 位于标题下方，图片上方 */
-    left: 5%;
-    width: 90%;       /* 右侧正好落在 95%，与图片右边缘对齐 */
+    top: 86mm;
+    left: var(--side);
+    right: var(--side);
     height: 12mm;
     display: flex;
-    align-items: baseline;      /* 两端基线对齐，处在同一行 */
+    align-items: baseline;
     justify-content: space-between;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #2E3A2E;
+    z-index: 2;            /* 保险：即使引擎忽略位置，文字也始终在图片上层 */
   }
 
   .issue-left {
@@ -107,7 +113,6 @@
     margin-left: 2mm;
   }
 
-  /* 图片右上角的 SINCE 2024 */
   .since-mark {
     font-size: 4.2mm;
     font-weight: bold;
@@ -116,28 +121,33 @@
   }
 
   /* ============================================================
-     4. 图片容器（严格限制位置尺寸）
-     确保：宽90%，高60%，距左5%，距右5%，距下5%
+     4. 图片容器（核心修改）
+     —— 全部用固定 mm 定位，避免 PDF 引擎对百分比四边约束计算偏差
+     —— 高度 = 285 - 100 - 5 = 180mm，比原来的约 171mm 更高
+     —— 图片改用 background-size: cover，兼容 PDF 引擎，不再依赖 object-fit
      ============================================================ */
   .image-container {
     position: absolute;
-    left: 5%;
-    bottom: 5%;
-    width: 90%;
-    height: 60%;
+    top: var(--img-top);       /* 100mm，与原 35% 基本持平，不整体下移 */
+    left: var(--side);         /* 10.5mm */
+    right: var(--side);        /* 10.5mm，宽 189mm */
+    bottom: var(--img-bottom); /* 5mm，下间距缩小，图片自然加高 */
+
     overflow: hidden;
-    background-color: #F7F6F2; /* 与页面底色一致，图片未加载或边缘留白时无突兀色块 */
-  }
+    background-color: #F7F6F2;
 
-  .image-container .bg {
-    display: block;
-    width: 100%;
-    height: 100%;
-    /* 图片等比例填充容器，多出部分被容器裁切 */
-    object-fit: cover;
-    object-position: center bottom;
-  }
+    /* PDF 友好的图片铺满方式 */
+    background-image: url('cz2.jpg');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
 
+    /* 强制打印/导出 PDF 时保留背景图颜色与图像 */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    z-index: 1;
+  }
 </style>
 </head>
 <body>
@@ -151,7 +161,7 @@
       <img src="BT.PNG" alt="奔藤">
     </div>
 
-    <!-- 3. 刊号信息栏 + SINCE 2024（同行，右侧对齐图片右边缘） -->
+    <!-- 3. 刊号信息栏 + SINCE 2024（已上移至图片上方，不再重叠） -->
     <div class="issue-bar">
       <div class="issue-left">
         <span class="issue-date">2026</span>
@@ -162,10 +172,8 @@
       <div class="since-mark">SINCE 2024</div>
     </div>
 
-    <!-- 4. 背景图严格容器 -->
-    <div class="image-container">
-      <img class="bg" src="cz.jpeg" alt="校园风景">
-    </div>
+    <!-- 4. 背景图严格容器（背景图铺满，PDF 转换更稳） -->
+    <div class="image-container" role="img" aria-label="校园风景"></div>
 
   </div>
 </body>
