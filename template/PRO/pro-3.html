@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 3 · 跨页「两页连图全幅 + 实底文字面板」</title>
+<style>
+/* ============================================================
+   PRO 模板 3：pro-3.html（跨页 · 一张图连续铺满两页）
+   ------------------------------------------------------------
+   用途："整版跨页大图"页。同一张横构图大图横跨左右两页，
+         订口（书脊）处像素连续；标题、导语装在左页的
+         实底纸色面板里，右页只留图注签与页码角标。
+         适用：横构图主图（宽高比 1.4–1.6 最佳，接近
+         420:285 ≈ 1.474 时几乎无裁切）、文字 150 字以内。
+
+   跨页方向：左偶在前、右奇在后，示例页码 20 / 21。
+
+   ★ 连图机制（本模板核心）：
+     两页各放一个整页 .bleed，同一 background-image、
+     同一 background-size（按"跨页全景平面"计算），
+     左页 background-position: 0% 50%（显示左半），
+     右页 background-position: 100% 50%（显示右半）。
+     两页在订口处同尺度、同高度对齐 → 视觉连续。
+     本例：图 3200×2133（宽高比 1.500）→ 铺满 285mm 高
+     需宽 285 ÷ 2133 × 3200 = 427.6mm →
+     background-size: 427.6mm 285mm（420mm 跨页平面中央
+     裁掉 7.6mm，订口处无感）。换图后重算：
+     bg-w = 285 × 图宽 ÷ 图高，左右页共用同一组值。
+
+   装订损耗提示：骑马订/胶装在订口各吃掉约 1–2mm 图像，
+     属正常跨页损耗；关键主体请避开画面正中 8mm 带。
+
+   PeachPDF 自检：同 pro-1。文字面板为纯实底（无透明），
+     是本模板唯一允许压图的元素。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 整页出血图（两页同一张图的两半）---------- */
+.bleed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 285mm;
+  background-size: 427.6mm 285mm;   /* 换图后按头注公式重算 */
+  background-repeat: no-repeat;
+}
+
+/* ---------- 标题面板（左页 · 纯实底）---------- */
+.panel {
+  position: absolute;
+  left: 16mm;
+  top: 34mm;
+  width: 104mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  padding: 8mm;
+}
+
+.bar {
+  width: 12mm;
+  height: 1.8mm;
+  background: #9e1b32;
+  background: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 2.2mm 0;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.5mm 0;
+  text-align: left;
+}
+
+h1.title {
+  font-size: 20pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.5mm 0 0 0;
+  text-align: left;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.5mm 0 3mm 0;
+}
+
+/* 面板导语：面板内宽 88mm，10.5pt 约 24 字/行 */
+.lead {
+  font-size: 10.5pt;
+  line-height: 1.7;
+  text-indent: 0;
+  margin: 0 0 2.2mm 0;
+}
+.lead.last { margin: 0; }
+
+/* ---------- 图注签（右页 · 纯实底）---------- */
+.plate-cap {
+  position: absolute;
+  right: 0;
+  bottom: 16mm;
+  max-width: 132mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-right: 1.6mm solid #9e1b32;
+  border-right-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 2.4mm 4.4mm 2.4mm 5mm;
+}
+.plate-cap p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.6;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+/* ---------- 页码角标（外角）---------- */
+.chip {
+  position: absolute;
+  width: 11mm;
+  height: 7.8mm;
+  background: #221f1e;
+  background: device-cmyk(0 0.02 0.04 0.9);
+  color: #fff;
+  color: device-cmyk(0 0 0 0);
+  font-size: 8pt;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 7.8mm;
+}
+.chip-bl { bottom: 0; left: 0; }
+.chip-br { bottom: 0; right: 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 20）：连图左半 + 标题面板
+     面板核算（内宽 88mm，10.5pt/1.7 → 6.29mm/行）：
+       色条 4 ｜ 栏目眉 4.2 ｜ 标题 8.8 ｜ 作者行 4.5 ｜ 线 5.5
+       导语段1 3 行 18.9 ｜ 导语段2 5 行 31.5
+       面板总高 ≈ 16（衬） + 77.4 = 93.4 → 底缘 y ≈ 127.4 ✓
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="bleed" style="background-image:url('../../2611/photos/逃亡可可西里.jpg'); background-position:0% 50%;"></div>
+
+  <div class="panel">
+    <div class="bar"></div>
+    <p class="kicker">正当年华</p>
+    <h1 class="title">逃亡可可西里</h1>
+    <p class="byline">莲峤</p>
+    <div class="rule"></div>
+    <p class="lead">驱车可可西里，映入眼帘的，是纯洁而沉郁的白色。云雾笼罩大地，似在宣告人类的罪愆。可可西里好像没有浪漫，只回荡着无声的嘶吼与呻吟。</p>
+    <p class="lead last">进入可可西里的那年，一位女大学生背着背包来到这片禁区，走时，只有骸骨被苍鹭啃食；一个骑行者骑着自行车在荒原上骑行，死前在朋友圈留下了最后一句话，“我昨天，听见狼叫了，怪不得叫狼叫沟。”转日他便失联，尸体在积水潭中被发现，已经腐烂。</p>
+  </div>
+
+  <div class="chip chip-bl">20</div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 21）：连图右半 + 图注签 + 页码角标
+     图：NASA 国际空间站拍摄的青藏高原佩枯错（3200×2133）。
+     主体（湖泊）偏画面左侧，主要落在左页；右页为山脉与云，
+     放图注签不遮主体。
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="bleed" style="background-image:url('../../2611/photos/逃亡可可西里.jpg'); background-position:100% 50%;"></div>
+
+  <div class="plate-cap">
+    <p>国际空间站掠过青藏高原：佩枯错与雪山相映<br>摄影 © NASA 影像库（公有领域）</p>
+  </div>
+
+  <div class="chip chip-br">21</div>
+
+</div>
+
+</body>
+</html>

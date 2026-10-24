@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 5 · 跨页「左下角连图」（对角大图 · pro-4 镜像）</title>
+<style>
+/* ============================================================
+   PRO 模板 5：pro-5.html（跨页 · 左下角锚定的角连大图）
+   ------------------------------------------------------------
+   用途：pro-4 的对角镜像。一张大图锚定在跨页的左下角：
+         左页（偶数页）底部整幅大图，向右越过订口延伸到
+         右页（奇数页）左下部位，形成阶梯状连图区；
+         两页合计约 53% 面积是图；标题与双栏正文排在
+         左页上方，题句与续文排在右页上方。
+         适用：横构图/长卷构图大图（宽高比 1.3–1.6），
+         与 pro-4（方构图、右上角）互补。
+
+   跨页方向：左偶在前、右奇在后，示例页码 28 / 29。
+
+   ★ 角连机制（底部锚定，与 pro-4 同一原理、锚点相反）：
+     图像平面（两级阶梯的外接矩形）：
+       左页块 C：left 0 / bottom 0 / 宽 210 / 高 150
+       右页块 D：left 0 / bottom 0 / 宽 150 / 高 210
+       → 平面 W = 210 + 150 = 360，H = 210（取两级中较高者）
+     本例图 3200×2279（宽高比 1.404）→ 按宽铺满平面：
+       图高 = 360 × 2279 ÷ 3200 = 256.4mm →
+       background-size: 360mm 256.4mm（两块共用）
+     纵向窗口取平面底部（长卷上缘裁去 18%）：
+       D（高 210 = 平面高）：Y 偏移 = −(256.4 − 210) = −46.4mm
+       C（高 150 < 平面高）：Y 偏移 = −(256.4 − 150) = −106.4mm
+       两块都底对齐 → 订口处同尺度、同行对齐 → 连续。
+     ⚠ Y 偏移按各块高度分别解算（这点与 pro-4 不同：
+       pro-4 是顶对齐两块共用同一 Y；本模板是底对齐、
+       各自的负 mm 值都把图像底边钉在同一条线上）。
+     验算：C 显示图域 x 0–210 / y 106.4–256.4；
+           D 显示图域 x 210–360 / y 46.4–256.4；
+           订口两侧 x=210 对齐、底边同在 y=256.4 → 连续。
+
+   换图四步：
+     1. 换两块 .art 的 background-image（同一张图）；
+     2. 重算：W、平面高 H（两级中较高者）、
+        图高 = W × 图高 ÷ 图宽 → 共用 background-size；
+     3. 定窗口：底部锚定时 Y 偏移 = −(图高 − 块高)，
+        高块先算，矮块同底钉线；主体避开订口 8mm 带；
+     4. 改 C/D 宽高后，同步改左页正文区 bottom 与
+        右页顶部条高度（= 285 − D 高 − 4 呼吸）。
+
+   PeachPDF 自检：同 pro-1；压图元素仅实底图注签与页码角标。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 角连图块（两页同一张图的两级阶梯 · 底部锚定）---------- */
+.art {
+  position: absolute;
+  background-size: 360mm 256.4mm;   /* 换图后按头注公式重算 */
+  background-repeat: no-repeat;
+}
+.art-lb {                /* 左页：底部整幅 */
+  left: 0;
+  bottom: 0;
+  width: 210mm;
+  height: 150mm;
+  background-position: 0% -106.4mm;
+}
+.art-rb {                /* 右页：左下部位阶梯 */
+  left: 0;
+  bottom: 0;
+  width: 150mm;
+  height: 210mm;
+  background-position: 100% -46.4mm;
+}
+
+/* ---------- 左页顶部文字区（图块 C 之上，全宽）---------- */
+.zone-t {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 178mm;
+}
+
+.bar {
+  width: 12mm;
+  height: 1.8mm;
+  background: #9e1b32;
+  background: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 2.2mm 0;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.4mm 0;
+}
+
+h1.title {
+  font-size: 18pt;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.4mm 0 0 0;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.4mm 0 3mm 0;
+}
+
+.lead {
+  font-size: 10.2pt;
+  line-height: 1.68;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+.cols {
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* ---------- 右页顶部条（图块 D 之上）---------- */
+.zone-r {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 178mm;
+}
+
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.4mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #a6a6a6;
+  border-bottom-color: device-cmyk(0 0 0 0.35);
+}
+
+.quote {
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+  border-bottom: 0.5pt solid #a6a6a6;
+  border-bottom-color: device-cmyk(0 0 0 0.35);
+  padding: 2.4mm 0;
+  margin: 0 0 3mm 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 12.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+}
+
+.zone-r .txt {
+  font-size: 8.7pt;
+  line-height: 1.49;
+}
+.zone-r .txt p {
+  margin: 0;
+  text-indent: 2em;
+}
+
+/* ---------- 实底图注签（压在图上）---------- */
+.plate-cap-l {           /* 左页：图块 C 上、左下 */
+  position: absolute;
+  left: 0;
+  bottom: 14mm;
+  max-width: 152mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-left: 1.6mm solid #9e1b32;
+  border-left-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 2.4mm 5mm 2.4mm 4.4mm;
+}
+.plate-cap-l p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.55;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+.plate-cap-r {           /* 右页：图块 D 上、右下 */
+  position: absolute;
+  right: 16mm;
+  bottom: 14mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-right: 1.6mm solid #9e1b32;
+  border-right-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 1.8mm 3.8mm 1.8mm 4.5mm;
+}
+.plate-cap-r p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+/* ---------- 页码角标（外角 · 实底）---------- */
+.chip {
+  position: absolute;
+  width: 11mm;
+  height: 7.8mm;
+  background: #221f1e;
+  background: device-cmyk(0 0.02 0.04 0.9);
+  color: #fff;
+  color: device-cmyk(0 0 0 0);
+  font-size: 8pt;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 7.8mm;
+}
+.chip-bl { bottom: 0; left: 0; }
+.chip-br { bottom: 0; right: 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 28）：顶部标题+导语+双栏，底部整幅图 C
+     核算（区高 115mm，自 y16 至图顶 y135 − 4 呼吸）：
+       色条+栏目眉 6.4 ｜ 标题 8.3 ｜ 作者行 4.4 ｜ 线 5.4
+       导语 2 行 12.6 + 3.5 ｜ 双栏（7 行 / 5 行）32
+       合计 ≈ 73 → 底缘 y ≈ 89，图顶 135 → 余 46mm ✓
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="zone-t">
+    <div class="bar"></div>
+    <p class="kicker">文史杂谈</p>
+    <h1 class="title">杜甫：一个不明不白的情圣</h1>
+    <p class="byline">木瑜</p>
+    <div class="rule"></div>
+    <p class="lead">很多人都说，杜甫是个伟大的现实主义诗人，这话没错，但如果说他本性骨子里就是个现实主义者那我不赞同。在我看来，杜甫的现实主义是乱世所催生的……</p>
+    <div class="cols">
+      <p>公元 744 年，杜甫与李白，这两个全唐乃至中国诗歌史上诗歌最优秀的两个人终于相遇。他们年龄相差十一岁，而且一个是现实主义诗人掌门人，一个是浪漫主义诗人掌门人，关系应该不会很好吧？但是，两个没有架子的人聚在一起只有一个可能——一起嗨皮一起飞。这两个人天天吼歌喝酒，互相谈论诗词歌赋、琴棋书画。但李白是被放还于乡的人，终会离开，过了几个月，两人便相互告别，他们将在一年后再次见面。</p>
+      <p class="cbrk">一年之后，李杜两人再次于齐鲁之地相遇，分别后，便是永别。公元 747年，由于“野无遗贤”，杜甫困于长安，穷困潦倒，从此八年没有与妻儿相见。公元 755 年，杜甫终于被授予了河西尉这样一个小官，但杜甫坚决不去赴任……一家子的生计刚有了着落，杜甫的幼儿便不幸饿死。杜甫老年丧子，痛哭流涕。</p>
+    </div>
+  </div>
+
+  <div class="art art-lb" style="background-image:url('../../2611/photos/杜甫.jpg');"></div>
+
+  <div class="plate-cap-l">
+    <p>曾我萧白《饮中八仙图》（18 世纪）· 克利夫兰艺术博物馆藏</p>
+  </div>
+
+  <div class="chip chip-bl">28</div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 29）：顶部题句条 + 左下阶梯图 D
+     顶部条核算（y16 至图顶 y75 − 4 呼吸，高 55mm）：
+       续题行 5.5 ｜ 题句 1 行带衬 ≈ 11 + 3 ｜ 续文 1 行 4.6
+       合计 ≈ 24 → 余 31mm ✓
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="zone-r">
+    <p class="continued-mark">杜甫：一个不明不白的情圣 · 续</p>
+    <div class="quote">
+      <p>但杜甫总能让你意想不到。他不但毫无官腔，而且比普通人还要随和无常。</p>
+    </div>
+    <div class="txt">
+      <p>就是这么一个看似简单平凡的人，就是唐朝第一现代主义诗人杜甫，你敢相信吗？</p>
+    </div>
+  </div>
+
+  <div class="art art-rb" style="background-image:url('../../2611/photos/杜甫.jpg');"></div>
+
+  <div class="plate-cap-r">
+    <p>《饮中八仙图》：众酒仙醉态各异</p>
+  </div>
+
+  <div class="chip chip-br">29</div>
+
+</div>
+
+</body>
+</html>

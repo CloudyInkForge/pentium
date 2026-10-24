@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 2 · 跨页「一页全图 + 一页大图少字」</title>
+<style>
+/* ============================================================
+   PRO 模板 2：pro-2.html（跨页 · 左页整版大图 + 右页上图下文）
+   ------------------------------------------------------------
+   用途："图主导"的专题跨页。左页（偶数页）一整版大图；
+         右页（奇数页）上部约 2/3 仍是大图（满宽出血），
+         仅底部一条文字带：标题 + 导语 + 两三段正文 + 页脚。
+         适用：图片气质强、文字量少（80–200 字）的短文/收尾。
+
+   跨页方向：左偶在前、右奇在后，示例页码 16 / 17。
+
+   版心：与 pro-1 相同的全出血机制 + 16mm 文字边距；
+         文字带宽 178mm，单栏直排（短文不用双栏）。
+
+   PeachPDF 自检：同 pro-1（无远程/无透明/无 filter、
+         图块显式尺寸 + cover、正文不与图叠压）。
+
+   换图四步：
+     1. 左页整版图：竖构图佳；按主体调 background-position
+        纵向百分比（本例 center 65%：瀑布位于原图 30%–70%，
+        页框显示 34.5%–100%，瀑布置于带上部）；
+     2. 右页大图：横/方构图均可，本区比例 210:195 ≈ 1.08；
+     3. 文字带正文 ≤ 5 行（8.7pt / 4.57mm 行高），超出移段；
+     4. 图注 ≤ 20 字；跨在图带与文字带交界上的 .plate-tab
+        保持实底，可整体上下平移，不得移进正文区。
+
+   核算（右页文字带，自图底 195mm 起，带宽 90mm）：
+     上留 7 ｜ 标题 8 ｜ 作者行 4.5 ｜ 线 4.5 ｜ 导语 2 行 10.4
+     正文 5 行 22.9 ｜ 下留（含页脚带）≈ 30 → 余量充足 ✓
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 整页出血图（左页）---------- */
+.bleed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 285mm;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* ---------- 右页上部大图：满宽出血，高 195mm ---------- */
+.bigart {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 195mm;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* ---------- 右页底部文字带 ---------- */
+.strip {
+  position: absolute;
+  left: 0;
+  top: 195mm;
+  width: 210mm;
+  height: 90mm;      /* 285 − 195；其中底部 12mm 为页脚带 */
+}
+
+.bar {
+  width: 12mm;
+  height: 1.8mm;
+  background: #9e1b32;
+  background: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 2mm 0;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.2mm 0;
+}
+
+h1.title {
+  font-size: 18pt;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.2mm 0 0 0;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.2mm 0 2.6mm 0;
+}
+
+.lead {
+  font-size: 10pt;
+  line-height: 1.65;
+  text-indent: 0;
+  margin: 0 0 2.4mm 0;
+}
+
+.strip .txt {
+  font-size: 8.7pt;
+  line-height: 1.49;
+}
+.strip .txt p {
+  margin: 0 0 1.6mm 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+
+/* ---------- 实底元素 ---------- */
+
+/* 图注小签：骑在右页大图底缘（实底，可整体平移） */
+.plate-tab {
+  position: absolute;
+  right: 16mm;
+  top: 186.5mm;     /* 大图底边 195mm，上骑约 8.5mm */
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-left: 1.6mm solid #9e1b32;
+  border-left-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 1.8mm 4.5mm 1.8mm 3.8mm;
+}
+.plate-tab p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+/* 图注实底条（左页） */
+.plate-cap {
+  position: absolute;
+  left: 0;
+  bottom: 14mm;
+  max-width: 152mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-left: 1.6mm solid #9e1b32;
+  border-left-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 2.4mm 5mm 2.4mm 4.4mm;
+}
+.plate-cap p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.55;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+/* 页码角标 */
+.chip {
+  position: absolute;
+  width: 11mm;
+  height: 7.8mm;
+  background: #221f1e;
+  background: device-cmyk(0 0.02 0.04 0.9);
+  color: #fff;
+  color: device-cmyk(0 0 0 0);
+  font-size: 8pt;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 7.8mm;
+}
+.chip-tl { top: 0; left: 0; }
+.chip-tr { top: 0; right: 0; }
+
+/* 细线页脚（右页文字带底部） */
+.folio {
+  position: absolute;
+  bottom: 3mm;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 16）：整版大图
+     图：梅清《九龙潭》竖幅（1642×3400，宽高比 0.483）。
+     cover 裁切：按宽缩放后高 ≈ 434.8mm，页高 285mm 显示
+     纵向 65.5%；position 纵向 65% → 显示带 34.5%–100%，
+     瀑布（原图 30%–70%）落在显示带上部，底部潭水完整。
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="bleed" style="background-image:url('../../2611/photos/上山、下山.jpg'); background-position:center 65%;"></div>
+
+  <div class="plate-cap">
+    <p>梅清《九龙潭》（清）· 克利夫兰艺术博物馆藏</p>
+  </div>
+
+  <div class="chip chip-tl">16</div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 17）：上 195mm 大图 + 底 90mm 文字带
+     文字带核算（内容宽 178mm，8.7pt 约 58 字/行）：
+       上留 7 ｜ 色条+栏目眉 6.4 ｜ 标题 8.3 ｜ 作者行 4.4
+       线 4.8 ｜ 导语 2 行 11.6 ｜ 正文 5 行 24.5
+       合计 ≈ 67 / 可用 75（90 − 12 页脚带 − 3 下留）→ 余 8mm ✓
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="bigart" style="background-image:url('../../2611/photos/上山、下山02.jpg');"></div>
+
+  <div class="plate-tab">
+    <p>冒雪上山的黄山挑夫</p>
+  </div>
+
+  <div class="chip chip-tr">17</div>
+
+  <div class="strip">
+    <div style="padding:7mm 16mm 0 16mm;">
+
+      <div class="bar"></div>
+      <p class="kicker">正当年华</p>
+      <h1 class="title">上山，下山</h1>
+      <p class="byline">原初164班 高128班　王文哲</p>
+      <div class="rule"></div>
+
+      <p class="lead">漆皮脱落的青绿色缆车摇晃不止，仿佛风一吹就要倒下，底下就是百丈悬崖，奇石怪柏生于其中，青石间的缝隙看不见土壤，只有昨夜留下的夏雨。</p>
+
+      <div class="txt">
+        <p>上山、下山、上山、下山，跨越重重山脉，很快便到了黄山腹地。下了轿子，天色也已渐晚，橙色和紫色在天边纠缠，晚霞的余光照亮山边深绿色的松树。老吴和他的侄子乘着光亮，晃晃悠悠的回去了。</p>
+        <p>无论哪一座山，总能看见这些轿夫的身影。但面临缆车的普及，他们也在逐渐减少，除了黄山这种极其险峻的山脉，大多数山峰缆车都可以直通山顶。消失的轿夫不得不寻找新的出路。和十几年前成都的棒棒一样，这些穿着汗衫的汉子，也必须在人生中年或暮年重新找一座山，上山，下山。</p>
+      </div>
+
+    </div>
+
+    <div class="folio">
+      <table>
+        <tr>
+          <td class="month">2026·10</td>
+          <td class="page-no">17</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

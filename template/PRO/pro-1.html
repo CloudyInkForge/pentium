@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 1 · 跨页「一页全图 + 一页文字」（国家地理式专题开篇）</title>
+<style>
+/* ============================================================
+   PRO 模板 1：pro-1.html（跨页 · 左页整版大图 + 右页文字版）
+   ------------------------------------------------------------
+   用途：文章的"专题开篇跨页"。左页（偶数页）一整版大图，
+         右页（奇数页）承接标题、导语、双栏正文与底部宽幅配图。
+         适用：有 1 张竖构图主图 + 1 张横构图辅图的任何文章。
+
+   跨页方向：本文件两页 = 一组对页（左偶在前、右奇在后）。
+         示例页码 14 / 15，实际使用时按刊内页码改。
+
+   与基础模板的关系：
+     - 页尺寸不变：210 × 285 mm；
+     - @page margin: 0（沿用封面 cover.html 的全出血机制），
+       版心由各 .page 内部 16mm 边距自行控制，文字栅格
+       （边距 16mm / 双栏 86.25mm / 栏距 5.5mm / 8.7pt / 1.49）
+       与 page+.html 完全一致；
+     - 栏内多栏文本一律 column-fill:auto + .cbrk 钉死切分点；
+     - 颜色全部 device-cmyk（hex 仅为浏览器回退，与既有模板同例）。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     - 无远程资源；图片全部本地相对路径；
+     - 无 opacity / filter / grid / JS / 透明渐变；
+     - 图块 .ph / .bleed 均显式 width/height + cover + 定位 + no-repeat；
+     - 文字不与任何绝对定位图片叠压（实底面板除外，见 .plate-*）。
+
+   换图五步：
+     1. 左页主图：换 .bleed 的 background-image（竖构图佳，
+        1518×3400 级别以上），按主体位置调 background-position
+        的纵向百分比（本例 center 75%：保人物、舍顶部题跋）；
+     2. 右页宽幅图：换 .inset .ph 的 background-image，
+        尽量选横构图（宽高比 ≈ 1.45–1.55，近乎无裁切）；
+     3. 图注 ≤ 20 字，写在 .plate-cap / .cap；
+     4. 右页正文只动"取哪些段"，不动字词；双栏第二栏起点
+        加 .cbrk；
+     5. 核算：右页各块高度之和 ≤ 273mm（285 − 12 页脚带），
+        留 ≥ 2 行（9mm）余量；正文块填充率 ≤ 75%。
+
+   图片路径说明：模板内在 template/PRO/ 预览用
+     ../../2611/photos/xxx.jpg；拷入指定期目录（如 2611/）后
+     改为 photos/xxx.jpg。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ---------- 页面容器：整页全出血 ---------- */
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 整页出血图（左页）---------- */
+.bleed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 285mm;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* ---------- 实底元素（唯一允许压图的机制：纯实色，无透明）---------- */
+
+/* 图注实底条：压在整版图底部，左侧色条 + 纸色底 */
+.plate-cap {
+  position: absolute;
+  left: 0;
+  bottom: 14mm;
+  max-width: 152mm;
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-left: 1.6mm solid #9e1b32;
+  border-left-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 2.4mm 5mm 2.4mm 4.4mm;
+}
+.plate-cap p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.55;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+/* 页码角标：实底色块，贴外角 */
+.chip {
+  position: absolute;
+  width: 11mm;
+  height: 7.8mm;
+  background: #221f1e;
+  background: device-cmyk(0 0.02 0.04 0.9);
+  color: #fff;
+  color: device-cmyk(0 0 0 0);
+  font-size: 8pt;
+  letter-spacing: 0.06em;
+  text-align: center;
+  line-height: 7.8mm;
+}
+.chip-tl { top: 0; left: 0; }
+.chip-tr { top: 0; right: 0; }
+.chip-bl { bottom: 0; left: 0; }
+.chip-br { bottom: 0; right: 0; }
+
+/* ---------- 右页（文字页）栅格：与 page+.html 同栅格 ---------- */
+.content {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 178mm;
+  height: 257mm;      /* 285 − 16 顶 − 12 页脚带 */
+}
+
+/* 色条（标题上方短横） */
+.bar {
+  width: 12mm;
+  height: 1.8mm;
+  background: #9e1b32;
+  background: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 2.2mm 0;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.5mm 0;
+}
+
+h1.title {
+  font-size: 22pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.5mm 0 0 0;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.5mm 0 3mm 0;
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.5pt;
+  line-height: 1.7;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 双栏正文：切分点钉死（column-fill:auto + .cbrk） */
+.cols {
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0 0 4mm 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* 题句：居中、上下细线 */
+.quote {
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+  border-bottom: 0.5pt solid #a6a6a6;
+  border-bottom-color: device-cmyk(0 0 0 0.35);
+  padding: 2.6mm 0;
+  margin: 0 0 4.5mm 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 13pt;
+  line-height: 1.55;
+  letter-spacing: 0.12em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+}
+
+/* 底部宽幅图：近满宽（178mm），高约 110mm */
+.inset { margin: 0; }
+.inset .ph {
+  width: 100%;
+  height: 110mm;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.inset .cap {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  margin: 0.8mm 0 0 0;
+  text-align: right;
+  text-indent: 0;
+  letter-spacing: 0.04em;
+}
+
+/* 细线页脚：期号 + 页码，两端对齐 */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 14）：整版大图
+     图：《出山释迦图》竖幅（1518×3400）。
+     cover 裁切核算：图宽高比 0.447 → 按宽缩放后高 ≈ 469mm，
+     页高 285mm 仅显示纵向 60.8%；position 纵向 75%：
+     显示带 39.2%–100%，人物（头 38%–足 90%）完整入框，
+     舍去顶部题跋。
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="bleed" style="background-image:url('../../2611/photos/流浪者的悲鸣.jpg'); background-position:center 75%;"></div>
+
+  <div class="plate-cap">
+    <p>《出山释迦图》（佚名，1244）· 克利夫兰艺术博物馆藏</p>
+  </div>
+
+  <div class="chip chip-tl">14</div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 15）：标题 + 导语 + 双栏 + 题句 + 宽幅图
+     高度核算（自 16mm 顶边起，容量 257mm）：
+       色条 4.0 ｜ 栏目眉 4.2 ｜ 标题 9.7 ｜ 作者行 4.5
+       分隔线 5.5 ｜ 导语 5 行 × 6.25 = 31.3 + 3.5 间距
+       双栏 9 行 × 4.57 = 41.1 + 4.0 间距（两栏各 ≤ 9 行，钉死）
+       题句 18.5 + 4.5 ｜ 宽幅图 110 + 图注 4.2
+       合计 ≈ 243.5 / 257，余 13.5mm（≈ 3 行）✓
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="content">
+
+    <div class="bar"></div>
+
+    <p class="kicker">文史杂谈</p>
+
+    <h1 class="title">流浪者的悲鸣</h1>
+
+    <p class="byline">原初163班 高125班　孙郭浩</p>
+
+    <div class="rule"></div>
+
+    <p class="lead">关外的雪很大，覆盖了将士的铠甲，马匹在嘶鸣，望着东方的土地——那是它们的家，那是他们的家。几十年后，这里来了一群新面孔，他们瞧着这陌生的土地，土地也瞧着陌生的他们。这里，是东北，建州女真的故乡，中原士人的流放地，他们来到了这里，女真人去了中原，他们都无家可归了，他们被流放了，他们也在流浪。</p>
+
+    <div class="cols">
+      <p>可怜的女真人，可怜的中原人，他们都来了自己不认识的异乡。女真人来中原，是为了自己祖先未达成的宏愿，但来了这里，他们发现，中原有什么好的，江南有什么好的？为了中原的一座宫殿，女真人挥洒了鲜血，有的甚至用自己的头颅堆起了前往北京的阶梯，在他们的眼中，这也是通往明天的阶梯，但来了这里，他们发现，迎候自己的，不过是大火烧过后的一片废墟，这是李闯王的杰作。</p>
+      <p class="cbrk">很多汉族士人为此绝望，其中，孕育了不少名篇佳作，纳兰性德的老师给纳兰性德看了两首金缕曲，纳兰性德感到无奈与惋惜，只因为几个细枝末节的原因，老师的友人便被流放宁古塔十年，这是自己民族的罪，他能做的，只是尽量赎罪。南国佳人多塞北，中原名士半辽阳。这是曹寅发出的感慨，曹寅一家是汉族中的名门望族，他本人更是与康熙皇帝私交甚笃，可还是深刻的感受到汉人的悲哀。</p>
+    </div>
+
+    <div class="quote">
+      <p>季子平安否！我亦飘零久。</p>
+    </div>
+
+    <div class="inset">
+      <div class="ph" style="background-image:url('../../2611/photos/流浪者的悲鸣02.jpg');"></div>
+      <p class="cap">雪落关外：白山黑水间的城寨与八旗。</p>
+    </div>
+
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·10</td>
+        <td class="page-no">15</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

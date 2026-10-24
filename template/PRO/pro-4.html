@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 4 · 跨页「右上角连图」（对角大图 + 双页文字）</title>
+<style>
+/* ============================================================
+   PRO 模板 4：pro-4.html（跨页 · 右上角锚定的角连大图）
+   ------------------------------------------------------------
+   用途："角连大图"跨页。一张大图锚定在跨页的右上角：
+         右页（奇数页）顶部整幅大图，向左越过订口延伸到
+         左页（偶数页）右上部位，形成阶梯状连图区；
+         两页合计约 57% 面积是图，其余区域排标题、导语、
+         双栏正文与题句。
+         适用：主体居中、背景干净的方构图/近方构图大图。
+
+   跨页方向：左偶在前、右奇在后，示例页码 24 / 25。
+
+   ★ 角连机制（本模板核心，两级阶梯的连续对齐）：
+     设"图像平面"宽 W × 高 H（跨两级阶梯的外接矩形）：
+       右页块 A：left 0 / top 0 / 宽 210 / 高 230
+       左页块 B：right 0 / top 0 / 宽 130 / 高 150
+       → 平面 W = 130 + 210 = 340，H = 230
+     本例图 3200×3016（宽高比 1.061）→ 按宽铺满平面：
+       图高 = 340 × 3016 ÷ 3200 = 320.45mm →
+       background-size: 340mm 320.45mm（两块共用）
+     纵向窗口取图像平面上部偏下一带（保住鼎耳与鼎足）：
+       窗口顶 = 72.36mm → background-position 的 Y 用
+       负长度 −72.36mm（两块必须同值！）。
+     ⚠ 两块高度不同（230 / 150），Y 用百分比会各自解算、
+       订口处上下错位 —— 角连图 Y 一律用负 mm 偏移；
+       X 才用百分比（右页 100%、左页 0%）。
+     验算：A 显示图域 x 130–340 / y 72.36–302.36；
+           B 显示图域 x 0–130 / y 72.36–222.36；
+           订口两侧 x=130 对齐、y 同起 72.36、同尺度 → 连续。
+
+   换图四步：
+     1. 换两块 .art 的 background-image（同一张图）；
+     2. 重算平面：W、H、图高 = W × 图高 ÷ 图宽，
+        写进两块共用的 background-size；
+     3. 定窗口：Y 偏移 = 平面外的纵向裁量 × 想跳过的比例，
+        两块写同一个负 mm 值；主体避开订口 8mm 带；
+     4. 左页标题区宽 = B 左缘 x − 16 − 2；改 B 宽/高后
+        同步改标题区宽与正文区 top（= B 底 + 8mm）。
+
+   PeachPDF 自检：同 pro-1；正文全部位于图块之外的留白区，
+     唯一压图元素是实底图注签 .plate-cap。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 角连图块（两页同一张图的两级阶梯）---------- */
+.art {
+  position: absolute;
+  background-size: 340mm 320.45mm;   /* 换图后按头注公式重算 */
+  background-repeat: no-repeat;
+}
+.art-r {                 /* 右页：顶部整幅 */
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 230mm;
+  background-position: 100% -72.36mm;
+}
+.art-l {                 /* 左页：右上部位阶梯 */
+  right: 0;
+  top: 0;
+  width: 130mm;
+  height: 150mm;
+  background-position: 0% -72.36mm;
+}
+
+/* ---------- 左页角上标题区（图块 B 左侧的空角）---------- */
+.corner {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 62mm;
+}
+
+.bar {
+  width: 12mm;
+  height: 1.8mm;
+  background: #9e1b32;
+  background: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 2.2mm 0;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.4mm 0;
+}
+
+h1.title {
+  font-size: 18pt;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.subtitle {
+  font-size: 9pt;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.2mm 0 0 0;
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.4mm 0 0 0;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.4mm 0 0 0;
+}
+
+/* ---------- 左页正文区（阶梯图下方，全宽）---------- */
+.zone-l {
+  position: absolute;
+  left: 16mm;
+  top: 158mm;          /* B 底 150 + 8 呼吸 */
+  width: 178mm;
+}
+
+.lead {
+  font-size: 10.2pt;
+  line-height: 1.68;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+.cols {
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0 0 4mm 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+.quote {
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+  border-bottom: 0.5pt solid #a6a6a6;
+  border-bottom-color: device-cmyk(0 0 0 0.35);
+  padding: 2.4mm 0;
+  margin: 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 12.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+}
+
+/* ---------- 右页续文区（大图下方）---------- */
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.2mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #a6a6a6;
+  border-bottom-color: device-cmyk(0 0 0 0.35);
+}
+
+.zone-r {
+  position: absolute;
+  left: 16mm;
+  top: 238mm;          /* A 底 230 + 8 呼吸 */
+  width: 178mm;
+}
+.zone-r .cols { margin: 0; }
+
+/* ---------- 实底图注签（压在右页图块底缘）---------- */
+.plate-cap {
+  position: absolute;
+  left: 16mm;
+  top: 221mm;          /* A 底 230，下骑 9mm 落在图上 */
+  background: #fff;
+  background: device-cmyk(0 0 0 0);
+  border-left: 1.6mm solid #9e1b32;
+  border-left-color: device-cmyk(0 0.78 0.62 0.08);
+  padding: 1.8mm 4.5mm 1.8mm 3.8mm;
+}
+.plate-cap p {
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+/* ---------- 细线页脚 ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #a6a6a6;
+  border-top-color: device-cmyk(0 0 0 0.35);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 24）：角上标题区 + 阶梯图 B + 全宽正文区
+     核算：
+       标题区（62mm 宽，x 16–78，不越 B 左缘 80）：≈ 30mm 高 ✓
+       正文区 y 158 起：导语 2 行 12.6 + 3.5
+         双栏 7 行 × 4.57 = 32 + 4 ｜ 题句 1 行带衬 ≈ 11
+         合计 ≈ 63 → 底缘 y ≈ 221，页脚带 273 以上 ✓ 余 52mm
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="art art-l" style="background-image:url('../../2611/photos/当浪潮已逝.jpg');"></div>
+
+  <div class="corner">
+    <div class="bar"></div>
+    <p class="kicker">文史杂谈</p>
+    <h1 class="title">当浪潮已逝</h1>
+    <p class="subtitle">——战国时期的法家</p>
+    <p class="byline">郭哥</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="zone-l">
+    <p class="lead">那是一个变革的时代，兵荒马乱，哀鸿遍野。此时的世代，韩赵魏三家分晋，周室衰微，天下群雄并起，都想分一杯羹，……制度犹如支柱，支撑着这个庞大国家的华丽，若是支柱腐烂，一切都终究轰然倒塌……</p>
+    <div class="cols">
+      <p>春秋的孔子早已深埋土中，但他们的传人还有零星几点，遍布于华夏大地，而孔门十哲之一的子夏，成为当时继承儒家星火的领袖。彼时稷下学宫尚未开设，除了道家和儒家，诸子百家尚未成型，魏文侯在两者之间，选择了儒家。彼时的秦国早已不见了当年穆公称霸西戎的强秦风范，犹如一匹颓唐的老马，在山东六国以西孤独徘徊……</p>
+      <p class="cbrk">法家又分为术治、势治和法治……而法治则为李悝所代表的派别，也是最适用于当时国家治理的派别。这一派出现了许多名人名家，除李悝外，还有魏人吴起，以及那个最为闪耀的名字——商鞅。</p>
+    </div>
+    <div class="quote">
+      <p>当浪潮已逝，没有人想成为被浪花拍在沙滩上坐以待毙的鱼。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·10</td>
+        <td class="page-no">24</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 25）：顶部整幅大图 A + 底部续文区
+     续文区 y 238 起：续题行 5.5 + 双栏（2 行 / 3 行）13.7
+       → 底缘 y ≈ 257，页脚带 273 以上 ✓
+     图：商代青铜圆鼎（3200×3016），鼎耳/鼎足完整入框。
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="art art-r" style="background-image:url('../../2611/photos/当浪潮已逝.jpg');"></div>
+
+  <div class="plate-cap">
+    <p>商代青铜圆鼎 · 克利夫兰艺术博物馆藏</p>
+  </div>
+
+  <div class="zone-r">
+    <p class="continued-mark">当浪潮已逝 · 续</p>
+    <div class="cols">
+      <p>魏国的变法在某种程度上决定了当时战国时代的上层结构，变法大大削弱了魏国的世卿世禄制，撰写了中国历史上第一部成文法典《法经》，以农为本，发展农业经济。</p>
+      <p class="cbrk">但对于李悝，并没有什么前人的成功与失败，他就是前人。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·10</td>
+        <td class="page-no">25</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
