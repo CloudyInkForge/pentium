@@ -12,9 +12,10 @@
      使用要点：
      1. 本模板 = 两个相邻页，只能落在（偶数 | 奇数）相邻对上，
         如 16 | 17：偶数页为左页（文），奇数页为右页（图）。
-     2. 与 T3 的区别：图不整页出血，底部有图注色带；文字跨两页。
-     3. 左页文本预算：约 1500 字（含编者按约 1200 字正文）；
-        右页下部续文约 350 字以内。
+     2. 与 T3 的区别：图不整页出血，底部有图注色带；文字跨两页，
+        右页下部为整宽双栏续文，填满图下区域。
+     3. 文本预算：左页约 1350 字（含编者按约 1100 字正文）；
+        右页下部续文约 650 字（续文末行不低于 258mm）。
      4. 图注色带 = 栏目暖强调色实底 + 反白小字，页码嵌在带内右端。
      ============================================================ */
 
@@ -64,7 +65,7 @@
   body {
     margin: 0;
     padding: 0;
-    background: rgb(255,255,255);
+    background: device-cmyk(0 0 0 0);
   }
 
   .page {
@@ -77,7 +78,7 @@
     page-break-after: always;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    background: rgb(255,255,255);
+    background: device-cmyk(0 0 0 0);
     font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
   }
   .page:last-child { break-after: auto; page-break-after: auto; }
@@ -97,7 +98,7 @@
     top: 16mm;
     font-size: 7.5pt;
     letter-spacing: 0.14em;
-    color: rgb(97,97,97);
+    color: device-cmyk(0 0 0 0.62);
   }
   .page--even .issue-mark { left: 12mm; }
   .page--odd  .issue-mark { right: 12mm; }
@@ -107,7 +108,7 @@
     bottom: 12mm;
     font-size: 7.5pt;
     letter-spacing: 0.1em;
-    color: rgb(97,97,97);
+    color: device-cmyk(0 0 0 0.62);
   }
   .page--even .folio { left: 12mm; }
   .page--odd  .folio { right: 12mm; }
@@ -115,11 +116,11 @@
   .sec-tag {
     display: inline-block;
     padding: 1.6mm 3.2mm 1.8mm 3.2mm;
-    background: rgb(191,17,61); /* 艺体观察 · 绛红 */
+    background: device-cmyk(0.12 0.92 0.72 0.15); /* 艺体观察 · 绛红 */
     font-size: 8pt;
     font-weight: 500;
     letter-spacing: 0.2em;
-    color: rgb(255,255,255);
+    color: device-cmyk(0 0 0 0);
   }
 
   h1.title {
@@ -128,7 +129,7 @@
     font-weight: 700;
     line-height: 1.3;
     letter-spacing: 0.02em;
-    color: rgb(0,0,0);
+    color: device-cmyk(0 0 0 1);
   }
 
   .subtitle {
@@ -136,41 +137,41 @@
     font-size: 11.5pt;
     font-weight: 400;
     line-height: 1.5;
-    color: rgb(97,97,97);
+    color: device-cmyk(0 0 0 0.62);
   }
 
   .byline {
     margin-top: 4.5mm;
     font-size: 8.5pt;
     letter-spacing: 0.06em;
-    color: rgb(97,97,97);
+    color: device-cmyk(0 0 0 0.62);
   }
 
   .head-rule {
     margin-top: 4.5mm;
     height: 0.2mm;
-    background: rgb(209,209,209);
+    background: device-cmyk(0 0 0 0.18);
   }
 
   /* 编者按（可选） */
   .editors-note {
     margin-top: 5mm;
     padding: 4mm 5mm 4.2mm 5mm;
-    background: rgb(245,222,227);
-    border-left: 1mm solid rgb(191,17,61);
+    background: device-cmyk(0.02 0.11 0.09 0.02);
+    border-left: 1mm solid device-cmyk(0.12 0.92 0.72 0.15);
   }
   .editors-note .label {
     font-size: 8pt;
     font-weight: 700;
     letter-spacing: 0.2em;
-    color: rgb(193,75,105);
+    color: device-cmyk(0.12 0.66 0.52 0.14);
   }
   .editors-note p {
     margin: 1.8mm 0 0 0;
     font-size: 8.5pt;
     line-height: 1.72;
     text-align: justify;
-    color: rgb(38,38,38);
+    color: device-cmyk(0 0 0 0.85);
   }
 
   .cols {
@@ -182,7 +183,7 @@
     font-size: 9.5pt;
     line-height: 1.62;
     text-align: justify;
-    color: rgb(0,0,0);
+    color: device-cmyk(0 0 0 1);
   }
   .cols p {
     margin: 0;
@@ -198,7 +199,7 @@
     height: 168mm;
     background-image: url("sample-b.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: right center;
   }
 
   /* 图注色带：实底反白，页码嵌右端 */
@@ -208,7 +209,7 @@
     left: 0;
     width: 210mm;
     height: 11mm;
-    background: rgb(191,17,61);
+    background: device-cmyk(0.12 0.92 0.72 0.15);
   }
   .band-cap {
     position: absolute;
@@ -219,7 +220,7 @@
     width: 150mm;
     font-size: 7.5pt;
     letter-spacing: 0.08em;
-    color: rgb(255,255,255);
+    color: device-cmyk(0 0 0 0);
     white-space: nowrap;
   }
   .band-folio {
@@ -230,22 +231,25 @@
     line-height: 11mm;
     font-size: 7.5pt;
     letter-spacing: 0.1em;
-    color: rgb(255,255,255);
+    color: device-cmyk(0 0 0 0);
   }
 
-  /* 右页下部续文：单栏贴外侧，另一侧留白 */
+  /* 右页下部续文：整宽双栏，贴版心，填满图下区域 */
   .tail {
     position: absolute;
-    top: 185mm;
-    right: 12mm;
-    width: 88mm;
-    height: 80mm;
+    top: 186mm;
+    left: 16mm;
+    width: 182mm;
+    height: 70mm;
+    column-count: 2;
+    column-gap: 6mm;
+    column-fill: auto;
     font-size: 9.5pt;
     line-height: 1.62;
     text-align: justify;
-    color: rgb(0,0,0);
+    color: device-cmyk(0 0 0 1);
   }
-  .page--even .tail { left: 12mm; right: auto; }
+  .page--even .tail { left: 12mm; }
   .tail p {
     margin: 0;
     text-indent: 2em;
@@ -253,13 +257,13 @@
 
   /* ------------------------------------------------------------
      栏目暖强调色色表（device-cmyk）：
-       封面故事  朱红   rgb(230,29,44)
-       时政摘编  赭红   rgb(180,34,27)
-       文史杂谈  砖棕   rgb(149,56,24)
-       正当年华  橘     rgb(255,97,38)
-       社会热点  金棕   rgb(188,110,28)
-       艺体观察  绛红   rgb(191,17,61)
-       校园天地  珊瑚棕 rgb(206,94,72)
+       封面故事  朱红   device-cmyk(0.05 0.88 0.82 0.05)
+       时政摘编  赭红   device-cmyk(0.20 0.85 0.88 0.12)
+       文史杂谈  砖棕   device-cmyk(0.25 0.72 0.88 0.22)
+       正当年华  橘     device-cmyk(0    0.62 0.85 0)
+       社会热点  金棕   device-cmyk(0.18 0.52 0.88 0.10)
+       艺体观察  绛红   device-cmyk(0.12 0.92 0.72 0.15)
+       校园天地  珊瑚棕 device-cmyk(0.08 0.58 0.68 0.12)
      ------------------------------------------------------------ */
 </style>
 </head>
@@ -324,7 +328,9 @@
         两侧的音响。有观众站在出口处回头看了很久。一位从外地
         赶来的歌迷说，她抢到票的那天正在加班，"看到开售提示
         的时候手都在抖"。这一晚之后，那些旋律就真的成了
-        回忆的一部分。</p>
+        回忆的一部分。灯光亮起的那一刻，许多人还保持着合唱的
+        口型。一位音乐学院的学生说，这场演出她会记很久，
+        "不是因为告别，而是因为所有人都还在唱。"</p>
       </div>
 
     </div>
@@ -344,9 +350,20 @@
     <div class="tail">
       <p>安可环节，他只唱了一首歌。前奏响起时，全场灯光熄灭，
       观众席的手机光连成星海，他唱着唱着把话筒转向观众——
-      副歌部分，几乎是三万人在替他完成。</p>
-      <p>散场后很久，仍有人留在座位上不肯离开。一位观众说：
-      "来之前就知道会哭，没想到会哭得这么高兴。"</p>
+      副歌部分，几乎是三万人在替他完成。后来这段视频在网上
+      流传，转发最多的一条评论只有八个字："原来我们都还记得。"</p>
+      <p>演出结束的第三天，唱片公司宣布将当晚的录音整理成现场
+      专辑。消息下面，最高赞的留言是一张三十年前的磁带照片，
+      配文说："这盘磁带在我家书架上放了三十年，今晚终于又
+      转了起来。"</p>
+      <p>对一代人来说，这样的告别并不只是关于一位歌手。那些
+      旋律响起时，人们想起的是自己的九十年代：放学路上的
+      收音机，晚自习后的宿舍夜谈，还有磁带背面抄了一半的
+      歌词。歌手在台上告别，观众告别的是自己的年轻。</p>
+      <p>散场那晚，体育馆外下起了小雨。有人没带伞，站在屋檐下
+      等雨停，无意间又哼起了那句"心若在，梦就在"。旁边的人
+      接了下一句，然后是第三个人。雨声很大，歌声很小，但没有
+      一个人先走。</p>
     </div>
 
   </div>
