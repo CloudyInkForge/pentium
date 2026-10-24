@@ -1,0 +1,10 @@
+  [warn] https://images-api.nasa.gov/search: ConnectionError
+  [跳过源 nasa：连续失败，本运行内不再尝试]
+  [warn] https://images-api.nasa.gov/search: ConnectionError
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/45600: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/930369: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/73651: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/926985: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/646991: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/855997: HTTP 404
+  [warn] https://collectionapi.metmuseum.org/public/collection/v1/objects/706314: HTTP 404

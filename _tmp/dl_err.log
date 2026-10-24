@@ -1,0 +1,16 @@
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~orig.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~large.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~medium.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/PIA04220/PIA04220~orig.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/PIA04220/PIA04220~large.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/PIA04220/PIA04220~medium.jpg: ConnectionError
+  [跳过源 nasa：连续失败，本运行内不再尝试]
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001788/GSFC_20171208_Archive_e001788~orig.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~orig.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~large.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e001699/GSFC_20171208_Archive_e001699~medium.jpg: ConnectionError
+C:\Users\y\AppData\Roaming\Python\Python313\site-packages\PIL\Image.py:3402: DecompressionBombWarning: Image size (132250000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+  [warn] https://images-assets.nasa.gov/image/PIA22266/PIA22266~orig.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/PIA22266/PIA22266~large.jpg: ConnectionError
+  [warn] https://images-assets.nasa.gov/image/PIA22266/PIA22266~medium.jpg: ConnectionError

@@ -1,167 +1,228 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8" />
-<title>内容页母版 · 210 × 285 mm</title>
+<meta charset="utf-8">
+<title>杂志内页模板 · 单页单篇双栏</title>
 <style>
-  /* ==========================================================
-     页面基础：成品尺寸 210 × 285 mm，无页边距，颜色全部使用
-     device-cmyk 定义，确保印刷输出色彩正确。
-     ========================================================== */
-  @page {
-    size: 210mm 285mm;
-    margin: 0;
-  }
+/* ============================================================
+   页面：210 × 285 mm
+   边距：上 15 / 右 16 / 下 16 / 左 16 mm
+   内容区：178 × 254 mm
+   颜色：全部 device-cmyk
+   长度：全部 mm / pt
+   图片路径：../template/cz2.jpg（相对期目录）
+   若 HTML 与 template 同级，请改为 template/cz2.jpg
 
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    background: device-cmyk(0 0 0 0);
-  }
+   本页已按文章篇幅微调：略降图片高度、收紧正文行距与
+   小标题间距，确保全文在单页内完整显示，不跨页。
+   ============================================================ */
+@page {
+  size: 210mm 285mm;
+  margin: 15mm 16mm 16mm 16mm;
+}
 
-  /* ----------------------------------------------------------
-     页面容器：只定义几何与印刷属性，不带任何字体 / 字号 /
-     行距 / 颜色规则，避免级联干预之后的正文排版。
-     ---------------------------------------------------------- */
-  .page {
-    position: relative;
-    width: 210mm;
-    height: 285mm;
-    box-sizing: border-box;
-    overflow: hidden;
-    background: device-cmyk(0 0 0 0);
-    break-after: page;
-    page-break-after: always;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
-  /* ==========================================================
-     页眉：栏目名靠外，期号靠内，下方一条极细线
-     ========================================================== */
-  .page-header {
-    position: absolute;
-    top: 13mm;
-    left: 20mm;
-    right: 20mm;
-    height: 6mm;
-    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", sans-serif;
-    font-size: 7.5pt;
-    line-height: 6mm;
-    letter-spacing: 0.12em;
-    color: device-cmyk(0 0 0 0.72);
-  }
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+}
 
-  .header-section,
-  .header-issue {
-    position: absolute;
-    top: 0;
-  }
+/* 页面容器：固定内容区高度，作为页脚绝对定位的参考 */
+.page {
+  position: relative;
+  height: 254mm;
+}
 
-  .header-rule {
-    position: absolute;
-    top: 20mm;
-    left: 20mm;
-    right: 20mm;
-    height: 0.2mm;
-    background: device-cmyk(0 0 0 1);
-  }
+/* ---------- 栏目眉 ---------- */
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.5mm 0;
+}
 
-  /* ==========================================================
-     版心：只锚定正文可用区域，内部不做任何样式预设
-     ========================================================== */
-  .page-body {
-    position: absolute;
-    top: 26mm;
-    left: 20mm;
-    right: 20mm;
-    bottom: 24mm;
-    overflow: hidden;
-  }
+/* ---------- 标题 ---------- */
+h1.title {
+  font-size: 22pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: device-cmyk(0 0 0 1);
+}
 
-  /* ==========================================================
-     页脚：上方一条极细线，页码靠外，名言靠内
-     ========================================================== */
-  .footer-rule {
-    position: absolute;
-    bottom: 19mm;
-    left: 20mm;
-    right: 20mm;
-    height: 0.2mm;
-    background: device-cmyk(0 0 0 1);
-  }
+/* ---------- 作者行 ---------- */
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.5mm 0 0 0;
+}
 
-  .page-footer {
-    position: absolute;
-    bottom: 12mm;
-    left: 20mm;
-    right: 20mm;
-    height: 6mm;
-    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", sans-serif;
-    font-size: 7.5pt;
-    line-height: 6mm;
-    letter-spacing: 0.12em;
-    color: device-cmyk(0 0 0 0.72);
-  }
+/* ---------- 分隔线 ---------- */
+.rule {
+  border-top: 0.5pt solid device-cmyk(0 0 0 0.5);
+  margin: 2.5mm 0 3mm 0;
+}
 
-  .footer-page,
-  .footer-quote {
-    position: absolute;
-    top: 0;
-  }
+/* ---------- 配图：36 mm 高，等比居中裁剪 ---------- */
+.photo {
+  width: 178mm;
+  height: 36mm;
+  background-image: url("../template/cz2.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin: 0 0 2.8mm 0;
+}
 
-  /* ---------------- 奇数页（右页）：外 = 右，内 = 左 ---------------- */
-  .page--odd .header-section { right: 0; }
-  .page--odd .header-issue   { left: 0; }
-  .page--odd .footer-page    { right: 0; }
-  .page--odd .footer-quote   { left: 0; }
+/* 图注 */
+.cap {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: device-cmyk(0 0 0 0.6);
+  margin: 0.5mm 0 1.8mm 0;
+  text-align: right;
+  text-indent: 0;
+  letter-spacing: 0.04em;
+}
 
-  /* ---------------- 偶数页（左页）：外 = 左，内 = 右 ---------------- */
-  .page--even .header-section { left: 0; }
-  .page--even .header-issue   { right: 0; }
-  .page--even .footer-page    { left: 0; }
-  .page--even .footer-quote   { right: 0; }
+/* ---------- 正文双栏：行距略收紧 ---------- */
+.body {
+  column-count: 2;
+  column-gap: 5.5mm;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin-bottom: 5.8mm;
+}
+
+.body p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+
+/* ---------- 小标题：间距略收紧 ---------- */
+.subhead {
+  font-size: 10.5pt;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: device-cmyk(0 0 0 1);
+  margin: 1.2mm 0 0.8mm 0;
+  text-indent: 0;
+  break-inside: avoid;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+/* ---------- 页脚：页码 + 月份 + 中间 ■ ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4.2mm;
+}
+
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.folio td {
+  padding: 0;
+  font-size: 8pt;
+  line-height: 1.5;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: bottom;
+}
+
+/* 右页：月份靠左（内侧），页码靠右（外侧） */
+.folio .month {
+  text-align: left;
+  letter-spacing: 0.04em;
+}
+
+.folio .center {
+  text-align: center;
+  letter-spacing: 0.3em;
+}
+
+.folio .page-no {
+  text-align: right;
+  letter-spacing: 0.04em;
+}
 </style>
 </head>
-
 <body>
 
-  <!--
-    ==========================================================
-    内容页母版（奇数页 / 右页示例）
-    使用方式：
-      · 右页：<div class="page page--odd"> … </div>
-      · 左页：<div class="page page--even"> … </div>
-    修改项：
-      · .header-section  栏目名（靠外）
-      · .header-issue    期号（靠内）
-      · .footer-page     页码（靠外）
-      · .footer-quote    名言（靠内）
-    版心（.page-body）内不设任何预设样式，
-    字体、字号、行距、缩进等均由具体页面自行决定。
-    ==========================================================
-  -->
-  <div class="page page--odd">
+<div class="page">
 
-    <!-- 页眉 -->
-    <div class="page-header">
-      <span class="header-section">栏目名称</span>
-      <span class="header-issue">2611</span>
-    </div>
-    <div class="header-rule"></div>
+  <div class="kicker">人物 · 长征</div>
 
-    <!-- 正文：内容由具体页面自行排版，此处不做任何预设 -->
-    <div class="page-body"></div>
+  <h1 class="title">一线阳光穿云出——周恩来的长征路</h1>
 
-    <!-- 页脚 -->
-    <div class="footer-rule"></div>
-    <div class="page-footer">
-      <span class="footer-page">012</span>
-      <span class="footer-quote">图难于其易，为大于其细</span>
-    </div>
+  <p class="byline">原初162班 高128班　郭斯陶</p>
+
+  <div class="rule"></div>
+
+  <div class="photo"></div>
+  <p class="cap">在漫长的征途上，信念比路更长。</p>
+
+  <div class="body">
+
+    <p>回顾两万五千里长征，我们常常惊叹于毛泽东的神机妙算，朱德的运筹帷幄，但往往容易忽略，在他们的背后，还有一个人，他往往不活跃于第一线，却始终坚守革命理想信念，即使身患重病也不言止步，在权力斗争中明辨是非。这就是周恩来，人民的总理，不朽的革命家。</p>
+
+    <h2 class="subhead">受命于危难之际</h2>
+
+    <p>长征刚刚开始，党和红军就遇到了前所未有的挑战。1934 年 10 月，在突破国民党军设置的前三道封锁线后，红军挺进湘桂边境。蒋介石判断出了红军的大致行军路线，调集国民党中央军、湘军、桂军、粤军等重兵，在湘江沿线布下第四道封锁线，企图扼杀红军的长征，使得中国革命走不出南方。由于当时的错误领导，红军携带大量辎重，行军速度缓慢，给敌人部署封锁线提供了时间，使红军面临严峻考验。</p>
+
+    <p>事实上，红军也确实差点被就此歼灭，经过五昼夜的激战，红军及党的主要领导人得以渡过湘江，但代价是出发时8.6万的红军队伍锐减至三万。战役的惨重损失使广大干部战士进一步认识到错误路线带来的严重后果，促使人们深刻反思。红军主要的领导人，都对李德、博古十分不满，认为再继续左倾机会主义的错误思想领导，党和红军就会彻底毁灭。他们纷纷向周恩来提出意见，想要周恩来担负起纠正错误路线和指挥红军走向胜利的责任。</p>
+
+    <p>作为黄埔军校的首位政治处主任，周恩来自然深谙军事；作为中国共产党的创始人之一，他更明白左倾机会主义与不实事求是的照搬苏联经验对中国革命的危害是巨大的。同时，面对惨烈的牺牲，博古李德两人也日益消沉，博古甚至多次想要自杀。党没有了主心骨，红军也前路未卜，中国革命更是陷入了前所未有的危险境地。面对这种情况，红军的一切军事事务都推给了周恩来负责。在此危难时刻，周恩来担负起了对中央红军的领导责任。他的正确领导成功暂时的带红军队伍脱离险境，为红军的漫漫长征路奠定了胜利的基础。</p>
+
+    <h2 class="subhead">明辨是非的大局观</h2>
+
+    <p>1935年，红军打下了遵义。此时，党内的同志们已经认识到，第五次反“围剿”的失败以及湘江战役的惨重损失，都是来源于博古李德的左倾机会主义错误领导。不符合中国国情的革命道路终将被历史洪流所掩埋。在这种情况下，遵义会议召开了。</p>
+
+    <p>会议开始，博古还试图诡辩，想要以模糊的客观因素来掩盖自己错误领导的事实。但同为中央主要领导的周恩来却主动作了检讨，承认自己的领导不力。实际上，虽然周恩来也是主要领导人，但真正的权力都在博古和李德的手中，周恩来虽然不认可他们的指挥，但也无可奈何。周恩来的主动检讨，体现出了他明辨是非的大局观。同时，他也进一步的批评了博古李德，为大会开了个好头。</p>
+
+    <p>周恩来的发言，与会人员大多都十分赞成。之后，毛泽东也发表了意见，对过往的军事路线进行了深入的分析和批评，阐述了前期的革命战争的客观问题，指明了今后红军发展的方向。周恩来十分认可毛泽东的发言，加上之前对毛泽东的认识，周恩来逐渐认识到只有毛泽东才能挽救红军、挽救党、实现革命的目标。因此，他在会议上全力推举由毛泽东来领导红军今后的军事行动。会后，博古和李德的领导权被取消，毛泽东的正确思想在党内树立起来，仍由朱德、周恩来为军事指挥者，周恩来再次接受党的重要委托，成为最后做决定的人，虽然名义上毛泽东是周恩来的副手，但实际上毛泽东已经奠定了在党内和红军中的中心地位，两人的位置在实际运行中往往要互调，后来，新的三人团成立，周恩来主动成为毛泽东的助手，积极维护其在军事领导上的权威。他不贪恋权力，不在乎名号，心中装着的始终只有党和人民，所做的一切，都是为了中华民族的崛起。这种明辨是非的大局观值得我们每一个人学习。</p>
+
+    <h2 class="subhead">带病过草地</h2>
+
+    <p>在红军西进滇黔川地区后，周恩来突患致命疾病，具体情况为肝脓肿。在当时医疗条件极度匮乏的情况下，医生们只能凭借有限的普通消炎药尽力治疗，用冰块冷敷肝部以暂时缓解那钻心的剧痛。</p>
+
+    <p>草地，一片荒芜、广袤无垠且危机四伏。而周恩来因病重已无法自行行走，只能依靠担架被抬着进入草地。红军队伍中的战友们用双肩和双手，将周恩来安全护送过草地。在这个过程中，周恩来多次挣扎着从担架上要下来，但都被杨立三等人拦住了。这种同志间的互助举动，充分展现了红军将士的革命精神与无私奉献的伟大品质</p>
+
+    <p>周恩来在病中所表现出的革命精神，令人深感敬仰。他忠于革命理想和事业，不畏艰难困苦，不惧生死危险。在长征途中，即使带病也始终承担着军委的重要工作，协助毛泽东制定行军作战的方针和策略，指挥红军突破敌人的重重包围和围追堵截。最终，党组织的殷切关心加上周恩来本人的强大韧性，病情得以控制，长征路也已从前路未卜变成胜利在望。周恩来同志在长征中的贡献，必将永载史册，为后人所敬仰。</p>
 
   </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·10</td>
+        <td class="center">■</td>
+        <td class="page-no">01</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
 
 </body>
 </html>
