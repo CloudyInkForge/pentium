@@ -1,6 +1,0 @@
-=== P16 (pdf#1) ===
-Traceback (most recent call last):
-  File "D:\CloudyInkForge\pentium\_tmp\pdfanalyze2.py", line 45, in <module>
-    px0, px1 = int(cx0 / PX), int(cx1 / PX)
-                   ~~~~^~~~
-TypeError: unsupported operand type(s) for /: 'float' and 'NoneType'
