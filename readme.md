@@ -1,10 +1,10 @@
 # readme.md（人看）
 
 ## 项目目标
-使用 Agent 完成杂志 HTML 排版，通过 PeachPDF 转为 PDF。AI 只负责 HTML 排版设计，以及文章目录、图片标签生成；不接触 PDF。
+使用 Agent 完成杂志 HTML 排版，通过 PeachPDF 转为 PDF。AI 只负责 HTML 排版设计，以及文章目录、图片标签生成；可只读查看 PDF 做校验，但不生成、不修改、不转换 PDF。
 
 ## 目录与文件
-- `PP/peachpdf.exe`：PDF 转换工具。仅人类/CI 使用；AI 禁止调用、读写、解析、生成或修改 PDF。
+- `PP/peachpdf.exe`：PDF 转换工具。仅人类/CI 使用；AI 禁止调用。AI 可以只读方式解析 PDF（读取文本、页数、页面尺寸、元数据），但不得生成、修改、转换或删除 PDF。
 - 每期一个 4 位编号目录，如 `2611/`，存放该期全部内容。
 - `src/`：原始数据，可含原始文章。必须有 `descriptor.txt` 记录处理情况。
 - `articles/`：处理好的文章 txt。`content.txt` 统计每篇名称、字数、所属栏目。
@@ -13,11 +13,27 @@
 - 每期目录下有与文件夹同名的 HTML，为主要交付物。
 
 ## AI 权限
-AI 仅有两种权力，且仅在明确要求时执行：
+AI 有三种权力，且仅在明确要求时执行：
 1. **HTML 排版设计**：创建/修改指定期同名 HTML，合理排布文章和图片，修改模板格式相关文字。
 2. **文章目录、图片标签生成**：生成/维护 `articles/content.txt`、`photos/phototags.txt`。
+3. **PDF 只读校验**：用 Python 3.13 脚本读取既有 PDF（页数、页面尺寸、文本、元数据），核对 HTML 排版结果。只读，不写回、不生成、不转换。
 
-禁止：整理原始数据到文章；为图片构建其他索引；操作 PDF；调用 PeachPDF；写其他文件。未明确要求构建/修改 HTML 时，读完说明即停止。
+禁止：整理原始数据到文章；为图片构建其他索引；创建/修改/转换/删除 PDF；调用 PeachPDF；写其他文件。未明确要求构建/修改 HTML 时，读完说明即停止。
+
+## PDF 只读读取环境
+- 解释器：`C:\Python313\python.exe`（Python 3.13.3）。
+- 已装库：`PyPDF2` 3.0.1（`import PyPDF2` 即可用，无需再装）。
+- 读文本与页数：
+
+```python
+import PyPDF2
+r = PyPDF2.PdfReader(r"old/2611/2611.pdf")
+print(len(r.pages), r.pages[0].mediabox)
+print(r.pages[0].extract_text())
+```
+
+- 输出中文时先 `sys.stdout.reconfigure(encoding="utf-8")`，或在 PowerShell 里 `$env:PYTHONIOENCODING="utf-8"`，否则控制台会显示乱码。
+- 只读用途：可解析、比对文本与页面尺寸；不得写入、修改、重新生成 PDF，也不得调用 `PP/peachpdf.exe`。如需把页面渲染成图片目检，另装 PyMuPDF（当前未安装）。
 
 ## HTML 兼容 PeachPDF 的硬性要求
 HTML 必须能被 PeachPDF 稳定转换且无格式问题。以下为已验证的支持边界，所有 HTML 均须满足。
@@ -65,4 +81,5 @@ HTML 必须能被 PeachPDF 稳定转换且无格式问题。以下为已验证�
 - 装饰性矢量优先用 inline `<svg>` 或本地 SVG 文件。SVG 的渐变、裁剪、遮罩大部分支持，但 `<filter>` 中 PDF 无对应操作符的部分（模糊、光照、形态学等）会被光栅化[reference:18]。杂志装饰不要用模糊滤镜。
 
 ### 8. 转换验证
-每次 HTML 修改后，由人类/CI 用 `PP/peachpdf.exe` 转换。AI 不读写 PDF；若收到转换报错文本，只修复 HTML，不得尝试触碰 PDF 或转换工具。
+每次 HTML 修改后，由人类/CI 用 `PP/peachpdf.exe` 转换。AI 可用 Python 只读解析转换结果（页数、页面尺寸、文本）核对排版，但不得写入、修改、重新生成 PDF，也不得调用转换工具；若收到转换报错文本，只修复 HTML。
+严禁安装PDF相关库，终端任务必须及时，超时立刻停止，不要歇着，不要浪费时间。

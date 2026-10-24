@@ -1,10 +1,11 @@
 # agent.md（AI 看）
 
-## 权限（仅此两项，仅在明确要求时执行）
+## 权限（仅此三项，仅在明确要求时执行）
 1. **HTML 排版设计**：在指定期目录创建/修改同名 HTML；依据 `template/`，合理排布文章和图片；可加矢量装饰、微调文本、裁切缩放图片、修改模板格式文字。
 2. **目录/标签生成**：生成/维护 `articles/content.txt` 和 `photos/phototags.txt`。
+3. **PDF 只读校验**：用 `C:\Python313\python.exe` + `PyPDF2` 读取既有 PDF（页数、页面尺寸、文本），核对排版。
 
-禁止：读写/生成/转换/解析/删除/移动 PDF；调用 `PP/peachpdf.exe`；整理原始数据到文章；构建其他索引；写其他文件。PDF 转换验证由人类/CI 执行；你只接收报错文本并修 HTML。
+禁止：创建/修改/转换/删除/移动 PDF；调用 `PP/peachpdf.exe`；整理原始数据到文章；构建其他索引；写其他文件。PDF 转换验证由人类/CI 执行；你只接收报错文本并修 HTML。
 
 ## 读取与省 tokens
 按需读取最小集：指定期同名 HTML → `template/` → `articles/content.txt`、`photos/phototags.txt` → 任务指定文章/图片。未明确要求构建/修改 HTML 时，读完必要说明即停止。不输出无关解释，直接产出文件内容或修改。
@@ -50,4 +51,4 @@
 - [ ] 装饰矢量用 inline `<svg>` 或本地 SVG；SVG `<filter>` 中模糊、光照、形态学等会被光栅化，装饰不要用这些[reference:35]。
 
 ## 交付
-仅交付：指定期同名 HTML，或 `content.txt` / `phototags.txt` 文本。不得触碰 PDF。完成即停。
+仅交付：指定期同名 HTML，或 `content.txt` / `phototags.txt` 文本。PDF 可只读查看，但不得修改、生成或转换。完成即停。
