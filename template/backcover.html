@@ -1,139 +1,344 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>奔藤杂志社 · 背封</title>
+<meta charset="utf-8">
+<title>奔藤杂志社 · 封底（backcover 模板）</title>
 <style>
-  @page {
-    size: 210mm 285mm;
-    margin: 0;
-  }
+/* ============================================================
+   模板：backcover.html（封底 · 全出血单页 · 纯排版无背景图）
+   ------------------------------------------------------------
+   机制（PeachPDF 安全）：
+   1. @page 210×285mm、margin:0；.page 固定尺寸 + position:relative
+      + overflow:hidden（最终裁切保险；页内各块均核算不溢出）。
+   2. 整版深墨绿实色（封面墨色反转，与封面互为书封），全部文字
+      米白实色叠印——纯 CMYK 实色，无透明度、无渐变、无 filter。
+   3. 结构全部为绝对定位块（显式 top/left，无 auto 静态位）+
+      居中流内簇 + flex 行 + 2×2 表格（table-layout:fixed、显式宽）。
+      无 grid、无 JS、无伪元素、无装饰压字。
+   4. 颜色全部「hex 预览回退 + device-cmyk 印刷实色」字面量双声明
+      （同 page+.html ~ page++++.html 约定；颜色不得经 CSS 变量
+      间接引用——var() 替换出的无效颜色会让属性坍缩为初始值）。
+   5. 字距补偿：居中且加 letter-spacing 的文本统一补
+      padding-left = 字距，抵消末字符后置间距，保证光学居中。
+   内容：常青藤中学奔藤杂志社 创刊招新信息 + 2611 期栏目与期号。
+   核算：社名区 36–52mm；招新簇 104–200mm（desc 两行、表格两行
+   各约 18mm 实测）；底部簇 228–256mm；内框内缩 9mm，无接触。
+   ============================================================ */
 
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    width: 210mm;
-    height: 285mm;
-    background-color: device-cmyk(0 0 0 0);
-  }
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
 
+:root {
+  --serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+           "SimSun", "STSong", serif;
+  --latin: "Times New Roman", Times, serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 210mm;
+  height: 285mm;
+  background-color: #2E3A2E;
+  background-color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+body {
+  font-family: var(--serif);
+  color: #F7F6F2;
+  color: device-cmyk(0 0.01 0.02 0.03);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+  background-color: #2E3A2E;
+  background-color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+@media screen {
+  body { padding: 10mm 0; }
   .page {
-    position: relative;
-    width: 210mm;
-    height: 285mm;
-    overflow: hidden;
-    background-color: device-cmyk(0 0 0 0);
-    background-image: url("bc.png");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+    margin: 0 auto;
+    box-shadow: 3mm 3mm 0 #77836F;      /* 无模糊硬投影，仅屏幕预览 */
+    box-shadow: 3mm 3mm 0 device-cmyk(0.22 0.05 0.24 0.42);
   }
+}
 
-  /* ============ 底部白色蒙版：背封信息区 ============ */
-  .bottom-mask {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-sizing: border-box;
-    padding: 12mm 16mm 11mm;
-    background-color: #ffffff;
-    background-color: device-cmyk(0 0 0 0);
-    color: #1a1a1a;
-    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB",
-                 "Microsoft YaHei", "Source Han Sans SC", sans-serif;
-  }
+/* ---------- 1. 版面细框（内缩 9mm，不与任何文字相接） ---------- */
+.frame {
+  position: absolute;
+  top: 9mm;
+  left: 9mm;
+  right: 9mm;
+  bottom: 9mm;
+  border: 0.6pt solid #77836F;
+  border-color: device-cmyk(0.22 0.05 0.24 0.42);
+}
 
-  .mask-kicker {
-    margin: 0 0 3.5mm;
-    font-size: 3mm;
-    line-height: 1;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: #8a8a8a;
-  }
+/* ---------- 2. 社名（顶部居中） ---------- */
+.brand {
+  position: absolute;
+  top: 36mm;
+  left: 30mm;
+  right: 30mm;
+  text-align: center;
+}
 
-  .mask-title {
-    margin: 0 0 4mm;
-    font-size: 8.2mm;
-    line-height: 1.2;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-  }
+.brand .name {
+  font-size: 21pt;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.9em;
+  padding-left: 0.9em;
+  color: #F7F6F2;
+  color: device-cmyk(0 0.01 0.02 0.03);
+}
 
-  .mask-desc {
-    margin: 0 0 6.5mm;
-    font-size: 3.4mm;
-    line-height: 1.75;
-    color: #4d4d4d;
-    max-width: 165mm;
-  }
+.brand .en {
+  margin-top: 4mm;
+  font-family: var(--latin);
+  font-size: 7pt;
+  letter-spacing: 0.75em;
+  padding-left: 0.75em;
+  color: #C3CBBB;
+  color: device-cmyk(0.18 0.08 0.19 0.16);
+}
 
-  .mask-desc strong {
-    color: #1a1a1a;
-    font-weight: 600;
-  }
+/* ---------- 3. 主体簇（招新信息） ---------- */
+.mid {
+  position: absolute;
+  top: 104mm;
+  left: 30mm;
+  width: 150mm;
+}
 
-  .mask-divider {
-    width: 100%;
-    height: 0;
-    margin: 0 0 5.5mm;
-    border: 0;
-    border-top: 0.25mm solid #e0e0e0;
-  }
+.kick {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6mm;
+}
 
-  .mask-meta {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4mm 12mm;
-    font-size: 3.2mm;
-    line-height: 1.5;
-    color: #1a1a1a;
-  }
+.kick .krule {
+  width: 14mm;
+  height: 0;
+  border-top: 0.5pt solid #77836F;
+  border-top-color: device-cmyk(0.22 0.05 0.24 0.42);
+}
 
-  .mask-meta li {
-    display: flex;
-    align-items: baseline;
-    gap: 2.5mm;
-  }
+.kick .ktext {
+  font-size: 8pt;
+  letter-spacing: 0.4em;
+  padding-left: 0.4em;
+  color: #C3CBBB;
+  color: device-cmyk(0.18 0.08 0.19 0.16);
+}
 
-  .mask-meta .label {
-    font-size: 2.7mm;
-    letter-spacing: 0.1em;
-    color: #9a9a9a;
-    white-space: nowrap;
-  }
+.mid h1 {
+  margin-top: 6.5mm;
+  font-size: 25pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding-left: 0.14em;
+  text-align: center;
+  color: #F7F6F2;
+  color: device-cmyk(0 0.01 0.02 0.03);
+}
+
+.crule {
+  width: 14mm;
+  height: 0;
+  margin: 7mm auto 0;
+  border-top: 1.2pt solid #B02A44;
+  border-top-color: device-cmyk(0 0.75 0.58 0.06);
+}
+
+.desc {
+  width: 128mm;
+  margin: 6.5mm auto 0;
+  font-size: 9.5pt;
+  line-height: 1.95;
+  text-align: center;
+  color: #E7E9DD;
+  color: device-cmyk(0.06 0.04 0.09 0.07);
+}
+
+/* ---------- 4. 信息格（2×2，内部十字细线） ---------- */
+.meta {
+  width: 138mm;
+  margin: 10mm auto 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.meta td {
+  padding: 4mm 3mm 4.4mm;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.meta td.mr {
+  border-left: 0.5pt solid #77836F;
+  border-left-color: device-cmyk(0.22 0.05 0.24 0.42);
+}
+
+.meta tr.mrow td {
+  border-top: 0.5pt solid #77836F;
+  border-top-color: device-cmyk(0.22 0.05 0.24 0.42);
+}
+
+.meta .lbl {
+  font-size: 7pt;
+  letter-spacing: 0.35em;
+  padding-left: 0.35em;
+  color: #C3CBBB;
+  color: device-cmyk(0.18 0.08 0.19 0.16);
+}
+
+.meta .val {
+  margin-top: 1.8mm;
+  font-size: 10.5pt;
+  letter-spacing: 0.06em;
+  color: #F7F6F2;
+  color: device-cmyk(0 0.01 0.02 0.03);
+}
+
+.lat { font-family: var(--latin); letter-spacing: 0.04em; }
+
+/* ---------- 5. 底部（本期栏目 + 版权行） ---------- */
+.foot {
+  position: absolute;
+  top: 228mm;
+  left: 30mm;
+  right: 30mm;
+}
+
+.cols-label {
+  text-align: center;
+  font-size: 6.5pt;
+  letter-spacing: 0.6em;
+  padding-left: 0.6em;
+  color: #C3CBBB;
+  color: device-cmyk(0.18 0.08 0.19 0.16);
+}
+
+.cols {
+  margin-top: 2.8mm;
+  text-align: center;
+  font-size: 8.5pt;
+  letter-spacing: 0.22em;
+  padding-left: 0.22em;
+  color: #F7F6F2;
+  color: device-cmyk(0 0.01 0.02 0.03);
+}
+
+.frule {
+  margin-top: 9mm;
+  height: 0;
+  border-top: 0.5pt solid #77836F;
+  border-top-color: device-cmyk(0.22 0.05 0.24 0.42);
+}
+
+.colophon {
+  margin-top: 3.5mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--latin);
+  font-size: 7pt;
+  color: #C3CBBB;
+  color: device-cmyk(0.18 0.08 0.19 0.16);
+}
+
+.colophon .since { letter-spacing: 0.3em; }
+.colophon .issue { letter-spacing: 0.12em; }
+
+.colophon .sq {
+  font-family: var(--serif);
+  font-size: 6pt;
+  color: #B02A44;
+  color: device-cmyk(0 0.75 0.58 0.06);
+}
 </style>
 </head>
 <body>
-  <div class="page">
 
-    <!-- 底部白色蒙版：常青藤中学奔藤杂志社背封信息 -->
-    <section class="bottom-mask">
-      <p class="mask-kicker">常青藤中学 · 奔藤杂志社</p>
+<div class="page">
 
-      <h1 class="mask-title">创刊招新 · 欢迎投稿</h1>
+  <!-- 1. 细框 -->
+  <div class="frame"></div>
 
-      <p class="mask-desc">
-        常青藤中学奔藤杂志社刚刚创办，现面向全校招新，开放
-        <strong>编辑、审稿、校对</strong> 岗位；同时长期欢迎投稿，
-        稿件一经采用即付稿费。欢迎热爱文字的你加入我们，或把作品投给我们。
-      </p>
+  <!-- 2. 社名 -->
+  <div class="brand">
+    <p class="name">奔藤</p>
+    <p class="en">MAGAZINE</p>
+  </div>
 
-      <hr class="mask-divider">
+  <!-- 3. 招新信息 -->
+  <div class="mid">
 
-      <ul class="mask-meta">
-        <li><span class="label">招新岗位</span><span>编辑 / 审稿 / 校对</span></li>
-        <li><span class="label">投稿说明</span><span>欢迎投稿 · 录用有稿费</span></li>
-        <li><span class="label">咨询电话</span><span>13593293890</span></li>
-        <li><span class="label">联系地点</span><span>128教室</span></li>
-      </ul>
-    </section>
+    <div class="kick">
+      <span class="krule"></span>
+      <span class="ktext">常青藤中学 · 奔藤杂志社</span>
+      <span class="krule"></span>
+    </div>
+
+    <h1>创刊招新 · 欢迎投稿</h1>
+
+    <div class="crule"></div>
+
+    <p class="desc">常青藤中学奔藤杂志社刚刚创办，现面向全校招新，开放编辑、审稿、校对岗位；同时长期欢迎投稿，稿件一经采用即付稿费。欢迎热爱文字的你加入我们，或把作品投给我们。</p>
+
+    <table class="meta">
+      <tr>
+        <td>
+          <p class="lbl">招新岗位</p>
+          <p class="val">编辑 / 审稿 / 校对</p>
+        </td>
+        <td class="mr">
+          <p class="lbl">投稿说明</p>
+          <p class="val">欢迎投稿 · 录用有稿费</p>
+        </td>
+      </tr>
+      <tr class="mrow">
+        <td>
+          <p class="lbl">咨询电话</p>
+          <p class="val"><span class="lat">13593293890</span></p>
+        </td>
+        <td class="mr">
+          <p class="lbl">联系地点</p>
+          <p class="val">128教室</p>
+        </td>
+      </tr>
+    </table>
 
   </div>
+
+  <!-- 4. 底部 -->
+  <div class="foot">
+    <p class="cols-label">本期栏目</p>
+    <p class="cols">时政摘编 · 封面故事 · 文史杂谈 · 正当年华 · 社会热点 · 艺体观察 · 校园天地</p>
+    <div class="frule"></div>
+    <div class="colophon">
+      <span class="since">SINCE 2024</span>
+      <span class="sq">■</span>
+      <span class="issue">2026 · 11 · Vol. 3</span>
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
