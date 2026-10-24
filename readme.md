@@ -35,24 +35,28 @@ AI 仅有以下三项权力，且仅在明确要求时执行：
 
 1. **模板优先**：文章页必须沿用模板三栏固定正文区；不得改成双栏或自动平衡多栏。
 2. **逐行核算**：每页占用行数 = 正文 + 洞 + 空行 + 图注预留；必须 ≤ 容量 − 6 行。不足余地必须移段、移图或分页。
-3. **页脚留白**：正文、图片、图注、附记、版权不得进入页脚区域。
-4. **图片必须挖洞**：每张栏内图必须同时有 `.hole` 和 `.photo-abs`，`--ph-w/--ph-h` 一致，`top` 用 mm；`body.debug` 红蓝框校准后删 debug。
-5. **图片样式完整**：`.ph` 必须有 `width:100%`、`height`、`background-size:cover`、`background-position:center`、`background-repeat:no-repeat`、`position:relative`。
-6. **目录绝对定位**：`.toc-col/.toc2-col` 必须 `position:relative`；版权/索引/引文不得与 `.folio` 重叠。
-7. **PeachPDF 兼容**：颜色全 `device-cmyk`；无透明度调浅、无 filter、无 grid 主布局、无 JS、无外链资源；图片只本地路径。
-8. **PDF 只读核对**：转换后只读检查页数、页面尺寸、页脚文本、末页附记文本；发现版式问题只改 HTML。
+3. **分栏切分必须钉死**：`.body` 必须带 `column-fill:auto`，每个分栏起点元素带 `.cbrk`（break-before:column）。浏览器与 PeachPDF 的多栏平衡算法不同，不钉死切分点，洞的位置就会在 PDF 里漂移。
+4. **页脚留白**：正文、图片、图注、附记、版权不得进入页脚区域。
+5. **图片必须挖洞**：每张栏内图必须同时有 `.hole` 和 `.photo-abs`，`--ph-w/--ph-h` 一致，`top` 用 mm；`top` 必须是最终分栏下洞的 DOM 实测值，禁止按行数估算直写；`body.debug` 红蓝框校准后删 debug。
+6. **图片样式完整**：`.ph` 必须有 `width:100%`、`height`、`background-size:cover`、`background-position:center`、`background-repeat:no-repeat`、`position:relative`。
+7. **目录绝对定位**：`.toc-col/.toc2-col` 必须 `position:relative`；版权/索引/引文不得与 `.folio` 重叠。
+8. **PeachPDF 兼容**：颜色全 `device-cmyk`；无透明度调浅、无 filter、无 grid 主布局、无 JS、无外链资源；图片只本地路径。
+9. **PDF 只读核对**：转换后只读检查页数、页面尺寸、页脚文本、末页附记文本；发现版式问题只改 HTML。
 
 ## 验证流程
 
 1. AI 交付 HTML，不碰 PDF。
 2. 人类/CI 用 PeachPDF 转换。
 3. AI 用只读脚本核对 PDF 文本与页面尺寸；必要时人工目检渲染结果。
-4. 若转换报错或版式异常，AI 只修 HTML，不修 PDF。
-5. 终端任务必须及时；超时立刻停止，不安装 PDF 库。
+4. 转换后必须逐页目检三件事：图与洞是否对齐、图注/正文有无互相叠压、页底留白是否均匀（有图页图不悬空、文字页不出现大面积空白）。
+5. 若转换报错或版式异常，AI 只修 HTML，不修 PDF。
+6. 终端任务必须及时；超时立刻停止，不安装 PDF 库。
 
 ## 常见失败（必须避免）
 
 - 把模板三栏改成双栏自动流，导致行数容量估算失效。
+- **漏掉分栏切分标记（`column-fill:auto` + `.cbrk`）**：浏览器里校准好的图位，到 PeachPDF 里因多栏平衡算法不同而漂移数行，出现图压正文、图注与正文打架、图片悬空。
+- **图 `top` 按行数估算直写**：必须是最终分栏下洞的 DOM 实测值；任何改切分、增删段、改图尺寸后都必须重测回填。
 - 流内大竖图触发 PeachPDF 多栏跳栏，第一栏剩余空间浪费。
 - 绝对定位图/附记不挖洞，直接覆盖正文。
 - `.body` 无固定高度、`.page` 固定高 `overflow:hidden`，正文被裁切。
