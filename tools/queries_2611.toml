@@ -1,0 +1,456 @@
+# queries_2611.toml — 2611 期（2026 年 11 月，奔藤）插图检索清单
+#
+# 每篇条目：
+#   no     文章序号（同 articles/contents.txt）
+#   title  文章题目（phototags.txt 的“所属文章”，需与 contents.txt 一致）
+#   file   照片文件名基名（首图 <file>.jpg，次图 <file>02.jpg…）
+#   count  计划图数（提示值，非强制）
+#   note   选图方向说明
+#   queries 检索词列表，按优先级排序；source 取 fetch_images.py SOURCES 键
+#
+# 本期背景：封面故事为“纪念长征胜利九十周年”；本机网络无法直连
+# Wikimedia Commons / LOC / AIC / Openverse，检索时会自动跳过，
+# 故中国近现代历史照片类需求改用博物馆山水画、书法、器物等意象替代。
+
+[[item]]
+no = "01"
+title = "时政汇编"
+file = "时政汇编"
+count = 1
+note = "时政摘编栏目导图：生态优先、绿色发展的国土意象（内蒙古湿地/湖泊卫星影像）"
+[[item.queries]]
+source = "nasa"
+q = "Inner Mongolia lake"
+[[item.queries]]
+source = "nasa"
+q = "Landsat China"
+
+[[item]]
+no = "02"
+title = "把信念走成路——写在长征胜利九十周年"
+file = "把信念走成路"
+count = 2
+note = "长征路：崇山峻岭、关隘行旅的山水画；封面故事主文，优先大图"
+[[item.queries]]
+source = "met"
+q = "wang hui landscape"
+[[item.queries]]
+source = "cma"
+q = "mountains river landscape chinese painting"
+[[item.queries]]
+source = "met"
+q = "mountain travel chinese painting"
+
+[[item]]
+no = "03"
+title = "一线阳光穿云出——周恩来的长征路"
+file = "一线阳光穿云出"
+count = 1
+note = "题目意象：一线阳光穿云而出（日光穿云影像）"
+[[item.queries]]
+source = "nasa"
+q = "sun rays through clouds"
+[[item.queries]]
+source = "nasa"
+q = "sunlight clouds earth"
+
+[[item]]
+no = "04"
+title = "铁血征途映初心 大德无言照长征——朱德长征故事"
+file = "铁血征途映初心"
+count = 1
+note = "赤水/土城战场：江峡山水画意象"
+[[item.queries]]
+source = "cma"
+q = "river gorge landscape chinese"
+[[item.queries]]
+source = "met"
+q = "creek mountains chinese painting"
+
+[[item]]
+no = "05"
+title = "真理在谁手里——毛泽东长征小传"
+file = "真理在谁手里"
+count = 1
+note = "“志薄昆仑寒五岳”：雪山寒山画意象"
+[[item.queries]]
+source = "met"
+q = "snow landscape chinese painting"
+[[item.queries]]
+source = "cma"
+q = "winter snow chinese painting"
+
+[[item]]
+no = "06"
+title = "走好我们的新时代长征路（节选）"
+file = "走好我们的新时代长征路"
+count = 1
+note = "天河超算/国防科研：超级计算机机房影像"
+[[item.queries]]
+source = "nasa"
+q = "supercomputer"
+[[item.queries]]
+source = "nasa"
+q = "computer servers room"
+
+[[item]]
+no = "07"
+title = "四渡赤水"
+file = "四渡赤水"
+count = 1
+note = "赤水河：江流舟行山水画意象"
+[[item.queries]]
+source = "cma"
+q = "river boats chinese painting"
+[[item.queries]]
+source = "met"
+q = "river landscape china boat"
+
+[[item]]
+no = "08"
+title = "长征诗词选"
+file = "长征诗词选"
+count = 1
+note = "诗词：中国书法卷轴意象"
+[[item.queries]]
+source = "met"
+q = "chinese calligraphy"
+[[item.queries]]
+source = "cma"
+q = "calligraphy chinese"
+
+[[item]]
+no = "09"
+title = "当浪潮已逝——战国时期的法家"
+file = "当浪潮已逝"
+count = 2
+note = "战国礼崩乐坏：青铜礼器意象"
+[[item.queries]]
+source = "met"
+q = "bronze ritual vessel china"
+[[item.queries]]
+source = "cma"
+q = "bronze ding vessel"
+
+[[item]]
+no = "10"
+title = "杜甫：一个不明不白的情圣"
+file = "杜甫"
+count = 1
+note = "诗圣杜甫：文人诗人画像/诗意画意象"
+[[item.queries]]
+source = "cma"
+q = "du fu"
+[[item.queries]]
+source = "met"
+q = "poet pine tree chinese painting"
+
+[[item]]
+no = "11"
+title = "山西人的足迹"
+file = "山西人的足迹"
+count = 1
+note = "晋商票号：中国古代钱币意象"
+[[item.queries]]
+source = "met"
+q = "chinese coin"
+[[item.queries]]
+source = "cma"
+q = "coin currency china"
+
+[[item]]
+no = "12"
+title = "流浪者的悲鸣"
+file = "流浪者的悲鸣"
+count = 1
+note = "关外风雪、流放之途：雪景寒林画意象"
+[[item.queries]]
+source = "cma"
+q = "snow mountains chinese painting"
+[[item.queries]]
+source = "met"
+q = "winter village chinese painting"
+
+[[item]]
+no = "13"
+title = "正当年华"
+file = "正当年华"
+count = 1
+note = "蔡元培与北大书生：文房书斋意象"
+[[item.queries]]
+source = "met"
+q = "inkstone"
+[[item.queries]]
+source = "cma"
+q = "scholar studio objects chinese"
+
+[[item]]
+no = "14"
+title = "长江动物园"
+file = "长江动物园"
+count = 1
+note = "中央大学牲畜西迁：牧牛图（水牛）意象"
+[[item.queries]]
+source = "met"
+q = "water buffalo chinese painting"
+[[item.queries]]
+source = "cma"
+q = "buffalo chinese"
+
+[[item]]
+no = "15"
+title = "逃亡可可西里"
+file = "逃亡可可西里"
+count = 1
+note = "可可西里无人区：藏地艺术/青藏高原意象"
+[[item.queries]]
+source = "mia"
+q = "tibetan buddhist painting"
+[[item.queries]]
+source = "nasa"
+q = "Tibetan Plateau"
+
+[[item]]
+no = "16"
+title = "上山，下山"
+file = "上山、下山"
+count = 1
+note = "黄山轿夫：黄山图（梅清/弘仁等）意象"
+[[item.queries]]
+source = "met"
+q = "huangshan"
+[[item.queries]]
+source = "cma"
+q = "huangshan mountains"
+
+[[item]]
+no = "17"
+title = "傻子"
+file = "傻子"
+count = 1
+note = "被漠视的乡间之人：流民图/人物画意象（周臣《流民图》，长卷横幅，放宽min_side）"
+[[item.queries]]
+source = "cma"
+q = "zhou chen beggars"
+min_side = 200
+[[item.queries]]
+source = "cma"
+q = "beggars chinese painting"
+min_side = 200
+
+[[item]]
+no = "18"
+title = "在韩国，政府和财阀谁是老大？"
+file = "在韩国、政府和财阀谁是老大"
+count = 1
+note = "韩国：月缸/青瓷等韩国艺术意象"
+[[item.queries]]
+source = "mia"
+q = "moon jar korean"
+[[item.queries]]
+source = "met"
+q = "korean celadon"
+
+[[item]]
+no = "19"
+title = "逐梦名古屋，同心向亚洲——第20届爱知·名古屋亚运会全景综述"
+file = "逐梦名古屋、同心向亚洲"
+count = 1
+note = "名古屋：东海道/名古屋城浮世绘意象"
+[[item.queries]]
+source = "met"
+q = "hiroshige tokaido"
+[[item.queries]]
+source = "met"
+q = "nagoya castle"
+[[item.queries]]
+source = "vam"
+q = "japanese woodblock print fuji"
+
+[[item]]
+no = "20"
+title = "文玩乱象：消费者正一步步掉入“文化”陷阱"
+file = "文玩乱象"
+count = 1
+note = "盘串/玉件：古代玉佩串饰意象"
+[[item.queries]]
+source = "met"
+q = "jade pendant china"
+[[item.queries]]
+source = "cma"
+q = "jade pendant chinese"
+
+[[item]]
+no = "21"
+title = "杨树荣：大明湖畔最有腔调的大爷"
+file = "杨树荣-大明湖畔最有腔调的大爷"
+count = 1
+note = "大明湖畔：荷花画意象"
+[[item.queries]]
+source = "met"
+q = "lotus chinese painting"
+[[item.queries]]
+source = "cma"
+q = "lotus pond chinese"
+
+[[item]]
+no = "22"
+title = "刘晓庆：一朵不败的小花"
+file = "刘晓庆-一朵不败的小花"
+count = 1
+note = "《小花》与黄山百步云梯：山茶花/花卉画意象"
+[[item.queries]]
+source = "cma"
+q = "camellia chinese painting"
+[[item.queries]]
+source = "met"
+q = "flowers birds chinese painting"
+
+[[item]]
+no = "23"
+title = "怀念游本昌：永远的济公"
+file = "怀念游本昌-永远的济公"
+count = 1
+note = "济公/西湖：禅僧画（布袋和尚等）意象"
+[[item.queries]]
+source = "met"
+q = "budai monk"
+[[item.queries]]
+source = "cma"
+q = "chan monk painting"
+
+[[item]]
+no = "24"
+title = "送别刘欢：心若在，梦就在"
+file = "送别刘欢-心若在、梦就在"
+count = 1
+note = "歌者与音乐：古琴意象"
+[[item.queries]]
+source = "met"
+q = "qin zither chinese"
+[[item.queries]]
+source = "cma"
+q = "guqin zither"
+
+[[item]]
+no = "25"
+title = "奥德赛：诺兰该如何驶过自己的地中海？"
+file = "奥德赛-诺兰该如何驶过自己的地中海"
+count = 2
+note = "奥德修斯：希腊陶瓶画 + 地中海帆船绘画"
+[[item.queries]]
+source = "met"
+q = "odysseus"
+[[item.queries]]
+source = "cma"
+q = "ulysses"
+[[item.queries]]
+source = "smk"
+q = "ship sea"
+
+[[item]]
+no = "26"
+title = "Light from Midday Tales"
+file = "Light from Midday Tales"
+count = 1
+note = "午后童书与光线：哈默肖伊式静室光线绘画"
+[[item.queries]]
+source = "smk"
+q = "hammershoi"
+[[item.queries]]
+source = "smk"
+q = "sunlight interior painting"
+
+[[item]]
+no = "27"
+title = "雾里·物理·悟理——高中物理学法指导"
+file = "雾里、物理、悟理"
+count = 1
+note = "“星河流转”：星云/星系影像"
+[[item.queries]]
+source = "nasa"
+q = "nebula"
+[[item.queries]]
+source = "nasa"
+q = "galaxy hubble"
+
+[[item]]
+no = "28"
+title = "图难于其易，为大于其细——高中地理学法指导"
+file = "图难于其易、为大于其细"
+count = 1
+note = "地理：地球全景影像"
+[[item.queries]]
+source = "nasa"
+q = "earth from space"
+[[item.queries]]
+source = "nasa"
+q = "blue marble"
+
+[[item]]
+no = "29"
+title = "浅析2026年历史山东卷"
+file = "浅析2026年历史山东卷"
+count = 1
+note = "史料实证：甲骨/金石意象"
+[[item.queries]]
+source = "met"
+q = "oracle bone"
+[[item.queries]]
+source = "cma"
+q = "bronze inscription chinese"
+
+[[item]]
+no = "30"
+title = "跑向更好的自己——高125班“牛牛健跑团”侧记"
+file = "跑向更好的自己"
+count = 1
+note = "奔跑：古希腊竞技陶瓶意象"
+[[item.queries]]
+source = "met"
+q = "athlete vase greek"
+[[item.queries]]
+source = "cma"
+q = "athlete greek vase"
+
+[[item]]
+no = "31"
+title = "军训感悟精选"
+file = "军训感悟精选"
+count = 1
+note = "戎装与操练：中国甲胄意象"
+[[item.queries]]
+source = "met"
+q = "chinese armor"
+[[item.queries]]
+source = "cma"
+q = "armour chinese"
+
+[[item]]
+no = "32"
+title = "科技节生物活动——以方寸标本，定格生命之美"
+file = "科技节生物活动"
+count = 1
+note = "植物标本：工笔花卉/花鸟意象"
+[[item.queries]]
+source = "cma"
+q = "flowers leaves chinese painting"
+[[item.queries]]
+source = "met"
+q = "peony chinese painting"
+
+[[item]]
+no = "33"
+title = "在劳动中收获，在收获中成长——记九月份秋收活动"
+file = "在劳动中收获、在收获中成长"
+count = 1
+note = "秋收：农事/收获绘画意象"
+[[item.queries]]
+source = "met"
+q = "harvest"
+[[item.queries]]
+source = "cma"
+q = "harvest painting"
+[[item.queries]]
+source = "smk"
+q = "harvest landscape"
