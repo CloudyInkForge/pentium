@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>奔藤模板 T3 · 内双页：左图右文</title>
+<style>
+  /* ============================================================
+     T3 · 内双页（左图右文）—— 重点文章开篇
+     适用：有精美大图的文章。左页整版出血图，右页文字开篇。
+     ------------------------------------------------------------
+     使用要点：
+     1. 本模板 = 两个相邻页。只能落在（偶数 | 奇数）相邻对上，
+        如 14 | 15：偶数页为左页（图），奇数页为右页（文）。
+        装配时先确定文章起始页码，再决定能否用本模板。
+     2. 图页：替换 .bleed-img 的图片与角部图注；页码反白。
+     3. 文页：同 T2 开篇结构，但标题区更大、版面更疏朗；
+        文章接续转 T6。
+     4. 文页文本预算：约 1500 字（含编者按约 1200 字正文）。
+     ============================================================ */
+
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-400-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-500-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-500-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-700-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    box-sizing: border-box;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: device-cmyk(0 0 0 0);
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* ---------------- 左页：整版出血图 ---------------- */
+  .bleed-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 285mm;
+    background-image: url("sample-a.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* 图上小字（图页恒为偶数页，外侧 = 左边）：
+     左下压深色条承反白图注，右下（内角）一枚反白页码 */
+  .img-strap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 96mm;
+    height: 12mm;
+    background: device-cmyk(0.30 0.20 0.30 0.82);
+  }
+  .img-cap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 96mm;
+    height: 12mm;
+    box-sizing: border-box;
+    padding: 0 5mm;
+    line-height: 12mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    color: device-cmyk(0 0 0 0);
+    white-space: nowrap;
+  }
+  .img-folio {
+    position: absolute;
+    bottom: 12mm;
+    right: 14mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    color: device-cmyk(0 0 0 0);
+  }
+
+  /* ---------------- 右页：文字开篇 ---------------- */
+  .frame {
+    position: absolute;
+    top: 20mm;
+    left: 16mm;
+    width: 182mm;
+    height: 245mm;
+  }
+  .page--even .frame { left: 12mm; }
+
+  .issue-mark {
+    position: absolute;
+    top: 20mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--odd  .issue-mark { right: 12mm; }
+  .page--even .issue-mark { left: 12mm; }
+
+  .folio {
+    position: absolute;
+    bottom: 12mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--odd  .folio { right: 12mm; }
+  .page--even .folio { left: 12mm; }
+
+  .sec-tag {
+    display: inline-block;
+    padding: 1.6mm 3.2mm 1.8mm 3.2mm;
+    background: device-cmyk(0.05 0.88 0.82 0.05); /* 封面故事 · 朱红 */
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: device-cmyk(0 0 0 0);
+  }
+
+  h1.title {
+    margin: 8mm 0 0 0;
+    font-size: 30pt;
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: 0.02em;
+    color: device-cmyk(0 0 0 1);
+  }
+
+  .subtitle {
+    margin-top: 4mm;
+    font-size: 13pt;
+    font-weight: 400;
+    line-height: 1.5;
+    color: device-cmyk(0 0 0 0.62);
+  }
+
+  .byline {
+    margin-top: 6mm;
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+
+  .head-rule {
+    margin-top: 5mm;
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 0.18);
+  }
+
+  /* 编者按（可选） */
+  .editors-note {
+    margin-top: 6mm;
+    padding: 4mm 5mm 4.2mm 5mm;
+    background: device-cmyk(0.01 0.11 0.10 0.01);
+    border-left: 1mm solid device-cmyk(0.05 0.88 0.82 0.05);
+  }
+  .editors-note .label {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: device-cmyk(0.10 0.62 0.58 0.10);
+  }
+  .editors-note p {
+    margin: 1.8mm 0 0 0;
+    font-size: 8.5pt;
+    line-height: 1.72;
+    text-align: justify;
+    color: device-cmyk(0 0 0 0.85);
+  }
+
+  .cols {
+    margin-top: 7mm;
+    column-count: 2;
+    column-gap: 6mm;
+    column-fill: auto;
+    height: 128mm;
+    font-size: 9.5pt;
+    line-height: 1.64;
+    text-align: justify;
+    color: device-cmyk(0 0 0 1);
+  }
+  .cols p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* ------------------------------------------------------------
+     栏目暖强调色色表（device-cmyk）：
+       封面故事  朱红   device-cmyk(0.05 0.88 0.82 0.05)
+       时政摘编  赭红   device-cmyk(0.20 0.85 0.88 0.12)
+       文史杂谈  砖棕   device-cmyk(0.25 0.72 0.88 0.22)
+       正当年华  橘     device-cmyk(0    0.62 0.85 0)
+       社会热点  金棕   device-cmyk(0.18 0.52 0.88 0.10)
+       艺体观察  绛红   device-cmyk(0.12 0.92 0.72 0.15)
+       校园天地  珊瑚棕 device-cmyk(0.08 0.58 0.68 0.12)
+     ------------------------------------------------------------ */
+</style>
+</head>
+<body>
+
+  <!--
+    T3 示例：内双页 14 | 15，封面故事《把信念走成路》。
+    左页（偶数）= 出血大图；右页（奇数）= 文字开篇。
+    装配时两页页码必须连续且偶在前。
+  -->
+
+  <!-- 左页 · 偶数 · 出血图 -->
+  <div class="page page--even">
+    <div class="bleed-img"></div>
+    <div class="img-strap"></div>
+    <div class="img-cap">于都河畔，中央红军长征出发纪念碑</div>
+    <div class="img-folio">14</div>
+  </div>
+
+  <!-- 右页 · 奇数 · 文字开篇 -->
+  <div class="page page--odd">
+
+    <div class="issue-mark">2611 · 11</div>
+    <div class="folio">15</div>
+
+    <div class="frame">
+
+      <div class="sec-tag">封面故事</div>
+
+      <h1 class="title">把信念走成路</h1>
+      <div class="subtitle">——写在长征胜利九十周年</div>
+
+      <div class="byline">文 / 沈疏桐　·　编辑 / 林川</div>
+      <div class="head-rule"></div>
+
+      <!-- 编者按（可选，可整块删除） -->
+      <div class="editors-note">
+        <div class="label">编者按</div>
+        <p>九十年过去，长征早已不只是历史名词。它是一次远征，也是
+        一种方法：认定方向，然后一步一步走下去。这是本期封面故事
+        想要回到的起点。</p>
+      </div>
+
+      <div class="cols">
+        <p>1934 年 10 月 17 日傍晚，于都河上的浮桥开始放行。八万六千
+        多人，用四条小船搭起的通道，从苏区的最后一道界河上走了过去。
+        他们中的大多数人并不知道目的地在哪里，只知道要走的路会很长。</p>
+        <p>九十年来，关于长征的叙述有过很多版本：军事的、政治的、
+        个人的。但所有版本都绕不开同一个事实——这支队伍在三百六十
+        多天里，翻过十八条山脉，渡过二十四条河流，穿越十一个省份，
+        平均每天都处于行军或作战状态。</p>
+        <p>数字是抽象的，脚步是具体的。本辑封面故事从五个切面重回
+        这段路：出发前的抉择、将帅的担当、普通士兵的行囊、路上的
+        诗歌，以及这场远征在今天的回声。我们想回答的问题只有一个：
+        是什么让一支疲惫的队伍没有散掉。</p>
+        <p>答案或许很简单。信念不是一个形容词，而是一个动词——
+        把信念走成路，路才成立。这也是我们把这句话放在本期封面上
+        的原因。</p>
+        <p>在接下来的七篇文章里，你会遇到不同的走路人：在下山部队
+        里坚持收容伤员的师长，在湘江边把最后一发子弹留给自己的
+        团长，把缝衣针弯成鱼钩的老班长，还有千千万万没有留下
+        姓名的士兵。他们的选择各不相同，底色却是一致的。</p>
+        <p>历史学者常说，长征是一场理想主义的远征。但走近了看，
+        它更像一次漫长的日常：每天做饭、行军、打草鞋，在地图上
+        标出昨天和明天。伟大的事情，大都是这样一件一件做成的。</p>
+        <p>本期写作过程中，编辑部几次讨论"今天还需要不
+        需要读长征"。最后的共识是：恰恰在这样的年份，更值得
+        把这段路重新走一遍——不是为了纪念而纪念，而是为了
+        看清我们来时的方向。这也是本辑七篇文章共同的出发点。</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

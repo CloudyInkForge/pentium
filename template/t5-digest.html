@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>奔藤模板 T5 · 多篇短文本（集锦页）</title>
+<style>
+  /* ============================================================
+     T5 · 多篇短文本 —— 一版 2–4 篇短文
+     适用：时政汇编、军训感悟精选、同栏目多篇小文拼版。
+     结构：顶部栏目色带（出血，含期号与页码）+ 分块短文。
+           上排左右两块（可带小图），下排一块通栏双栏。
+     ------------------------------------------------------------
+     使用要点：
+     1. 每块 = 序号 + 篇名 + 署名 + 正文；块间用细线分隔。
+     2. 布局是"手动分块"（浮动列），不是自动分栏——每块文字
+        必须按预算填入：上排每块约 450–550 字，下排通栏约 550 字。
+     3. 只有一篇带图时，图给上排其中一块，比例统一裁切。
+     4. 混合多篇不同栏目时，顶带改用藤绿主色。
+     5. 变体：单篇 200 字以内的诗/短文，可把两块合并为一栏大字。
+     ============================================================ */
+
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-400-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-500-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-500-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-700-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    box-sizing: border-box;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: device-cmyk(0 0 0 0);
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* 顶部色带：出血，承载栏目名 / 期号 / 页码 */
+  .band {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 12mm;
+    background: device-cmyk(0.08 0.58 0.68 0.12); /* 校园天地 · 珊瑚棕 */
+  }
+  .band-name {
+    position: absolute;
+    top: 0;
+    left: 16mm;
+    height: 12mm;
+    line-height: 12mm;
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: device-cmyk(0 0 0 0);
+  }
+  .band-info {
+    position: absolute;
+    top: 0;
+    right: 16mm;
+    height: 12mm;
+    line-height: 12mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    color: device-cmyk(0 0 0 0);
+  }
+
+  /* 两块浮动列：内 16 / 外 12 / 栏距 6 */
+  .row {
+    position: absolute;
+    top: 22mm;
+    left: 12mm;
+    width: 182mm;
+    height: 140mm;
+  }
+  .page--odd .row { left: 16mm; }
+
+  .cell {
+    width: 88mm;
+    float: left;
+  }
+  .cell-r { float: right; }
+
+  .num {
+    font-size: 15pt;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: device-cmyk(0.08 0.58 0.68 0.12);
+  }
+  .num .sq {
+    display: inline-block;
+    width: 2.2mm;
+    height: 2.2mm;
+    background: device-cmyk(0.08 0.58 0.68 0.12);
+    margin-left: 2mm;
+  }
+
+  h2.item-title {
+    margin: 3.5mm 0 0 0;
+    font-size: 13.5pt;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    color: device-cmyk(0 0 0 1);
+  }
+
+  .item-byline {
+    margin-top: 2mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.06em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+
+  .item-img {
+    margin-top: 3.5mm;
+    width: 88mm;
+    height: 50mm;
+    background-image: url("sample-a.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .item-body {
+    margin-top: 3.5mm;
+    font-size: 9.5pt;
+    line-height: 1.62;
+    text-align: justify;
+    color: device-cmyk(0 0 0 1);
+  }
+  .item-body p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* 块间分隔细线 */
+  .sep {
+    position: absolute;
+    top: 170mm;
+    left: 12mm;
+    width: 182mm;
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 0.18);
+  }
+  .page--odd .sep { left: 16mm; }
+
+  /* 下排通栏块：双栏 */
+  .row2 {
+    position: absolute;
+    top: 180mm;
+    left: 12mm;
+    width: 182mm;
+    height: 85mm;
+  }
+  .page--odd .row2 { left: 16mm; }
+
+  .row2 .item-body {
+    margin-top: 4mm;
+    column-count: 2;
+    column-gap: 6mm;
+    column-fill: auto;
+    height: 58mm;
+  }
+
+  /* ------------------------------------------------------------
+     栏目暖强调色色表（device-cmyk）：
+       封面故事  朱红   device-cmyk(0.05 0.88 0.82 0.05)
+       时政摘编  赭红   device-cmyk(0.20 0.85 0.88 0.12)
+       文史杂谈  砖棕   device-cmyk(0.25 0.72 0.88 0.22)
+       正当年华  橘     device-cmyk(0    0.62 0.85 0)
+       社会热点  金棕   device-cmyk(0.18 0.52 0.88 0.10)
+       艺体观察  绛红   device-cmyk(0.12 0.92 0.72 0.15)
+       校园天地  珊瑚棕 device-cmyk(0.08 0.58 0.68 0.12)
+     ------------------------------------------------------------ */
+</style>
+</head>
+<body>
+
+  <!--
+    T5 示例：校园天地集锦页（奇数页 / 右页，页码 24）。
+    上排两块（左带图），下排通栏一块；三块合计约 1500 字。
+  -->
+  <div class="page page--odd">
+
+    <div class="band">
+      <div class="band-name">校园天地</div>
+      <div class="band-info">2611 · 11　·　24</div>
+    </div>
+
+    <div class="row">
+
+      <div class="cell">
+        <div class="num">01<span class="sq"></span></div>
+        <h2 class="item-title">跑向更好的自己</h2>
+        <div class="item-byline">文 / 高一（3）班　王小雨</div>
+        <div class="item-img"></div>
+        <div class="item-body">
+          <p>加入健跑团的第一个月，我最大的收获不是配速，而是开始
+          相信"坚持"这个词。每天清晨六点半的操场，跑步的人比想象
+          中多得多。</p>
+          <p>从三公里到五公里用了四个星期。现在我知道，所谓极限，
+          大多只是昨天的自己。</p>
+        </div>
+      </div>
+
+      <div class="cell cell-r">
+        <div class="num">02<span class="sq"></span></div>
+        <h2 class="item-title">傻子</h2>
+        <div class="item-byline">文 / 高二（7）班　李叙</div>
+        <div class="item-body">
+          <p>楼下的修车师傅姓罗，大家都叫他罗傻子。别人收费十块
+          他收五块，别人不肯修的破车他蹲一下午也要修好。</p>
+          <p>有一次我的车链子在半路断了，推着走了两公里找到他。
+          那天已经过了九点，他刚收摊。他二话不说重新打开卷帘门，
+          一边换链子一边说："车嘛，和人一样，不能撑着。"</p>
+          <p>后来我搬了家，再没路过那条街。前些天听人说，罗傻子
+          的修车摊前常年排着队。我想，大家叫了他这么多年傻子，
+          其实心里都清楚：谁才是真的会算账的人。</p>
+          <p>聪明有很多种，有一种叫厚道。这是那个修车摊教会我的事，
+          比很多节课都记得牢。后来每当我面临"吃亏不吃亏"的选择，
+          总会想起那盏为他重新亮起的灯。</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="row2">
+      <div class="num">03<span class="sq"></span></div>
+      <h2 class="item-title">长江动物园</h2>
+      <div class="item-byline">文 / 初二（1）班　赵一舟</div>
+      <div class="item-body">
+        <p>江豚露出水面的时间不到两秒。为了这两秒，我们在观测点
+        蹲了整整一个上午。带队老师说，十年前这里一天能看到三十
+        多次，如今能有一次就值得欢呼。</p>
+        <p>在保护区陈列馆，我看见一面墙的照片：每一头被记录的
+        江豚都有编号和名字。讲解员说，给它们起名字，是因为
+        "记住"本身就是保护的第一步。</p>
+          <p>回程的船上，大家都不太说话。江风很大，浪一层层推向
+          岸边。我忽然明白，动物园的意义也许不是观看，而是提醒：
+          有些动物，我们不该只能在照片里见到。</p>
+          <p>回去以后，班里决定认养一头江豚。钱不多，是一笔一笔
+          攒出来的零花钱，但讲解员说，每一笔认养都会被记进
+          名册——和那面照片墙一样，"记住"本身就是保护。</p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

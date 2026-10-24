@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>奔藤模板 T4 · 内双页：右图左文</title>
+<style>
+  /* ============================================================
+     T4 · 内双页（右图左文）—— 有精美图的文章开篇（与 T3 互为变体）
+     适用：图够好但不足以独占整页时。左页文字开篇，右页上部
+           大图 + 图注色带（本模板签名元素），右页下部续排短文。
+     ------------------------------------------------------------
+     使用要点：
+     1. 本模板 = 两个相邻页，只能落在（偶数 | 奇数）相邻对上，
+        如 16 | 17：偶数页为左页（文），奇数页为右页（图）。
+     2. 与 T3 的区别：图不整页出血，底部有图注色带；文字跨两页。
+     3. 左页文本预算：约 1500 字（含编者按约 1200 字正文）；
+        右页下部续文约 350 字以内。
+     4. 图注色带 = 栏目暖强调色实底 + 反白小字，页码嵌在带内右端。
+     ============================================================ */
+
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-400-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-500-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-500-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-700-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    box-sizing: border-box;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: device-cmyk(0 0 0 0);
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* ---------------- 左页（偶数）：文字开篇 ---------------- */
+  .frame {
+    position: absolute;
+    top: 16mm;
+    left: 12mm;
+    width: 182mm;
+    height: 249mm;
+  }
+  .page--odd .frame { left: 16mm; }
+
+  .issue-mark {
+    position: absolute;
+    top: 16mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--even .issue-mark { left: 12mm; }
+  .page--odd  .issue-mark { right: 12mm; }
+
+  .folio {
+    position: absolute;
+    bottom: 12mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--even .folio { left: 12mm; }
+  .page--odd  .folio { right: 12mm; }
+
+  .sec-tag {
+    display: inline-block;
+    padding: 1.6mm 3.2mm 1.8mm 3.2mm;
+    background: device-cmyk(0.12 0.92 0.72 0.15); /* 艺体观察 · 绛红 */
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: device-cmyk(0 0 0 0);
+  }
+
+  h1.title {
+    margin: 6.5mm 0 0 0;
+    font-size: 26pt;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    color: device-cmyk(0 0 0 1);
+  }
+
+  .subtitle {
+    margin-top: 3mm;
+    font-size: 11.5pt;
+    font-weight: 400;
+    line-height: 1.5;
+    color: device-cmyk(0 0 0 0.62);
+  }
+
+  .byline {
+    margin-top: 4.5mm;
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+
+  .head-rule {
+    margin-top: 4.5mm;
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 0.18);
+  }
+
+  /* 编者按（可选） */
+  .editors-note {
+    margin-top: 5mm;
+    padding: 4mm 5mm 4.2mm 5mm;
+    background: device-cmyk(0.02 0.11 0.09 0.02);
+    border-left: 1mm solid device-cmyk(0.12 0.92 0.72 0.15);
+  }
+  .editors-note .label {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: device-cmyk(0.12 0.66 0.52 0.14);
+  }
+  .editors-note p {
+    margin: 1.8mm 0 0 0;
+    font-size: 8.5pt;
+    line-height: 1.72;
+    text-align: justify;
+    color: device-cmyk(0 0 0 0.85);
+  }
+
+  .cols {
+    margin-top: 6mm;
+    column-count: 2;
+    column-gap: 6mm;
+    column-fill: auto;
+    height: 152mm;
+    font-size: 9.5pt;
+    line-height: 1.62;
+    text-align: justify;
+    color: device-cmyk(0 0 0 1);
+  }
+  .cols p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* ---------------- 右页（奇数）：上部大图 + 图注色带 ---------------- */
+  .half-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 168mm;
+    background-image: url("sample-b.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* 图注色带：实底反白，页码嵌右端 */
+  .band {
+    position: absolute;
+    top: 168mm;
+    left: 0;
+    width: 210mm;
+    height: 11mm;
+    background: device-cmyk(0.12 0.92 0.72 0.15);
+  }
+  .band-cap {
+    position: absolute;
+    top: 0;
+    left: 5mm;
+    height: 11mm;
+    line-height: 11mm;
+    width: 150mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    color: device-cmyk(0 0 0 0);
+    white-space: nowrap;
+  }
+  .band-folio {
+    position: absolute;
+    top: 0;
+    right: 5mm;
+    height: 11mm;
+    line-height: 11mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    color: device-cmyk(0 0 0 0);
+  }
+
+  /* 右页下部续文：单栏贴外侧，另一侧留白 */
+  .tail {
+    position: absolute;
+    top: 185mm;
+    right: 12mm;
+    width: 88mm;
+    height: 80mm;
+    font-size: 9.5pt;
+    line-height: 1.62;
+    text-align: justify;
+    color: device-cmyk(0 0 0 1);
+  }
+  .page--even .tail { left: 12mm; right: auto; }
+  .tail p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* ------------------------------------------------------------
+     栏目暖强调色色表（device-cmyk）：
+       封面故事  朱红   device-cmyk(0.05 0.88 0.82 0.05)
+       时政摘编  赭红   device-cmyk(0.20 0.85 0.88 0.12)
+       文史杂谈  砖棕   device-cmyk(0.25 0.72 0.88 0.22)
+       正当年华  橘     device-cmyk(0    0.62 0.85 0)
+       社会热点  金棕   device-cmyk(0.18 0.52 0.88 0.10)
+       艺体观察  绛红   device-cmyk(0.12 0.92 0.72 0.15)
+       校园天地  珊瑚棕 device-cmyk(0.08 0.58 0.68 0.12)
+     ------------------------------------------------------------ */
+</style>
+</head>
+<body>
+
+  <!--
+    T4 示例：内双页 16 | 17，艺体观察《送别刘欢》。
+    左页（偶数）= 文字开篇；右页（奇数）= 大图 + 图注色带 + 续文。
+  -->
+
+  <!-- 左页 · 偶数 · 文字开篇 -->
+  <div class="page page--even">
+
+    <div class="issue-mark">2611 · 11</div>
+    <div class="folio">16</div>
+
+    <div class="frame">
+
+      <div class="sec-tag">艺体观察</div>
+
+      <h1 class="title">送别刘欢：心若在，梦就在</h1>
+      <div class="subtitle">一代人的歌声，与一个时代的注脚</div>
+
+      <div class="byline">文 / 顾一　·　编辑 / 陈叙</div>
+      <div class="head-rule"></div>
+
+      <!-- 编者按（可选，可整块删除） -->
+      <div class="editors-note">
+        <div class="label">编者按</div>
+        <p>他的歌几乎定义了九十年代的声音记忆。告别演出那晚，
+        全场观众自发站起来合唱的场景，值得被认真记录一次。</p>
+      </div>
+
+      <div class="cols">
+        <p>告别演唱会的票开售即空。演出当晚，体育馆外的黄牛把票价
+        抬到了原价的三倍，依然有人愿意买单——他们买的不是座位，
+        而是一次当面道别的机会。</p>
+        <p>开场没有暖场嘉宾。灯光暗下来之后，钢琴前只亮起一盏小灯，
+        刘欢从侧幕走出来，向四个方向的观众各鞠了一躬，坐下，弹响
+        第一个音。没有多余的话，第一首便是《从头再来》。</p>
+        <p>唱到第三首时，他停下来喝水，随口说起年轻时第一次登台的
+        事：那是学校的礼堂，麦克风坏了，他几乎是喊完整首歌的。
+        台下笑成一片，他也笑，然后说："所以后来我一开口就用全力，
+        怕再遇上坏麦克风。"这个玩笑后来被许多观众反复提起。</p>
+        <p>对更年轻的听众来说，刘欢的名字也许首先属于电视歌曲。
+        但在九十年代，他的嗓音是一代人的背景音：宿舍楼道里的
+        收音机，绿皮火车上的磁带，还有大学操场夜谈时有人轻轻
+        哼出的调子。</p>
+        <p>演出过半，大屏幕开始播放三十年间的影像剪辑。从青涩的
+        独唱到万人体育场的合唱，影像一帧帧翻过去，像一次无声的
+        年代盘点。有观众在黑暗里抹眼泪，也有观众举起手机，屏幕
+        的光星星点点连成一片。</p>
+        <p>安可之前，有一段很长的安静。刘欢坐在钢琴边说，选歌的
+        时候最难的不是取舍，而是顺序——"每一首都像老朋友，
+        让谁先出场都要斟酌。"最终定下的曲目单，横跨了他三十年
+        的创作：从早期的校园民谣，到后来为电影、电视剧写的
+        主题歌，再到近年少见的慢板新作。</p>
+        <p>这些歌串起来，几乎就是一部流行音乐编年史。台下有人
+        跟着每一段前奏轻轻打拍子，像在对暗号——哪一年听过，
+        在哪里听过，和谁一起听过，都藏在节拍里。</p>
+        <p>散场时，体育馆的灯光早早亮起，工作人员开始拆除舞台
+        两侧的音响。有观众站在出口处回头看了很久。一位从外地
+        赶来的歌迷说，她抢到票的那天正在加班，"看到开售提示
+        的时候手都在抖"。这一晚之后，那些旋律就真的成了
+        回忆的一部分。</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 右页 · 奇数 · 大图 + 图注色带 + 续文 -->
+  <div class="page page--odd">
+
+    <div class="half-img"></div>
+
+    <div class="band">
+      <div class="band-cap">告别演唱会现场，全场观众起立合唱《心若在，梦就在》。　图 / 王可</div>
+      <div class="band-folio">17</div>
+    </div>
+
+    <div class="tail">
+      <p>安可环节，他只唱了一首歌。前奏响起时，全场灯光熄灭，
+      观众席的手机光连成星海，他唱着唱着把话筒转向观众——
+      副歌部分，几乎是三万人在替他完成。</p>
+      <p>散场后很久，仍有人留在座位上不肯离开。一位观众说：
+      "来之前就知道会哭，没想到会哭得这么高兴。"</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

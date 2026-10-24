@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>奔藤模板 T6 · 接续页</title>
+<style>
+  /* ============================================================
+     T6 · 接续页 —— 长文第 2 页起连续使用
+     适用：T2/T3/T4 开篇后未排完的正文。
+     结构：页首一枚"篇名 · 续"小字提示 + 细线，通高双栏正文，
+           外侧底部一枚页码。无页眉页脚、无标题区。
+     ------------------------------------------------------------
+     使用要点：
+     1. 页首小字与细线是"承上"提示，不再重复栏目与期号。
+     2. 文本预算：约 2000 字/页（9.5pt·行高1.62·每栏约26字·
+        每栏约 44 行）。文字未满栏时，右栏底部自然留白，
+        属于正常版面，不必强填。
+     3. 如需插图：参照 T2，把正文拆成图前/图后两个双栏块，
+        通栏插图高 50–64mm，并把本页文字预算相应减去。
+     4. 奇偶页均可用；小字提示与页码自动落在外侧。
+     ============================================================ */
+
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-400-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-700-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: device-cmyk(0 0 0 0);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    box-sizing: border-box;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: device-cmyk(0 0 0 0);
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* 页首提示：靠内一侧 */
+  .cue {
+    position: absolute;
+    top: 16mm;
+    height: 4mm;
+    line-height: 4mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--odd  .cue { left: 16mm; }
+  .page--even .cue { right: 16mm; }
+
+  .cue-rule {
+    position: absolute;
+    top: 22mm;
+    left: 12mm;
+    width: 182mm;
+    height: 0.2mm;
+    background: device-cmyk(0 0 0 0.18);
+  }
+  .page--odd  .cue-rule { left: 16mm; }
+  .page--even .cue-rule { left: 12mm; }
+
+  /* 通高双栏正文 */
+  .cols {
+    position: absolute;
+    top: 28mm;
+    left: 12mm;
+    width: 182mm;
+    height: 237mm;
+    column-count: 2;
+    column-gap: 6mm;
+    column-fill: auto;
+    font-size: 9.5pt;
+    line-height: 1.62;
+    text-align: justify;
+    color: device-cmyk(0 0 0 1);
+  }
+  .page--odd .cols { left: 16mm; }
+  .cols p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* 页码：外侧底部 */
+  .folio {
+    position: absolute;
+    bottom: 12mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    color: device-cmyk(0 0 0 0.62);
+  }
+  .page--odd  .folio { right: 12mm; }
+  .page--even .folio { left: 12mm; }
+
+  /* ------------------------------------------------------------
+     栏目暖强调色色表（device-cmyk）：
+       封面故事  朱红   device-cmyk(0.05 0.88 0.82 0.05)
+       时政摘编  赭红   device-cmyk(0.20 0.85 0.88 0.12)
+       文史杂谈  砖棕   device-cmyk(0.25 0.72 0.88 0.22)
+       正当年华  橘     device-cmyk(0    0.62 0.85 0)
+       社会热点  金棕   device-cmyk(0.18 0.52 0.88 0.10)
+       艺体观察  绛红   device-cmyk(0.12 0.92 0.72 0.15)
+       校园天地  珊瑚棕 device-cmyk(0.08 0.58 0.68 0.12)
+     ------------------------------------------------------------ */
+</style>
+</head>
+<body>
+
+  <!--
+    T6 示例：《四渡赤水》第 2 页（奇数页 / 右页，页码 14）。
+    接 T2 开篇使用；偶数页把 class 换为 page--even。
+  -->
+  <div class="page page--odd">
+
+    <div class="cue">四渡赤水 · 续</div>
+    <div class="cue-rule"></div>
+    <div class="folio">14</div>
+
+    <div class="cols">
+      <p>金沙江的转移是四渡赤水的最后一笔。1935 年 4 月末，红军
+      以一部佯攻昆明，主力却转向西北，直扑皎平渡。渡口的船工
+      后来回忆，那几天江面上夜夜有火光，七只小船来回不停。</p>
+      <p>七天七夜之后，三万人全部过江。担任后卫的干部团在渡口
+      南岸顶住了追兵的先头部队，等最后一名战士上船，才撤掉
+      浮桥的缆绳。追军抵达江边时，只看到空荡荡的渡口。</p>
+      <p>从 1 月末到 5 月初，三个多月，红军在川黔滇边来回穿插，
+      平均每天行军三十公里以上。这条路线之所以被反复研究，
+      是因为它展示了一种在绝对劣势下依然保持主动的方法：
+      速度、隐蔽、侦察，以及对敌军指挥官心理的准确判断。</p>
+      <p>参与追击的将领在战后回忆里写道，他们始终"隔着一日
+      行程"，看得见红军的行军痕迹，追不上红军的脚。这句无奈
+      的话，成了对这条行军线最好的注脚。</p>
+      <p>今天重走四渡赤水的地方，许多渡口已经因为水位上涨而
+      改变了模样。当地人在土城、太平渡建起了陈列馆，馆里最
+      常见到的展品，是行军地图的复制品——红蓝两色的箭头在
+      同一条河谷里反复交叉，像一场持续了三个月的对话。</p>
+      <p>对当年的亲历者而言，这段路没有战术教科书上的从容。
+      一位老红军晚年回忆说，那时候最直接的感受是"走路、
+      打仗、再走路"，许多命令下达时，连团长也不知道下一站
+      在哪里。所谓机动灵活，首先是对不确定的忍耐。</p>
+      <p>本刊编辑部在整理这组文章时，恰好收到一张老照片：
+      赤水河畔的浮桥，桥板缝隙里看得见湍急的水。照片背后
+      有一行铅笔小字，写着拍摄年份和一个至今没有考证出
+      身份的名字。我们把它刊在下面，也把寻找的过程留给
+      下一期。</p>
+      <p>长征的叙述总是宏大的，但它的底色是具体的：一双磨穿
+      的草鞋，一份迟到的命令，一条在夜里搭起又拆掉的浮桥。
+      四渡赤水教给后来的我们的，也许正是这种具体——方向
+      由此而来，道路由此而成。</p>
+      <p>在土城陈列馆，我们遇到一位义务讲解员。他的祖父当年
+      是船工，曾在大雾夜里把一船红军送到对岸。祖父生前不
+      常讲这段事，只说过一句："水急，但不能慌。手一慌，
+      船就横了。"这句话被讲解员写进了讲解词的第一页。</p>
+      <p>太平渡的旧渡口如今立着一块石碑，碑文很短，只有年份
+      和一行小字。当地学校每年春天都组织学生来此清扫，孩子们
+      蹲在石阶上抄碑文的样子，被拍成照片，贴在学校走廊里。</p>
+      <p>从军事史的角度，关于四渡赤水的研究还有很多争论：情报
+      工作究竟起了多大作用，二渡与四渡的决策间隔里发生过什么，
+      都仍有讨论的空间。对普通读者而言，这些争论提醒我们：
+      历史不是一条平滑的曲线，而是一连串具体的人在具体的
+      处境里做出的具体选择。</p>
+      <p>本组封面故事到此告一段落。下一期，我们将沿着这条
+      行军线继续向北，走进金沙江与为大渡河之间的山谷——
+      那里的故事，同样从一条船开始。</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

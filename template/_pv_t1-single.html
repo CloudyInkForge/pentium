@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>奔藤模板 T1 · 单页不分栏</title>
+<style>
+  /* ============================================================
+     T1 · 单页不分栏 —— 疏朗版式
+     适用：≤1300 字短文（带图约 650 字）、诗词页、卷首语。
+     结构：外侧竖排书脊签（栏目·期号·页码）+ 窄版心（132mm）
+           + 标题区 + 可选编者按 + 通栏单栏正文 + 可选单插图。
+     ------------------------------------------------------------
+     使用要点：
+     1. 奇数页正文贴内边距（左），右侧留白放书脊；偶数页镜像。
+     2. 书脊竖排用"窄容器逐字换行"实现，不依赖 writing-mode。
+     3. 编者按块与插图块均可整块删除；无图时正文预算约 1250 字。
+     4. 诗词页变体：删去编者按与插图，正文改 12pt、行高 2.2、
+        左对齐不缩进，标题区下方留白加倍。
+     5. 正文预算：带图约 650 字 / 无图约 1250 字（9.5pt·行高1.62）。
+     ============================================================ */
+
+  @page {
+    size: 210mm 285mm;
+    margin: 0;
+  }
+
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-400-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 400;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-400-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-500-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 500;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-500-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-chinese-simplified-700-normal.woff2") format("woff2");
+    unicode-range: U+3000-9FFF, U+FF00-FFEF;
+  }
+  @font-face {
+    font-family: "Noto Sans SC";
+    font-weight: 700;
+    src: url("fonts/noto-sans-sc/noto-sans-sc-latin-700-normal.woff2") format("woff2");
+    unicode-range: U+0020-007E, U+00A0-00FF, U+2000-206F;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: rgb(255,255,255);
+  }
+
+  .page {
+    position: relative;
+    width: 210mm;
+    height: 285mm;
+    box-sizing: border-box;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: rgb(255,255,255);
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  /* 版心：奇数页贴内（左），偶数页镜像贴内（右） */
+  .measure {
+    position: absolute;
+    top: 18mm;
+    width: 132mm;
+    height: 247mm;
+  }
+  .page--odd  .measure { left: 16mm; }
+  .page--even .measure { right: 16mm; }
+
+  /* 外侧书脊签：竖排逐字换行，含栏目名、期号与页码 */
+  .spine {
+    position: absolute;
+    top: 18mm;
+    width: 3.4mm;
+    font-size: 7.5pt;
+    line-height: 1.65;
+    letter-spacing: 0;
+    color: rgb(97,97,97);
+    word-break: break-all;
+  }
+  .page--odd  .spine { right: 4.6mm; }
+  .page--even .spine { left: 4.6mm; }
+
+  .spine-page {
+    position: absolute;
+    bottom: 14mm;
+    width: 3.4mm;
+    font-size: 7.5pt;
+    line-height: 1.65;
+    color: rgb(97,97,97);
+    word-break: break-all;
+  }
+  .page--odd  .spine-page { right: 4.6mm; }
+  .page--even .spine-page { left: 4.6mm; }
+
+  /* 标题区 */
+  .sec-tag {
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: rgb(255,97,38); /* 正当年华 · 橘 */
+  }
+  .sec-tag .sq {
+    display: inline-block;
+    width: 2.6mm;
+    height: 2.6mm;
+    background: rgb(255,97,38);
+    margin-right: 2.4mm;
+  }
+
+  h1.title {
+    margin: 6mm 0 0 0;
+    font-size: 28pt;
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: 0.02em;
+    color: rgb(0,0,0);
+  }
+
+  .subtitle {
+    margin-top: 3.5mm;
+    font-size: 12pt;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgb(97,97,97);
+  }
+
+  .byline {
+    margin-top: 5mm;
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+    color: rgb(97,97,97);
+  }
+
+  .head-rule {
+    margin-top: 5mm;
+    height: 0.2mm;
+    background: rgb(209,209,209);
+  }
+
+  /* 编者按（可选）：浅橘底 + 左侧橘条 */
+  .editors-note {
+    margin-top: 6mm;
+    padding: 4mm 5mm 4.2mm 5mm;
+    background: rgb(252,232,225);
+    border-left: 1mm solid rgb(255,97,38);
+  }
+  .editors-note .label {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: rgb(211,129,89);
+  }
+  .editors-note p {
+    margin: 1.8mm 0 0 0;
+    font-size: 8.5pt;
+    line-height: 1.72;
+    text-align: justify;
+    color: rgb(38,38,38);
+  }
+
+  /* 正文：单栏，段首缩进 */
+  .article {
+    margin-top: 6mm;
+    font-size: 9.5pt;
+    line-height: 1.62;
+    text-align: justify;
+    color: rgb(0,0,0);
+  }
+  .article p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  /* 插图：版心宽，固定高度，background 裁切不变形 */
+  .figure {
+    margin-top: 6mm;
+    width: 132mm;
+    height: 84mm;
+    background-image: url("sample-a.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .figcap {
+    margin-top: 2.2mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.04em;
+    color: rgb(97,97,97);
+  }
+
+  /* ------------------------------------------------------------
+     栏目暖强调色色表（device-cmyk）：
+       封面故事  朱红   rgb(230,29,44)
+       时政摘编  赭红   rgb(180,34,27)
+       文史杂谈  砖棕   rgb(149,56,24)
+       正当年华  橘     rgb(255,97,38)
+       社会热点  金棕   rgb(188,110,28)
+       艺体观察  绛红   rgb(191,17,61)
+       校园天地  珊瑚棕 rgb(206,94,72)
+     浅底约为各值乘 0.12（本页编者按底即橘的浅档）。
+     ------------------------------------------------------------ */
+</style>
+</head>
+<body>
+
+  <!--
+    T1 示例：正当年华《上山，下山》（奇数页 / 右页，页码 12）
+    偶数页：class 换 page--even，书脊与版心自动镜像。
+    本页预算：标题区 + 编者按 + 插图 84mm + 正文 600 字左右。
+  -->
+  <div class="page page--odd">
+
+    <div class="spine">正当年华 · 2611</div>
+    <div class="spine-page">12</div>
+
+    <div class="measure">
+
+      <div class="sec-tag"><span class="sq"></span>正当年华</div>
+
+      <h1 class="title">上山，下山</h1>
+      <div class="subtitle">记一次夜爬与清晨的雾</div>
+
+      <div class="byline">文 / 陈叙　·　编辑 / 周原</div>
+      <div class="head-rule"></div>
+
+      <!-- 编者按（可选，可整块删除） -->
+      <div class="editors-note">
+        <div class="label">编者按</div>
+        <p>爬山的意义从不在山顶。作者把一次说走就走的夜爬写得克制而诚实，
+        那些喘息、沉默与天光，属于每一个正在上坡的年纪。</p>
+      </div>
+
+      <div class="article">
+        <p>出发是在夜里十一点。手电的光柱扫过台阶，只能照亮脚下三级，
+        再往上就交给腿了。同行的人不多，说话的声音都压得很低，像是怕
+        惊动山里已经睡下的东西。</p>
+        <p>爬到一半的时候，我开始后悔背包里那两瓶多余的水。肩带勒进
+        锁骨，汗把后背浸透，风一吹又凉下去。前面的路牌在光圈里一闪
+        一闪，数字小得让人绝望。</p>
+        <p>凌晨四点半，山顶的风大得几乎站不住。我们裹着租来的军大衣，
+        挤在一块背风的石头后面，等天亮。雾从山谷里漫上来，先吞掉远
+        处的山脊，再吞掉脚下的台阶，最后只剩下身边几张模糊的脸。</p>
+        <p>太阳出来只有几分钟。金红色的光贴着云海铺开，所有人都在
+        按快门，我却没有拍。我想把那几分钟留给自己——下山的时候，
+        腿一直在抖，可心里是满的。</p>
+      </div>
+
+      <div class="figure"></div>
+      <div class="figcap">晨雾漫过山脊前的几分钟，山顶的能见度不足十米。　图 / 李真</div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
