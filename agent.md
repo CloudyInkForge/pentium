@@ -1,55 +1,114 @@
 # agent.md（AI 看）
-## 绝对不允许违反
-对模板进行排版时必须严格遵守模板，自己逐行计算分页等，且要留有一定余地。坚决不允许引入CSS自动排版。
-## 权限（仅此三项，仅在明确要求时执行）
-1. **HTML 排版设计**：在指定期目录创建/修改同名 HTML；依据 `template/`，合理排布文章和图片；可加矢量装饰、微调文本、裁切缩放图片、修改模板格式文字。
+
+## 0. 最高优先级与适用范围
+
+1. 本文件是 AI 执行排版的唯一规则。与历史文件、口头说明、旧 HTML 冲突时，以 **本文件 + `template/` 中对应模板** 为准。
+2. AI 只拥有第 1 节列出的三项权限。未明确要求构建/修改 HTML 时，读完必要说明即停止，不输出无关解释。
+3. 任何一项硬性约束不满足，即视为任务未完成。
+
+## 1. 权限（仅此三项，仅在明确要求时执行）
+
+1. **HTML 排版设计**：在指定期目录创建/修改同名 HTML；必须基于 `template/`，按模板机制排布文章和图片；仅可修改与版式直接相关的文字，不得改写正文事实、标题、作者、页码。
 2. **目录/标签生成**：生成/维护 `articles/content.txt` 和 `photos/phototags.txt`。
-3. **PDF 只读校验**：用 `C:\Python313\python.exe` + `PyPDF2` 读取既有 PDF（页数、页面尺寸、文本），核对排版。
+3. **PDF 只读校验**：仅用 `C:\Python313\python.exe` + `PyPDF2` 读取既有 PDF 的页数、页面尺寸、文本。只读，不写回、不生成、不转换、不删除。
 
-禁止：创建/修改/转换/删除/移动 PDF；调用 `PP/peachpdf.exe`；整理原始数据到文章；构建其他索引；写其他文件。PDF 转换验证由人类/CI 执行；你只接收报错文本并修 HTML。
+### 绝对禁止
 
-## 读取与省 tokens
-按需读取最小集：指定期同名 HTML → `template/` → `articles/content.txt`、`photos/phototags.txt` → 任务指定文章/图片。未明确要求构建/修改 HTML 时，读完必要说明即停止。不输出无关解释，直接产出文件内容或修改。
+- 禁止创建/修改/转换/删除/移动 PDF；禁止调用 `PP/peachpdf.exe`；禁止安装 PDF 相关库。
+- 禁止整理原始数据到文章；禁止构建其他索引；禁止写除 HTML、`content.txt`、`phototags.txt` 之外的文件。
+- 禁止擅自改变模板的页尺寸、边距、栏数、正文区高度、行高、栏宽、页脚机制。
+- 禁止用自动多栏平衡、自动分页、自动避让代替人工逐行核算。
+- 禁止把大段正文放进固定高 `overflow:hidden` 容器后依赖裁切“分页”。
+- 禁止在正文流中放大图替代模板的“绝对定位图 + 洞”机制。
+- 禁止绝对定位图片/附记/装饰覆盖正文而不挖洞。
+- 禁止无核算、无 debug 校准、无 PDF 只读核对就交付。
 
-## PeachPDF 兼容硬性要求（逐条自检）
-生成或修改 HTML 后，逐项核对以下规则。违反任一项即视为未完成。
+## 2. 模板硬性机制（必须照做）
+
+### 2.1 正文区
+
+- 文章页必须沿用模板的 `.body`：固定正文区、三栏、`column-gap`、`margin-bottom` 给页脚留白。不得改成双栏、单栏或自动平衡多栏。
+- 每页正文必须人工切分。每页占用行数 = 正文行数 + 洞行数 + 空行数 + 图注预留行数；必须 ≤ 该页容量 − 6 行。不足 6 行余地必须移段、移图或分页。
+- 页脚区域必须预留。正文、图片、图注、附记、装饰不得进入页脚区域。
+- `.page` 的 `overflow:hidden` 只能作为最终裁切保险，不得作为分页手段。正文不得被裁切。
+
+### 2.2 图片
+
+- 每张进入正文栏的图片必须同时具备：
+  1. `.hole` 占位洞；
+  2. `.photo-abs` 绝对定位图；
+  3. 两者 `--ph-w` / `--ph-h` 完全一致；
+  4. 有图注时洞高包含图注预留；
+  5. `top` 用 `mm` 从正文区顶部量；
+  6. `body.debug` 下红蓝框校准，对齐后删除 `debug`。
+- 图片不得放在正文流中挤占多栏排版；模板已有的首页顶部配图除外。
+- 窄图栏内居中必须用模板的 `left: calc(...)` 写法。
+- 图片 `.ph` 必须显式包含：`width:100%`、`height`、`background-size:cover`、`background-position:center center`、`background-repeat:no-repeat`、`position:relative`。需要角标时不得漏 `position:relative`。
+- 图片路径必须为本地相对路径或 `data:` URI；引用前确认文件存在。禁止 HTTP(S) 远程图片。
+
+### 2.3 目录页与绝对定位
+
+- `.toc-col`、`.toc2-col` 等包含内部绝对定位元素的列，必须设 `position:relative`，否则内部绝对定位会相对 `.page` 定位。
+- 版权、栏目索引、引文等绝对定位块不得与 `.folio` 页脚重叠。`.copyright` 不得使用 `bottom:0` 直接压页脚。
+
+### 2.4 校准与核算
+
+- 交付前必须逐页核算：栏数 × 每栏行数 = 页容量；占用行数必须留 ≥6 行。
+- 有洞的页必须用 `body.debug` 检查洞与图红蓝框重合；未校准不得交付。
+- 图片、图注、附记、页脚必须分别占位；不得用“看起来差不多”代替核算。
+
+## 3. PeachPDF 兼容硬性要求（逐条自检）
 
 ### 页面与单位
-- [ ] `@page { size: 210mm 285mm; }`，边距显式给出。
-- [ ] 所有尺寸用 `mm` / `pt` / `cm` / `in` 或按标准解析的 `px`（`1px = 0.75pt`，`96px = 1in`）[reference:19]。不要写“1px 当 1pt”的旧逻辑。
+- [ ] `@page { size: 210mm 285mm; margin: ... }` 显式给出。
+- [ ] 所有尺寸用 `mm` / `pt` / `cm` / `in` 或标准 `px`（`1px=0.75pt`，`96px=1in`）。不得使用旧式“1px 当 1pt”。
 
 ### 颜色
-- [ ] 全文件搜索 `#`、`rgb(`、`hsl(`、颜色名（`red`、`black` 等），全部替换为 `device-cmyk(...)`。
-- [ ] 不使用 `opacity`、半透明渐变、半透明 stop、`fill-opacity`/`stroke-opacity` 做视觉调整；需要浅色时用低百分比 CMYK 实色[reference:20]。
-- [ ] 不使用专色/spot color 概念。
+- [ ] 全文件不得出现 `#`、`rgb(`、`hsl(`、颜色名。全部用 `device-cmyk(...)`。
+- [ ] 不得使用 `opacity`、半透明渐变、`fill-opacity`/`stroke-opacity` 调浅。浅色用低百分比 CMYK 实色。
+- [ ] 不使用专色/spot color。
 
 ### 分页与溢出
-- [ ] 跨页内容**不**放在 `overflow: hidden` 容器中；跨页壳用普通块级流。
-- [ ] 跨页内容**不**是 flex item 或 grid item；多栏用 `multi-column`，不要用 grid 跨页。
-- [ ] 没有固定 `max-height` 的大段文字容器；内容超过 max-height 会直接溢出底边，不会撑开[reference:24]。
+- [ ] 跨页内容不得放在 `overflow:hidden` 容器中依赖裁切。
+- [ ] 跨页内容不得是 flex item 或 grid item；多栏用 `multi-column`。
+- [ ] 不得给大段正文设固定 `max-height`；内容超限会溢出底边。
 - [ ] 强制分页只用 `break-before: page` / `page-break-before: always`。
 
 ### 不支持的样式
-- [ ] 没有 `filter: blur()/grayscale()/sepia()/saturate()/hue-rotate()/drop-shadow()`，没有模糊 `box-shadow`；这些会被光栅化或失效[reference:25]。
-- [ ] 版面主要结构**不**用 `display: grid`；用 block 流、`float`、`table`、`multi-column`[reference:26]。
-- [ ] 不使用不认识的伪类或复杂选择器；选择器只用元素、类、ID、后代、子代、基本属性选择器[reference:27]。
-- [ ] 没有 JS、`<dialog>` 开关、`<details>` 展开等交互行为[reference:28]。
+- [ ] 无 `filter: blur()/grayscale()/sepia()/saturate()/hue-rotate()/drop-shadow()`，无模糊 `box-shadow`。
+- [ ] 版面主要结构不得用 `display:grid`；用 block 流、`float`、`table`、`multi-column`。
+- [ ] 选择器只用元素、类、ID、后代、子代、基本属性选择器；不用不认识的伪类。
+- [ ] 无 JS、`<dialog>` 开关、`<details>` 展开等交互。
 
 ### 图片与资源
-- [ ] 图片路径**全部**为本地相对路径或 `data:` URI；没有 HTTP(S) 远程图片，因为 PeachPDF 默认静默跳过远程资源[reference:29]。
-- [ ] 图片格式在 JPEG / PNG / BMP / GIF / WebP / AVIF / TIFF / SVG 范围内。
-- [ ] 图片容器给出了 `width`/`height` 或 `max-width: 100%`，避免替换元素尺寸歧义。
-- [ ] 印刷用途的图片不依赖透明叠色；透明可能触发光栅化或 CMYK-only 限制下的位图回退。
+- [ ] 图片路径全部本地相对路径或 `data:` URI；无 HTTP(S) 远程资源。
+- [ ] 图片格式在 JPEG/PNG/BMP/GIF/WebP/AVIF/TIFF/SVG 范围内。
+- [ ] 图片容器显式给出 `width`/`height` 或 `max-width:100%`。
+- [ ] 印刷图片不依赖透明叠色；不依赖透明背景做视觉。
 
 ### 字体
-- [ ] `@font-face` 字体文件为本地 TTF / OTF(CFF) / WOFF / WOFF2，没有远程字体 URL。
-- [ ] `font-family` 有完整回退栈；中文字体用 `unicode-range` 声明覆盖范围，避免缺字回退异常[reference:32]。
-- [ ] 不依赖彩色 emoji；彩色 emoji 表不会被嵌入[reference:33]。
+- [ ] `@font-face` 只引用本地 TTF/OTF/WOFF/WOFF2；无远程字体。
+- [ ] `font-family` 有完整回退栈；中文用 `unicode-range` 声明覆盖范围。
+- [ ] 不依赖彩色 emoji。
 
 ### 结构与外部资源
-- [ ] 样式在 HTML 内的 `<style>` 或本地 `<link rel="stylesheet">` 中；没有外链 CSS、JS、字体、图片。
-- [ ] 文档结构为标准 HTML 元素；`<head>` 中只依赖 `<style>` / `<link rel="stylesheet">`，其他子元素不影响布局。
-- [ ] 装饰矢量用 inline `<svg>` 或本地 SVG；SVG `<filter>` 中模糊、光照、形态学等会被光栅化，装饰不要用这些[reference:35]。
+- [ ] 样式只在 HTML 内 `<style>` 或本地 `<link rel="stylesheet">`；无外链 CSS/JS/字体/图片。
+- [ ] 文档结构只用标准 HTML 元素。
+- [ ] 装饰矢量用 inline SVG 或本地 SVG；SVG `<filter>` 中模糊、光照、形态学不得使用。
 
-## 交付
-仅交付：指定期同名 HTML，或 `content.txt` / `phototags.txt` 文本。PDF 可只读查看，但不得修改、生成或转换。完成即停。
+## 4. 交付前自检（任一不满足即未完成）
+
+- [ ] 已从 `template/` 复制对应页面结构，未自创栏数/正文区/行高/栏宽。
+- [ ] 文章页为模板三栏固定正文区，不是双栏自动流。
+- [ ] 每张栏内图片都有 `.hole` + `.photo-abs`，参数一致，`top` 已校准。
+- [ ] 每页逐行核算，留 ≥6 行余地；未依赖 `overflow:hidden` 裁切。
+- [ ] 页脚区域无正文/图片/版权重叠。
+- [ ] 目录列有 `position:relative`；版权/索引/引文未压页脚。
+- [ ] 所有 `.ph` 含 cover/center/no-repeat/position:relative。
+- [ ] 颜色全部 `device-cmyk`；无远程资源；无 filter/grid 主布局/JS。
+- [ ] 已用只读 PDF 核对页数、页面尺寸、页脚文本、末页附记文本是否存在；发现 HTML 问题只修 HTML。
+- [ ] PDF 只读检查未写回、未生成、未修改 PDF。
+
+## 5. 交付
+
+仅交付：指定期同名 HTML，或 `content.txt` / `phototags.txt`。完成即停。PDF 可只读查看，但不得修改、生成或转换。

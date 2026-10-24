@@ -1,85 +1,62 @@
 # readme.md（人看）
 
 ## 项目目标
-使用 Agent 完成杂志 HTML 排版，通过 PeachPDF 转为 PDF。AI 只负责 HTML 排版设计，以及文章目录、图片标签生成；可只读查看 PDF 做校验，但不生成、不修改、不转换 PDF。
+
+用 AI 完成杂志 HTML 排版，由人类/CI 用 PeachPDF 转 PDF。AI 只负责 HTML 排版、目录/图片标签生成，以及 PDF 只读校验；不生成、不修改、不转换 PDF。
 
 ## 目录与文件
-- `PP/peachpdf.exe`：PDF 转换工具。仅人类/CI 使用；AI 禁止调用。AI 可以只读方式解析 PDF（读取文本、页数、页面尺寸、元数据），但不得生成、修改、转换或删除 PDF。
-- 每期一个 4 位编号目录，如 `2611/`，存放该期全部内容。
-- `src/`：原始数据，可含原始文章。必须有 `descriptor.txt` 记录处理情况。
-- `articles/`：处理好的文章 txt。`content.txt` 统计每篇名称、字数、所属栏目。
-- `photos/`：图片。`phototags.txt` 记录每图所属文章、尺寸、字数、内容概要。
-- `template/`：封面、内容页模板，HTML 据此构建。
-- 每期目录下有与文件夹同名的 HTML，为主要交付物。
+
+- `PP/peachpdf.exe`：仅人类/CI 使用，AI 禁止调用。
+- 每期一个 4 位编号目录，如 `2611/`，存放该期同名 HTML 和内容。
+- `src/`：原始数据，含 `descriptor.txt`。
+- `articles/`：文章 txt；`content.txt` 统计名称、字数、栏目。
+- `photos/`：图片；`phototags.txt` 记录所属文章、尺寸、字数、概要。
+- `template/`：封面与内容页模板，HTML 必须据此构建。
 
 ## AI 权限
-AI 有三种权力，且仅在明确要求时执行：
-1. **HTML 排版设计**：创建/修改指定期同名 HTML，合理排布文章和图片，修改模板格式相关文字。
-2. **文章目录、图片标签生成**：生成/维护 `articles/content.txt`、`photos/phototags.txt`。
-3. **PDF 只读校验**：用 Python 3.13 脚本读取既有 PDF（页数、页面尺寸、文本、元数据），核对 HTML 排版结果。只读，不写回、不生成、不转换。
 
-禁止：整理原始数据到文章；为图片构建其他索引；创建/修改/转换/删除 PDF；调用 PeachPDF；写其他文件。未明确要求构建/修改 HTML 时，读完说明即停止。
+AI 仅有以下三项权力，且仅在明确要求时执行：
 
-## PDF 只读读取环境
-- 解释器：`C:\Python313\python.exe`（Python 3.13.3）。
-- 已装库：`PyPDF2` 3.0.1（`import PyPDF2` 即可用，无需再装）。
-- 读文本与页数：
+1. **HTML 排版设计**：创建/修改指定期同名 HTML，必须基于模板；仅可改版式相关文字，不得改正文事实、标题、作者、页码。
+2. **目录/标签生成**：维护 `articles/content.txt`、`photos/phototags.txt`。
+3. **PDF 只读校验**：用 `C:\Python313\python.exe` + `PyPDF2` 读取既有 PDF 的页数、页面尺寸、文本。只读，不写回、不生成、不转换、不删除。
 
-```python
-import PyPDF2
-r = PyPDF2.PdfReader(r"old/2611/2611.pdf")
-print(len(r.pages), r.pages[0].mediabox)
-print(r.pages[0].extract_text())
-```
+### 禁止
 
-- 输出中文时先 `sys.stdout.reconfigure(encoding="utf-8")`，或在 PowerShell 里 `$env:PYTHONIOENCODING="utf-8"`，否则控制台会显示乱码。
-- 只读用途：可解析、比对文本与页面尺寸；不得写入、修改、重新生成 PDF，也不得调用 `PP/peachpdf.exe`。如需把页面渲染成图片目检，另装 PyMuPDF（当前未安装）。
+- 禁止创建/修改/转换/删除/移动 PDF；禁止调用 PeachPDF；禁止安装 PDF 库。
+- 禁止整理原始数据到文章；禁止构建其他索引；禁止写其他文件。
+- 禁止擅自改变模板页尺寸、边距、栏数、正文区高度、行高、栏宽、页脚机制。
+- 禁止自动多栏平衡、自动分页、自动避让代替人工逐行核算。
+- 禁止用固定高 `overflow:hidden` 裁切正文冒充分页。
+- 禁止正文流内放大图替代“绝对定位图 + 洞”。
+- 禁止绝对定位图/附记/装饰覆盖正文而不挖洞。
 
-## HTML 兼容 PeachPDF 的硬性要求
-HTML 必须能被 PeachPDF 稳定转换且无格式问题。以下为已验证的支持边界，所有 HTML 均须满足。
+## 排版硬性规则（人检查清单）
 
-### 1. 页面与尺寸
-- 页面尺寸必须 `210 × 285 mm`，用 `@page { size: 210mm 285mm; margin: ... }` 定义。
-- 所有长度单位按标准物理比率解析：`1px = 0.75pt`，`96px = 1in`，`1mm = 2.835pt`[reference:0]。不要用旧式“1px≈1pt”的写法，否则内容会放大 33%。
-- 绝对单位优先：`mm` / `pt` / `cm` / `in`。避免依赖视口单位做关键布局。
+1. **模板优先**：文章页必须沿用模板三栏固定正文区；不得改成双栏或自动平衡多栏。
+2. **逐行核算**：每页占用行数 = 正文 + 洞 + 空行 + 图注预留；必须 ≤ 容量 − 6 行。不足余地必须移段、移图或分页。
+3. **页脚留白**：正文、图片、图注、附记、版权不得进入页脚区域。
+4. **图片必须挖洞**：每张栏内图必须同时有 `.hole` 和 `.photo-abs`，`--ph-w/--ph-h` 一致，`top` 用 mm；`body.debug` 红蓝框校准后删 debug。
+5. **图片样式完整**：`.ph` 必须有 `width:100%`、`height`、`background-size:cover`、`background-position:center`、`background-repeat:no-repeat`、`position:relative`。
+6. **目录绝对定位**：`.toc-col/.toc2-col` 必须 `position:relative`；版权/索引/引文不得与 `.folio` 重叠。
+7. **PeachPDF 兼容**：颜色全 `device-cmyk`；无透明度调浅、无 filter、无 grid 主布局、无 JS、无外链资源；图片只本地路径。
+8. **PDF 只读核对**：转换后只读检查页数、页面尺寸、页脚文本、末页附记文本；发现版式问题只改 HTML。
 
-### 2. 颜色（device-cmyk）
-- 所有颜色必须用 `device-cmyk(C M Y K)`，不得用 hex、rgb、hsl、颜色名等 sRGB 写法。
-- `device-cmyk` 会原样传递为 PDF 的 DeviceCMYK 操作符，不会被近似成 RGB。
-- **不得依赖透明度**：`opacity < 1`、半透明渐变 stop、`fill-opacity`/`stroke-opacity < 1`、SVG `<mask>` 会触发光栅化或透明组；在 PDF/X-1a 等 CMYK 受限模式下，透明内容可能被光栅化，或直接报错[reference:2]。杂志排版应使用实色，如需浅色请用低百分比 CMYK，不要用透明度调浅。
-- 避免使用 `spot color`：PeachPDF 没有专色支持，实践中按 CMYK-only 处理。
+## 验证流程
 
-### 3. 分页与溢出（高危区）
-- PeachPDF 的分页行为不完全等同浏览器，尤其以下情况必须规避：
-  - **不要用 `overflow: hidden` 包裹跨页内容**。曾经因为把这类容器当成不可分割，导致页边缘把最后一行切掉。跨页文章用普通块级流，不要套固定高或 `overflow: hidden` 的壳。
-  - **不要让 flex item / grid item 直接跨页**。这类盒子当前仍倾向于整体移动，容易造成页末大片空白或内容错位。跨页内容用普通 block 流；分栏用 `multi-column`，不要用 grid 硬撑杂志跨页排版。
-  - 避免把大段文字放入固定高度的 `max-height` 盒子：内容超过 max-height 时**不会撑开**，而是直接溢出底边[reference:6]。
-- 需要强制分页时用 `page-break-before: always` / `break-before: page`。不要让 PeachPDF 去“猜”复杂碎片化场景。
+1. AI 交付 HTML，不碰 PDF。
+2. 人类/CI 用 PeachPDF 转换。
+3. AI 用只读脚本核对 PDF 文本与页面尺寸；必要时人工目检渲染结果。
+4. 若转换报错或版式异常，AI 只修 HTML，不修 PDF。
+5. 终端任务必须及时；超时立刻停止，不安装 PDF 库。
 
-### 4. 不支持的样式（会导致光栅化或直接失效）
-- **滤镜类**：`filter: blur()/grayscale()/sepia()/saturate()/hue-rotate()/drop-shadow()` 以及模糊 `box-shadow`，PeachPDF 无法作为矢量绘制，会转成位图或失效[reference:7]。杂志排版不应依赖这些效果。
-- **CSS Grid**：不要用 `display: grid` 做主要版面。PeachPDF 对复杂 Grid/Flexbox 布局支持有限，官方兼容矩阵中 Grid 没有完整的排版保证；版面结构用 block 流 + `float` + 表格（必要时）+ multi-column[reference:8]。
-- **复杂选择器**：不认识的伪类可能使整个选择器列表失效[reference:9]。只用标准、简单、浏览器和 PeachPDF 都能识别的选择器（元素、类、ID、后代、子代、基本属性选择器）。
-- 不要用 JS、动态 DOM、`<dialog>` 的开关行为、`<details>` 的展开行为；这些要么不执行，要么按静态块渲染[reference:10]。
+## 常见失败（必须避免）
 
-### 5. 图片
-- 支持 JPEG、PNG、BMP、GIF、WebP、AVIF、TIFF；SVG 作为矢量支持（inline `<svg>`、`<img src="x.svg">`、`background-image`）[reference:12]。
-- 图片用**本地相对路径**或 `data:` URI。PeachPDF 默认**静默跳过远程 HTTP(S) 资源**，远程图片会直接不出现[reference:13]。
-- 需要透明背景时，PNG 的 alpha 在普通 PDF 中可用，但若输出模式涉及 PDF/X-1a 且要求 CMYK-only，透明区域可能被光栅化或处理成位图；保险起见，印刷用图片尽量用实底 CMYK 图，不要依赖透明叠色。
-- 图片放入固定尺寸容器时，显式设置 `width`/`height` 或 `max-width: 100%`，避免 PeachPDF 的布局引擎对替换元素尺寸计算产生歧义。
-
-### 6. 字体
-- 使用 `@font-face` 嵌入本地字体，格式支持 TTF、OTF/CFF、WOFF、WOFF2。
-- 字体文件放在项目本地，用相对路径引用；不要引用远程字体 CDN。
-- 中文字体尽量在 `font-family` 中给出完整回退栈，并用 `unicode-range` 声明覆盖范围，避免缺字时 PeachPDF 的回退逻辑产生意外字重或字宽[reference:15]。
-- 不要依赖彩色 emoji 字体：彩色 emoji 表不会被嵌入，只保证单色轮廓[reference:16]。
-
-### 7. 结构、选择器与外部资源
-- 文档结构只用标准 HTML 元素（`div`、`p`、`h1`–`h6`、`ul`、`table`、`img`、`figure` 等）。`<head>` 中只有 `<style>` 和 `<link rel="stylesheet">` 会被处理，其余忽略。
-- 所有样式写在 HTML 内的 `<style>` 中，或通过本地 `<link rel="stylesheet">` 引入；不要用内联 `style` 中 PeachPDF 不认识的属性。
-- 禁止外链任何 CSS、JS、图片、字体。需要引用的资源一律本地相对路径或 `data:`。
-- 装饰性矢量优先用 inline `<svg>` 或本地 SVG 文件。SVG 的渐变、裁剪、遮罩大部分支持，但 `<filter>` 中 PDF 无对应操作符的部分（模糊、光照、形态学等）会被光栅化[reference:18]。杂志装饰不要用模糊滤镜。
-
-### 8. 转换验证
-每次 HTML 修改后，由人类/CI 用 `PP/peachpdf.exe` 转换。AI 可用 Python 只读解析转换结果（页数、页面尺寸、文本）核对排版，但不得写入、修改、重新生成 PDF，也不得调用转换工具；若收到转换报错文本，只修复 HTML。
-严禁安装PDF相关库，终端任务必须及时，超时立刻停止，不要歇着，不要浪费时间。
+- 把模板三栏改成双栏自动流，导致行数容量估算失效。
+- 流内大竖图触发 PeachPDF 多栏跳栏，第一栏剩余空间浪费。
+- 绝对定位图/附记不挖洞，直接覆盖正文。
+- `.body` 无固定高度、`.page` 固定高 `overflow:hidden`，正文被裁切。
+- 未给页脚预留 `margin-bottom`，正文压页脚。
+- 目录列漏 `position:relative`，引文/版权跑到页面左下并压页脚。
+- `.endfig .ph` 漏 cover/position，末页图片异常、角标错位。
+- 未逐行核算、未 debug 校准、未只读核对就交付。
