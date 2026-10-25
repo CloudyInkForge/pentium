@@ -2,122 +2,399 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>奔藤 · 卷首语</title>
+<title>目录页 · content.html（模板）</title>
 <style>
-  @page { size: 210mm 285mm; margin: 0; }
+/* ============================================================
+   模板：content.html（目录页 · 全出血单页）
+   ------------------------------------------------------------
+   机制（PeachPDF 安全）：
+   1. @page 210×285mm、margin:0；.page 固定尺寸 + position:relative
+      + overflow:hidden（仅作最终裁切保险，页内内容全部核算不溢出）。
+   2. 版面全部为绝对定位块（全部显式 top/left/right，无 auto 静态位）
+      与 flex 行（PeachPDF Flexbox Level 1 完整支持）；无 grid、无 JS、
+      无 filter、无透明度、无渐变、无伪元素。
+   3. 颜色全部「hex 预览回退 + device-cmyk 印刷实色」字面量双声明
+      （同 page+.html ~ page++++.html 约定：浏览器不支持 device-cmyk
+      时整条声明按无效丢弃、保留前一条 hex；PeachPDF 取后者，
+      PDF 输出为纯 CMYK。注意：颜色不得经 CSS 变量间接引用——
+      var() 替换出的无效颜色会让属性坍缩为初始值而非回退到前一条）。
+   4. 目录两栏为两个等宽流内列（各 81mm，栏距 12mm），
+      栏间竖线为独立绝对定位装饰，不覆盖任何文字。
+   5. 条目行 = flex baseline：题名可换行、页码常驻右上首行基线，
+      不用点线引导（空隙由 space-between 吸收，任何引擎下不叠压）。
+   6. 居中且加 letter-spacing 的文本统一补 padding-left = 字距，
+      抵消末字符后置间距，保证光学居中（两端引擎行为一致）。
+   内容口径：2611 期 articles/contents.txt（33 篇 · 7 栏目）
+   + design.txt（正文页码 P01–P56）。
+   核算：左栏 17 条（1 条两行题）/ 右栏 16 条（4–5 条两行题），
+   含栏头与栏距实测高约 174mm，目录区 70→244mm，页脚线 258mm，
+   余量 ≥14mm，无溢出。
+   ============================================================ */
 
-  html, body { margin: 0; padding: 0; }
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
 
-  body {
-    font-family: "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC",
-                 "SimSun", "STSong", serif;
-    color: device-cmyk(0% 0% 0% 100%);
-    background: device-cmyk(0% 0% 0% 0%);
-  }
+:root {
+  --serif: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+           "SimSun", "STSong", serif;
+  --latin: "Times New Roman", Times, serif;
+}
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 210mm;
+  height: 285mm;
+  background-color: #F7F6F2;
+  background-color: device-cmyk(0 0.01 0.02 0.03);
+}
+
+body {
+  font-family: var(--serif);
+  color: #1A1A1A;
+  color: device-cmyk(0 0 0 0.9);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;
+  background-color: #F7F6F2;
+  background-color: device-cmyk(0 0.01 0.02 0.03);
+}
+
+@media screen {
+  body { padding: 10mm 0; }
   .page {
-    position: relative;
-    width: 210mm;
-    height: 285mm;
-    box-sizing: border-box;
-    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 3mm 3mm 0 #A9B3A6;      /* 无模糊硬投影，仅屏幕预览 */
+    box-shadow: 3mm 3mm 0 device-cmyk(0.21 0.03 0.22 0.28);
   }
+}
 
-  .page + .page {
-    page-break-before: always;
-    break-before: page;
-  }
+/* ---------- 1. 顶行：社标 + SINCE ---------- */
+.brand-row {
+  position: absolute;
+  top: 13mm;
+  left: 18mm;
+  right: 18mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  /* 第一页：左上角粗角，紧贴边缘 */
-  .page-1 {
-    padding: 50mm 22mm 24mm 26mm;
-  }
+.brand-row img {
+  display: block;
+  width: 15.1mm;      /* BT.png 294×136 原比例 */
+  height: 7mm;
+}
 
-  .deco-a {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 42mm;
-    height: 42mm;
-    box-sizing: border-box;
-    border-top: 7mm solid device-cmyk(20% 100% 100% 35%);
-    border-left: 7mm solid device-cmyk(20% 100% 100% 35%);
-  }
+.since {
+  font-family: var(--latin);
+  font-size: 7pt;
+  letter-spacing: 0.55em;
+  color: #2E3A2E;
+  color: device-cmyk(0.21 0 0.21 0.77);
+}
 
-  /* 第二页：右下角粗角，紧贴边缘 */
-  .page-2 {
-    padding: 26mm 26mm 46mm 22mm;
-  }
+/* ---------- 2. 标题区 ---------- */
+.head-left {
+  position: absolute;
+  top: 30mm;
+  left: 18mm;
+}
 
-  .deco-b {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 42mm;
-    height: 42mm;
-    box-sizing: border-box;
-    border-right: 7mm solid device-cmyk(80% 35% 70% 45%);
-    border-bottom: 7mm solid device-cmyk(80% 35% 70% 45%);
-  }
+.head-left h1 {
+  font-size: 33pt;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #2E3A2E;
+  color: device-cmyk(0.21 0 0.21 0.77);
+}
 
-  p {
-    margin: 0 0 0.7em 0;
-    font-size: 11.5pt;
-    line-height: 1.95;
-    text-align: justify;
-    text-indent: 2em;
-  }
+/* 目录题侧的朱印方章（装饰色块，不压文字） */
+.seal {
+  display: inline-block;
+  width: 5.2mm;
+  height: 5.2mm;
+  margin-left: 4mm;
+  background-color: #9E1B32;
+  background-color: device-cmyk(0 0.78 0.62 0.08);
+}
 
-  .kicker {
-    margin: 0 0 16mm 0;
-    font-size: 12pt;
-    font-weight: normal;
-    line-height: 1;
-    letter-spacing: 0.7em;
-    text-indent: 0.7em;
-    text-align: center;
-    color: device-cmyk(20% 100% 100% 35%);
-  }
+.contents-en {
+  margin-top: 3mm;
+  font-family: var(--latin);
+  font-size: 8.5pt;
+  letter-spacing: 0.5em;
+  color: #9E1B32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+}
 
-  .salutation {
-    margin-top: 2.4em;
-    text-indent: 0;
-  }
+.head-meta {
+  position: absolute;
+  top: 33mm;
+  right: 18mm;
+  text-align: right;
+}
 
-  .sign {
-    margin-top: 3em;
-    text-indent: 0;
-    text-align: right;
-    color: device-cmyk(80% 35% 70% 45%);
-  }
+.head-meta .date {
+  font-family: var(--latin);
+  font-size: 13pt;
+  letter-spacing: 0.08em;
+  color: #2E3A2E;
+  color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+.head-meta .vol {
+  margin-top: 2mm;
+  font-family: var(--latin);
+  font-size: 8.5pt;
+  letter-spacing: 0.3em;
+  color: #595959;
+  color: device-cmyk(0 0 0 0.65);
+}
+
+/* ---------- 3. 文武双线 ---------- */
+.rule-a {
+  position: absolute;
+  top: 58mm;
+  left: 18mm;
+  right: 18mm;
+  height: 0;
+  border-top: 1.1pt solid #2E3A2E;
+  border-top-color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+.rule-b {
+  position: absolute;
+  top: 60.2mm;
+  left: 18mm;
+  right: 18mm;
+  height: 0;
+  border-top: 0.5pt solid #2E3A2E;
+  border-top-color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+/* ---------- 4. 目录主体：两栏 ----------
+   左栏 17 条 / 右栏 16 条（含跨行题名实测约 174mm，页高预算内）；
+   栏间竖线为独立装饰，与两栏文字互不接触。 */
+.toc-body {
+  position: absolute;
+  top: 70mm;
+  left: 18mm;
+  right: 18mm;
+  display: flex;
+  gap: 12mm;
+}
+
+.toc-col {
+  position: relative;
+  width: 81mm;
+}
+
+.col-divider {
+  position: absolute;
+  top: 1mm;
+  left: 87mm;         /* .toc-body 宽 174mm 的正中 = 两栏间隙中点 */
+  height: 174mm;
+  width: 0;
+  border-left: 0.5pt solid #A9B3A6;
+  border-left-color: device-cmyk(0.21 0.03 0.22 0.28);
+}
+
+/* 栏目头：绛红小眉题 + 鼠尾草细线 */
+.sec {
+  margin-bottom: 5.5mm;
+}
+
+.sec:last-child { margin-bottom: 0; }
+
+.sec-h {
+  font-size: 8.5pt;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #9E1B32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  padding-bottom: 1.2mm;
+  border-bottom: 0.5pt solid #A9B3A6;
+  border-bottom-color: device-cmyk(0.21 0.03 0.22 0.28);
+  margin-bottom: 2.6mm;
+}
+
+/* 条目行：题名左、页码右，空隙由 space-between 吸收 */
+.it {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2.1mm;
+}
+
+.it .tt {
+  flex: 0 1 auto;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  padding-right: 3mm;
+  color: #1A1A1A;
+  color: device-cmyk(0 0 0 0.9);
+}
+
+.it .pg {
+  flex: 0 0 auto;
+  font-family: var(--latin);
+  font-size: 9pt;
+  letter-spacing: 0.02em;
+  color: #595959;
+  color: device-cmyk(0 0 0 0.65);
+}
+
+/* ---------- 5. 页脚 ---------- */
+.foot-rule {
+  position: absolute;
+  top: 258mm;
+  left: 18mm;
+  right: 18mm;
+  height: 0;
+  border-top: 0.5pt solid #A9B3A6;
+  border-top-color: device-cmyk(0.21 0.03 0.22 0.28);
+}
+
+.foot-line {
+  position: absolute;
+  top: 261.5mm;
+  left: 18mm;
+  right: 18mm;
+  text-align: center;
+  font-size: 7.5pt;
+  letter-spacing: 0.35em;
+  padding-left: 0.35em;   /* 抵消末字符后置间距，保证光学居中 */
+  color: #2E3A2E;
+  color: device-cmyk(0.21 0 0.21 0.77);
+}
+
+.foot-line .sq {
+  font-size: 5pt;
+  color: #9E1B32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 3mm;
+}
 </style>
 </head>
 <body>
 
-<div class="page page-1">
-  <div class="deco-a"></div>
+<div class="page">
 
-  <h2 class="kicker">主编按</h2>
+  <!-- 1. 顶行 -->
+  <div class="brand-row">
+    <img src="BT.png" alt="奔藤">
+    <span class="since">SINCE 2024</span>
+  </div>
 
-  <p>在这个日新月异、欣欣向荣的世界里，一切充满生机，凡事皆可为。我们在常青藤的校园里一同学习、一同进步，汲取知识、涵养品德，对人生的未来无限憧憬，对广阔的世界无限向往。校园生活中，《奔藤》为大家提供了展示风采的舞台、交流研讨的空间，顺应了学校发展的客观要求，顺应了学生成长的必然趋势。今天，我们创立《奔藤》，让我们奔腾在伟大的时代，书写青春的年华，期许满载而归、硕果盈怀！</p>
+  <!-- 2. 标题区 -->
+  <div class="head-left">
+    <h1>目 录<span class="seal"></span></h1>
+    <p class="contents-en">CONTENTS</p>
+  </div>
+  <div class="head-meta">
+    <p class="date">2026 · 11</p>
+    <p class="vol">Vol. 3</p>
+  </div>
 
-  <p class="salutation">亲爱的读者们：</p>
+  <!-- 3. 双线 -->
+  <div class="rule-a"></div>
+  <div class="rule-b"></div>
 
-  <p>中国梦激荡中国力量，青春梦，《奔藤》青春飞扬。本刊的主管单位是太原市常青藤中学校（下面简称“我校”）。我校始终坚持立德树人的教育方针，贯彻落实“五育并举，全面发展”的新时代教育理念，致力于培养对党忠诚、品德优异、素质过硬、专业见长的中国特色社会主义建设者和接班人。</p>
+  <!-- 4. 目录两栏 -->
+  <div class="toc-body">
+    <div class="col-divider"></div>
 
-  <p>书写自我荡漾青春之志，共鸣共情汇聚时代洪流。面对新形势下的新要求、新机遇，《奔藤》应运而生。本刊是我校全体同学挥毫泼墨演绎青春活力的重要舞台。本刊致力于让同学们在回望过去和展望未来中培养家国情怀，在学习交流和思考探索中练就过人本领，在科学钻研和社会实践中养成创新品质，成为合乎时代要求的现代化人才。</p>
-</div>
+    <!-- 左栏：时政摘编 / 封面故事 / 文史杂谈 / 正当年华 -->
+    <div class="toc-col">
 
-<div class="page page-2">
-  <div class="deco-b"></div>
+      <section class="sec">
+        <h2 class="sec-h">时政摘编</h2>
+        <p class="it"><span class="tt">时政汇编</span><span class="pg">01</span></p>
+      </section>
 
-  <p>本刊以《奔藤》为名。“举帆遇风劲，逸势如飞奔”，诗出吴筠。“奔”在古诗文中常译为奔腾的快马，象征着速度、进取。本刊主管单位太原市常青藤中学校，在改革的春风中崛起，在时代的浪潮中发展，短短八年时间取得了为人称道的优异成绩，而如此成就的取得离不开骏马般的拼搏奋进。在办学过程中，全校师生踔厉奋发，锐意进取，以求真务实的姿态，以尽善尽美的决心，以“志存高远，脚踏实地”的坚定信念，干好事业，做好学问。他们就像一匹匹飞奔的骏马，驰骋于常青藤的绿茵场上；他们用自己坚实的脚步，推动奔腾的梦想扬帆起航；他们立志知识报国，投身民族复兴的光辉事业。第二字取“藤”字，藤是校名的一部分，代表我校；同时也有深层次的含义。“藤”本意是木本蔓生植物的枝茎，蕴含着蓬勃向上的顽强斗志和青春活力。“青春如初春，如朝日，如百卉之萌动”。常青藤的学子，正是在校园这棵蓬勃生长的主藤上，汲取养分、积极进取、发展自我，如藤蔓一般向上，向上，再向上，最终结出灿烂的果实，从常青藤中学校走向中国常青藤、走向世界常青藤。由此可知，“奔藤”二字蕴含着我校奋发有为的文化特质，饱含着我校对学生工作的重视和对我刊茁壮成长的殷切期待！</p>
+      <section class="sec">
+        <h2 class="sec-h">封面故事 · 纪念长征胜利九十周年</h2>
+        <p class="it"><span class="tt">把信念走成路——写在长征胜利九十周年</span><span class="pg">02–04</span></p>
+        <p class="it"><span class="tt">一线阳光穿云出——周恩来的长征路</span><span class="pg">05–06</span></p>
+        <p class="it"><span class="tt">铁血征途映初心 大德无言照长征——朱德长征故事</span><span class="pg">07</span></p>
+        <p class="it"><span class="tt">真理在谁手里——毛泽东长征小传</span><span class="pg">08–09</span></p>
+        <p class="it"><span class="tt">走好我们的新时代长征路（节选）</span><span class="pg">10–12</span></p>
+        <p class="it"><span class="tt">四渡赤水</span><span class="pg">13–14</span></p>
+        <p class="it"><span class="tt">长征诗词选</span><span class="pg">15</span></p>
+      </section>
 
-  <p>本刊面向全校同学开放，期待各年级同学的来稿。</p>
+      <section class="sec">
+        <h2 class="sec-h">文史杂谈</h2>
+        <p class="it"><span class="tt">当浪潮已逝——战国时期的法家</span><span class="pg">16–21</span></p>
+        <p class="it"><span class="tt">杜甫：一个不明不白的情圣</span><span class="pg">22–24</span></p>
+        <p class="it"><span class="tt">山西人的足迹</span><span class="pg">25–26</span></p>
+        <p class="it"><span class="tt">流浪者的悲鸣</span><span class="pg">27</span></p>
+      </section>
 
-  <p>于高山之巅，方见大河奔涌；于群峰之上，更觉长风浩荡。我刊将切实当好与青年学生的连心桥，始终致力于为常青藤学子提供妙笔生花展文采的舞台、思想交流提修养的平台，让青春思想碰撞出闪耀的火花！</p>
+      <section class="sec">
+        <h2 class="sec-h">正当年华</h2>
+        <p class="it"><span class="tt">正当年华</span><span class="pg">28–30</span></p>
+        <p class="it"><span class="tt">长江动物园</span><span class="pg">31</span></p>
+        <p class="it"><span class="tt">逃亡可可西里</span><span class="pg">32</span></p>
+        <p class="it"><span class="tt">上山，下山</span><span class="pg">33</span></p>
+        <p class="it"><span class="tt">傻子</span><span class="pg">34</span></p>
+      </section>
 
-  <p class="sign">太原市常青藤中学校《奔藤》编辑部</p>
+    </div>
+
+    <!-- 右栏：社会热点 / 艺体观察 / 校园天地 -->
+    <div class="toc-col">
+
+      <section class="sec">
+        <h2 class="sec-h">社会热点</h2>
+        <p class="it"><span class="tt">在韩国，政府和财阀谁是老大？</span><span class="pg">35–36</span></p>
+        <p class="it"><span class="tt">逐梦名古屋，同心向亚洲——第20届爱知·名古屋亚运会全景综述</span><span class="pg">37</span></p>
+        <p class="it"><span class="tt">文玩乱象：消费者正一步步掉入“文化”陷阱</span><span class="pg">38</span></p>
+        <p class="it"><span class="tt">杨树荣：大明湖畔最有腔调的大爷</span><span class="pg">39</span></p>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-h">艺体观察</h2>
+        <p class="it"><span class="tt">刘晓庆：一朵不败的小花</span><span class="pg">40–41</span></p>
+        <p class="it"><span class="tt">怀念游本昌：永远的济公</span><span class="pg">42</span></p>
+        <p class="it"><span class="tt">送别刘欢：心若在，梦就在</span><span class="pg">43–44</span></p>
+        <p class="it"><span class="tt">奥德赛：诺兰该如何驶过自己的地中海？</span><span class="pg">45</span></p>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-h">校园天地</h2>
+        <p class="it"><span class="tt">Light from Midday Tales</span><span class="pg">46</span></p>
+        <p class="it"><span class="tt">雾里·物理·悟理——高中物理学法指导</span><span class="pg">47–48</span></p>
+        <p class="it"><span class="tt">图难于其易，为大于其细——高中地理学法指导</span><span class="pg">49–50</span></p>
+        <p class="it"><span class="tt">浅析2026年历史山东卷</span><span class="pg">51</span></p>
+        <p class="it"><span class="tt">跑向更好的自己——高125班“牛牛健跑团”侧记</span><span class="pg">52</span></p>
+        <p class="it"><span class="tt">军训感悟精选</span><span class="pg">53</span></p>
+        <p class="it"><span class="tt">科技节生物活动——以方寸标本，定格生命之美</span><span class="pg">54–55</span></p>
+        <p class="it"><span class="tt">在劳动中收获，在收获中成长——记九月份秋收活动</span><span class="pg">56</span></p>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 5. 页脚 -->
+  <div class="foot-rule"></div>
+  <p class="foot-line"><span class="sq">■</span>常青藤中学 · 奔藤杂志社<span class="sq">■</span></p>
+
 </div>
 
 </body>
