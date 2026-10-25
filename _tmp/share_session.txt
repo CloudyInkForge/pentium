@@ -1,0 +1,705 @@
+ZCode
+2611仍然有一些页文字排版不合理，灵活的修改一下，确保整齐优雅。在这之前先解决问题，仍然有很多页PDF第二栏文本...
+去 ZCode 继续
+2026年10月25日 20:11
+· 7 个结果物
+2611仍然有一些页文字排版不合理，灵活的修改一下，确保整齐优雅。在这之前先解决问题，仍然有很多页PDF第二栏文本不显示或某一栏最后一行文本显示不完全，大多都是文字排版计算不准确无余地的问题，检查分析并解决。以及大部分页面排版都不整齐，一栏长、一栏短比比皆是，同时还有许多不合理的留白，你完全可以微调字号行距来完成更精细整齐的排版。逐篇文章的完成该工作，在不破坏页面分配的前提下，完成尽可能整齐无错误的文本排版。
+已工作 1 时 5 分
+思考
+·
+持续了几秒
+
+我先了解一下项目结构和 2611 的现状，再逐项分析排版问题。
+
+终端
+ls "D:\CloudyInkForge\pentium"
+思考
+·
+持续了几秒
+终端
+ls "D:\CloudyInkForge\pentium\2611" && cat "D:\CloudyInkForge\pentium\agent.md" 2>/dev/null | head -100
+思考
+·
+持续了几秒
+查阅
+·
+1 列表, 1 文件
+思考
+·
+持续了几秒
+查阅
+·
+3 列表
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium\2611" && wc -l 2611.html && ls -la 2611.pdf 2611.html && git -C .. log --oneline -5
+思考
+·
+持续了几秒
+
+PDF 是最新的（18:54 生成）。我先做 PDF 只读体检，找出哪些页有“第二栏不显示/末行被裁”问题，再对照 HTML 修复。
+
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && ls PP && head -60 readme.md && head -80 styles.md
+思考
+·
+持续了几秒
+
+任务明确了：这是“AI 改 HTML → 人用 PeachPDF 转 PDF → AI 只读校验”的循环。我现在做只读 PDF 体检，找出所有问题页。
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/check2611.py << 'EOF' # -*- coding: utf-8 -*- # 只读体检：逐页提取文本与坐标，按栏分桶，报告每栏最底一行位置 import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 PDF = r"D:\CloudyInkForge\pentium\2611\2611.pdf" MM = 72 / 25.4 reader = PyPDF2.PdfReader(PDF) print("pages:", len(reader.pages)) pw = float(reader.pages[0].mediabox.width); ph = float(reader.pages[0].mediabox.height) print("page size pt:", pw, ph, "mm:", round(pw/MM,1), round(ph/MM,1)) for pno in range(len(reader.pages)): page = reader.pages[pno] items = [] # (x_mm, y_mm, text) def visitor(text, cm, tm, fd, fs): t = text.strip() if not t: return x = tm[4]; y = tm[5] items.append((x/MM, y/MM, t)) try: page.extract_text(visitor_text=visitor) except Exception as e: print(pno+1, "ERR", e); continue if not items: print(f"P{pno+1:02d} NO-TEXT"); continue # 按栏分桶：基础页版心 16..194mm（三栏 55.67+5.5*2）；PRO 全出血 # 用聚类：把 x 排序后按间隙>20mm 分组 xs = sorted(set(round(x,0) for x,y,t in items)) print(f"P{pno+1:02d} items={len(items)}") EOF C:/Python313/python.exe _tmp/check2611.py 2>&1 | head -20
+思考
+·
+持续了几秒
+
+P02/P07 只有 2 个文本项——那是 PRO 整版跨页图页，属正常。我需要更完整的分析：把每页文本带坐标导出，和 HTML 逐页比对。
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/dump2611.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 PDF = r"D:\CloudyInkForge\pentium\2611\2611.pdf" MM = 72 / 25.4 reader = PyPDF2.PdfReader(PDF) out = [] for pno in range(len(reader.pages)): page = reader.pages[pno] items = [] def visitor(text, cm, tm, fd, fs): t = text.strip() if not t: return items.append({"x": round(tm[4]/MM,2), "y": round(tm[5]/MM,2), "t": t}) page.extract_text(visitor_text=visitor) out.append(items) with open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json","w",encoding="utf-8") as f: json.dump(out, f, ensure_ascii=False) # 摘要：每页最底文本行 y 与其文本 for pno, items in enumerate(out): if not items: print(f"P{pno+1:02d} EMPTY") continue low = max(items, key=lambda i: i["y"]) txt = low["t"][:28].replace("\n"," ") print(f"P{pno+1:02d} lowest y={low['y']:7.1f} x={low['x']:6.1f} | {txt}") EOF C:/Python313/python.exe _tmp/dump2611.py
+思考
+·
+持续了几秒
+
+坐标层面没有明显越界。下一步：把 HTML 逐页的文本和 PDF 提取文本做差集，找出“第二栏丢失”的页。先看 HTML 的分页结构。
+
+终端
+cd "D:\CloudyInkForge\pentium\2611" && grep -n 'class="page' 2611.html | head -90
+思考
+·
+持续了几秒
+
+HTML 是每页一个 div.page。现在写比对脚本：逐页 HTML 文本 vs PDF 提取文本，找出丢失内容。
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/cmp2611.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json, re, html as htmlmod sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') SRC = open(r"D:\CloudyInkForge\pentium\2611\2611.html", encoding="utf-8").read() items = json.load(open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json", encoding="utf-8")) # ---- split html into pages ---- starts = [m.start() for m in re.finditer(r'<div class="page[ "]', SRC)] pages_html = [] for i, s in enumerate(starts): e = starts[i+1] if i+1 < len(starts) else len(SRC) pages_html.append(SRC[s:e]) print("html pages:", len(pages_html), "pdf pages:", len(items)) def strip_html(h): # remove style blocks h = re.sub(r'<style.*?</style>', '', h, flags=re.S) h = re.sub(r'<!--.*?-->', '', h, flags=re.S) h = re.sub(r'<[^>]+>', '', h) h = htmlmod.unescape(h) h = re.sub(r'\s+', '', h) return h def pdf_text(pg): t = ''.join(i["t"] for i in pg) return re.sub(r'\s+', '', t) missing_report = [] for idx in range(min(len(pages_html), len(items))): htxt = strip_html(pages_html[idx]) ptxt = pdf_text(items[idx]) # 按块检查：把 html 文本切成 12 字滑窗段，找 html 中连续但 pdf 中没有的段落 # 更实用：按 HTML 文本顺序，找到最长缺失前缀块 miss = [] i = 0 n = len(htxt) while i < n: # try to match growing run j = i while j < n: if htxt[j] not in ptxt and htxt[j] not in '·—': break j += 1 # binary-search longest k so that htxt[i:i+k] in ptxt lo, hi = 0, j - i best = 0 while lo <= hi: mid = (lo+hi)//2 if htxt[i:i+mid] in ptxt: best = mid; lo = mid+1 else: hi = mid-1 run = htxt[i:i+best] if best < 8: # 无法匹配的段，报缺失 # collect the maximal missing chunk (until next good match) k = i while k < n: nxt = htxt[k:k+8] if nxt in ptxt: break k += 1 miss.append(htxt[i:min(k, i+60)]) i = k else: i += best if miss: missing_report.append((idx+1, miss)) print(f"P{idx+1:02d} MISSING {len(miss)}:") for m in miss: print(" …" + m + "…") if not missing_report: print("NO MISSING TEXT") EOF C:/Python313/python.exe _tmp/cmp2611.py
+思考
+·
+持续了几秒
+
+比对完成，问题清晰了。缺失内容分三类：
+
+图注丢失（约 20 处）——photo-block 落到栏底时图注被 PeachPDF 丢弃；
+续页标识丢失（6 处）——.continued-mark 未渲染；
+正文行丢失（P01/P10/P16/P17/P20/P31/P64/P72）——栏末行溢出被裁。
+
+现在逐页对照 HTML 核算。先看各页的行号分布：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/pagemap.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, re sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') SRC = open(r"D:\CloudyInkForge\pentium\2611\2611.html", encoding="utf-8").read() lines = SRC.split('\n') starts = [] for ln, line in enumerate(lines, 1): if re.match(r'<div class="page[ "]', line): starts.append(ln) for i, s in enumerate(starts): e = starts[i+1]-1 if i+1 < len(starts) else len(lines) print(f"P{i+1:02d}: lines {s}-{e} ({e-s+1})") EOF C:/Python313/python.exe _tmp/pagemap.py
+思考
+·
+持续了几秒
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+CSS 结构清楚了。现在深入分析问题页。先看正文丢失的页面（P01/P10/P16/P17/P20/P64/P72）和 continued-mark 丢失页的结构：
+
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+P01 没有任何 .cbrk，靠自然流分栏——栏边界落在段落中间时 PeachPDF 就丢掉续行片段。这就是“第二栏不显示”的根因。我写一个逐栏分析脚本，从 PDF 反推每栏实际行数和栏底位置：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/cols2611.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') items = json.load(open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json", encoding="utf-8")) # 页面类型:2col 页码列表(双栏),其余基础页三栏;PRO 跳过 P2COL = {4,5,8,12,13,14,15,18,22,23,24,25,26,27,28,29,34,36,37,40,46,47,49,54,62,66,67,71,74} PRO = {2,3,6,7,10,11,16,17,20,21,30,32,38,39,44,45,52,58,59,65,70,73} def analyze(pno, items): # 过滤 folio 区 (y<20) 与正文 body = [i for i in items if 20 <= i["y"] <= 266] if not body: return ncol = 2 if pno in P2COL else 3 cw = (178 - 5.5*(ncol-1)) / ncol x0 = 16 cols = [[] for _ in range(ncol)] for it in body: rel = it["x"] - x0 ci = int(rel // (cw + 5.5)) if 0 <= ci < ncol: cols[ci].append(it) else: # 图片说明右对齐等,归入最近的栏 ci = min(range(ncol), key=lambda c: abs(x0 + c*(cw+5.5) + cw/2 - it["x"])) cols[ci].append(it) print(f"--- P{pno:02d} ({ncol}col) ---") for ci, c in enumerate(cols): if not c: print(f" col{ci+1}: EMPTY"); continue ys = sorted({round(i["y"],1) for i in c}, reverse=True) # 聚类行 (相邻<1.5mm 视为一行) lines = [] for y in ys: if not lines or lines[-1] - y > 1.5: lines.append(y) c.sort(key=lambda i: (-i["y"], i["x"])) top = c[0]; bot = min(c, key=lambda i: i["y"]) print(f" col{ci+1}: {len(lines):3d}行 y[{bot['y']:6.1f}..{max(ys):6.1f}] " f"首[{top['t'][:14]}] 末[{bot['t'][:14]}]") for pno, its in enumerate(items, 1): if pno in PRO: continue analyze(pno, its) EOF C:/Python313/python.exe _tmp/cols2611.py 2>&1 | head -120
+思考
+·
+持续了几秒
+
+栏位数据非常有价值——P01 实际只渲染了 col1 44 行 + col2 47 行 + col3 仅 2 行，大量正文丢失。我需要看清楚 photo-block 图注丢失的具体机制。先看 P05 的完整渲染文本和 HTML：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/pageitems.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') items = json.load(open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json", encoding="utf-8")) pno = int(sys.argv[1]) for it in sorted(items[pno-1], key=lambda i: (-i["y"], i["x"])): print(f"y={it['y']:7.1f} x={it['x']:6.1f} | {it['t'][:52]}") EOF C:/Python313/python.exe _tmp/pageitems.py 5 && sed -n '808,882p' 2611/2611.html
+思考
+·
+持续了几秒
+
+P05 揭示了重要事实：“红军战士群雕”其实在 PDF 里有（y=50.8）——我的比对有误报。同时看到真正的问题：col1 底部有 29mm 空洞，col2 却排到底，栏严重不平衡。先验证这些“缺失图注”是真是假：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/verify.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json, re sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') items = json.load(open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json", encoding="utf-8")) cases = [ (1,"推进器完成短时腾空"),(1,"凭《初次尝到寂寞》获第31届"), (3,"王翚《太行山色》"),(5,"红军战士群雕"),(9,"红军草鞋"),(9,"神农精神"), (10,"真理在谁手里，就跟谁走"),(16,"毛泽东的计划是进军"),(17,"四渡赤水·续"),(17,"红军继续北上"), (20,"子夏尽管已经是满头白发"),(21,"·续"),(22,"当浪潮已逝·续"),(23,"当浪潮已逝·续"), (25,"当浪潮已逝·续"),(26,"当浪潮已逝·续"),(28,"唐代诗人画像"),(31,"四纳兰性德思念着"), (33,"敦煌阳关遗址王维雕像"),(34,"鹳雀楼日落航拍"),(36,"正当年华·续"),(36,"北京大学西门"), (37,"正当年华·续"),(37,"私塾场景复原"),(37,"蔡元培先生塑像"),(45,"首尔三星大楼"), (46,"三星会长李在镕"),(50,"清代朝珠项链"),(53,"电影《小花》剧照"),(54,"刘晓庆早年写真"), (55,"布袋和尚像"),(55,"游本昌晚年写真"),(57,"刘欢黑白肖像"),(59,"拉雷塞《墨丘利命卡吕普索放行尤利西斯》"), (63,"商代刻辞甲骨"),(64,"以知识为经纬"),(69,"清代礼服甲胄"),(72,"体浑浊变质"), ] for pno, s in cases: pt = ''.join(i["t"] for i in items[pno-1]).replace(" ","").replace("\u00a0","") s2 = s.replace(" ","") print(f"P{pno:02d} {'FOUND' if s2 in pt else 'GONE!':7s} {s}") EOF C:/Python313/python.exe _tmp/verify.py
+思考
+·
+持续了几秒
+
+误报排除后，真正的缺失清单确认了：9 页正文片段丢失 + 4 页图注丢失。我需要看图注丢失页的原始坐标，弄清 PeachPDF 的丢弃机制：
+
+终端
+cd "D:\CloudyInkForge\pentium" && for p in 33 45 53 59; do echo "===== P$p ====="; C:/Python313/python.exe _tmp/pageitems.py $p | head -40; done
+思考
+·
+持续了几秒
+
+发现重大线索：P33/P45/P53/P59 都是 pro-1 右页，正文双栏只渲染了左栏+右栏第一行，其余全部丢失。而且右栏起始 x≈95.8 与预期 107.75 不符。看这几页的 HTML：
+
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+机制已经明朗了。我发现了几类问题，先做一个元素级的精确缺失核对（每个 HTML 文本节点是否完整出现在 PDF 中），把问题清单做全：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/elem2611.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json, re, html as hm sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') SRC = open(r"D:\CloudyInkForge\pentium\2611\2611.html", encoding="utf-8").read() items = json.load(open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items.json", encoding="utf-8")) starts = [m.start() for m in re.finditer(r'<div class="page[ "]', SRC)] pages_html = [SRC[s:(starts[i+1] if i+1 < len(starts) else len(SRC))] for i, s in enumerate(starts)] def norm(t): return re.sub(r'[\s\u00a0]+', '', t) report = {} for idx, ph in enumerate(pages_html): ph2 = re.sub(r'<!--.*?-->', '', ph, flags=re.S) ph2 = re.sub(r'<style.*?</style>', '', ph2, flags=re.S) # 文本节点:标签间内容 nodes = re.findall(r'>([^<>]+)<', ph2) pt = norm(''.join(i["t"] for i in items[idx])) lost = [] for n in nodes: t = norm(hm.unescape(n)) if len(t) < 2: continue # 跳过纯符号 if not re.search(r'[\u4e00-\u9fffA-Za-z0-9]', t): continue if t not in pt: lost.append(t) if lost: report[idx+1] = lost for p, lost in sorted(report.items()): print(f"P{p:02d} 丢失 {len(lost)} 个文本节点:") for t in lost: print(f" [{len(t)}字] {t[:56]}") EOF C:/Python313/python.exe _tmp/elem2611.py
+思考
+·
+持续了几秒
+
+等等——我发现坐标可能有陷阱：PyPDF2 的 visitor 文本块可能包含多行。先验证文本项的真实结构（是否含换行、坐标对应关系）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/raw33.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 PDF = r"D:\CloudyInkForge\pentium\2611\2611.pdf" MM = 72 / 25.4 reader = PyPDF2.PdfReader(PDF) page = reader.pages[32] # P33 def visitor(text, cm, tm, fd, fs): t = text.strip() if not t: return print(f"tm=({tm[4]/MM:6.1f},{tm[5]/MM:6.1f}) cm=({cm[4]/MM:6.1f},{cm[5]/MM:6.1f}) fs={fs} | {repr(t[:60])}") page.extract_text(visitor_text=visitor) EOF C:/Python313/python.exe _tmp/raw33.py 2>&1 | head -30
+思考
+·
+持续了几秒
+
+坐标系有陷阱：justify 两端对齐的行可能被拆成多个文本运行，我的按 x 分栏不可靠。最可靠的办法是直接渲染页面图像目检。查一下可用的渲染工具：
+
+终端
+which mutool gs pdftoppm magick gswin64c 2>/dev/null; C:/Python313/python.exe -c "import fitz; print('pymupdf', fitz.__version__)" 2>&1 | tail -1; C:/Python313/python.exe -c "import pypdfium2; print('pypdfium2 ok')" 2>&1 | tail -1
+思考
+·
+持续了几秒
+
+没有渲染工具且不许安装。改用 PyPDF2 的整体提取（自带行分组）来看真实视觉行结构：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/plain33.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") t = reader.pages[32].extract_text() for i, ln in enumerate(t.split('\n')): print(f"{i:3d} [{len(ln):3d}] {ln[:64]}") EOF C:/Python313/python.exe _tmp/plain33.py
+思考
+·
+持续了几秒
+
+逐字推理进入死胡同——直接用浏览器渲染 PDF 页面看真实版面。加载浏览器控制技能：
+
+技能
+browser-use:control-browser
+思考
+·
+持续了几秒
+
+浏览器不能直接开 file:，我起一个本地 HTTP 服务来渲染 PDF 页面做目检：
+
+终端
+cd "D:\CloudyInkForge\pentium\2611" && C:/Python313/python.exe -m http.server 8765 --bind 127.0.0.1
+打开浏览器环境
+· 已完成
+思考
+·
+持续了几秒
+打开 PDF 第33页查看
+· 已完成
+
+tool-image-78-1.jpg
+
+IMAGE · 137 KB
+
+下载文件
+思考
+·
+持续了几秒
+
+截图证实了诊断！P33 的正文被渲染成单栏（左半栏文字、右半全空），底部插图被推出页面、图注丢失。看一下 PRO 模板原版是怎么写的：
+
+查阅
+·
+1 搜索, 1 文件
+思考
+·
+持续了几秒
+
+模板的 .cols 也没有显式高度——这就是问题所在。验证一下模板自己的 PDF 是否同样坏：
+
+查看当前浏览器标签
+· 已完成
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && C:/Python313/python.exe -m http.server 8766 --bind 127.0.0.1
+查看模板 pro-1.pdf 右页
+· 已完成
+
+tool-image-88-1.jpg
+
+IMAGE · 125 KB
+
+下载文件
+思考
+·
+持续了几秒
+
+模板自己也坏——确认了根因：PeachPDF 的多栏在容器无确定高度时退化为单栏，.cbrk 也失效。基础页 .body 因为在 flex 固定高度 .page 内有确定高度所以正常。继续目检其他问题页：
+
+查看 PDF 第10页
+· 已完成
+
+tool-image-91-1.jpg
+
+IMAGE · 125 KB
+
+下载文件
+思考
+·
+持续了几秒
+
+P10 同样确诊：zone-l 的 .cols 单栏化、右半空白、文字溢出被裁。继续看 P17、P71、P01、P64、P72：
+
+查看 PDF 第71页
+· 已完成
+
+tool-image-94-1.jpg
+
+IMAGE · 125 KB
+
+下载文件
+思考
+·
+持续了几秒
+强制刷新查看第71页
+· 已完成
+
+tool-image-96-1.jpg
+
+IMAGE · 121 KB
+
+下载文件
+思考
+·
+持续了几秒
+查看 PDF 第1页
+· 已完成
+
+tool-image-98-1.jpg
+
+IMAGE · 116 KB
+
+下载文件
+思考
+·
+持续了几秒
+
+P01 三栏本身有渲染，但栏边界处的段落片段被丢弃（栏底文字被切断）。再看 P64 和 P72 这两个丢失最多的页：
+
+查看 PDF 第64页
+· 已完成
+
+tool-image-101-1.jpg
+
+IMAGE · 134 KB
+
+下载文件
+思考
+·
+持续了几秒
+
+诊断完成，问题全部定位。更新任务清单并开始修复：
+
+思考
+·
+持续了几秒
+
+开始实施。先看各 PRO 文字页的 .content/.zone 子元素结构，确定 flex 化方案：
+
+终端
+·
+2 个命令
+思考
+·
+持续了几秒
+
+现在建精确的行数核算工具：从 PDF 重建“视觉行”（按基线聚类 + x 间隙分列），与 HTML 元素匹配，得到每段真实行数。先重新导出带字号的文本项：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/dump2.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 PDF = r"D:\CloudyInkForge\pentium\2611\2611.pdf" MM = 72 / 25.4 reader = PyPDF2.PdfReader(PDF) out = [] for pno in range(len(reader.pages)): page = reader.pages[pno] items = [] def visitor(text, cm, tm, fd, fs): t = text.strip() if not t: return items.append({"x": round(tm[4]/MM,2), "y": round(tm[5]/MM,2), "fs": fs, "t": t}) page.extract_text(visitor_text=visitor) out.append(items) with open(r"D:\CloudyInkForge\pentium\_tmp\pdf_items2.json","w",encoding="utf-8") as f: json.dump(out, f, ensure_ascii=False) print("dumped", sum(len(p) for p in out), "items") EOF C:/Python313/python.exe _tmp/dump2.py && cat > _tmp/vlines.py << 'EOF' # -*- coding: utf-8 -*- """从 PDF 重建视觉行:按基线聚类,x 间隙拆行,输出每栏行序列""" import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') items = json.load(open(r"_tmp\pdf_items2.json", encoding="utf-8")) def char_w(ch, fs): o = ord(ch) if o < 0x2E80: # ascii/latin return fs * 0.3528 * (0.30 if ch in ' .,\'’‘"“”!i' else 0.55) return fs * 0.3528 # CJK 全角 def item_w(it): fs = it["fs"] or 8.7 return sum(char_w(c, fs) for c in it["t"]) def vlines_for_page(pno, col_edges): its = [i for i in items[pno-1] if 20 <= i["y"] <= 272] by_y = {} for i in its: key = round(i["y"] * 2) / 2 # 0.5mm 聚类 by_y.setdefault(key, []).append(i) lines = [] for y in sorted(by_y, reverse=True): runs = sorted(by_y[y], key=lambda i: i["x"]) cur = None for r in runs: if cur is None: cur = {"y": y, "x0": r["x"], "x1": r["x"] + item_w(r), "t": r["t"], "fs": r["fs"]} elif r["x"] - cur["x1"] > 2.5: lines.append(cur); cur = {"y": y, "x0": r["x"], "x1": r["x"] + item_w(r), "t": r["t"], "fs": r["fs"]} else: cur["t"] += r["t"]; cur["x1"] = r["x"] + item_w(r) if cur: lines.append(cur) # 分栏 for ln in lines: best, bd = None, 1e9 for ci, (a, b) in enumerate(col_edges): cx = (max(ln["x0"], a) + min(ln["x1"], b)) / 2 if a - 1 <= ln["x1"] and ln["x0"] <= b + 1: d = abs(cx - (a + b) / 2) if d < bd: bd, best = d, ci ln["col"] = best if best is not None else -1 return lines if __name__ == "__main__": import sys pno = int(sys.argv[1]); ncol = int(sys.argv[2]) if ncol == 3: edges = [(16,71.67),(77.17,132.83),(138.33,194)] elif ncol == 2: edges = [(16,102.25),(107.75,194)] else: edges = [(16,194)] for ln in vlines_for_page(pno, edges): print(f"c{ln['col']} y={ln['y']:6.1f} x={ln['x0']:6.1f} fs={ln['fs']} | {ln['t'][:46]}") EOF C:/Python313/python.exe _tmp/vlines.py 5 2 | head -30
+思考
+·
+持续了几秒
+
+行重建在 P05 出现可疑的“超宽行”——需要看 PDF 内容流里文本算子的真实写法来确定坐标语义：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/stream5.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, re, zlib sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") page = reader.pages[4] data = page.get_contents().get_data().decode('latin-1') # 找包含 "代表当年" 的 Tj 附近算子 — CJK 在流里是十六进制或转义;先看 BT/ET 块结构样本 blocks = data.split('BT') print("BT blocks:", len(blocks)) # 打印前 3 个含 Tm 的块的开头 cnt = 0 for b in blocks: if 'Tm' in b and cnt < 4: print("=" * 40) print(b[:600].strip()[:600]) cnt += 1 EOF C:/Python313/python.exe _tmp/stream5.py
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/stream5b.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") page = reader.pages[4] data = page.get_contents().get_data().decode('latin-1') blocks = data.split('BT') for i, b in enumerate(blocks[1:5], 1): print(f"===== BT block {i} ({len(b)} chars) =====") print(b[:900].strip()) print() EOF C:/Python313/python.exe _tmp/stream5b.py
+思考
+·
+持续了几秒
+
+PeachPDF 逐字符写 Tj+Td，PyPDF2 的合并策略导致跨界文本块。直接看 P05 该区域的原始回调细节：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/rawdump.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 MM = 72/25.4 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") page = reader.pages[4] def visitor(text, cm, tm, fd, fs): t = text.strip() if not t: return y = tm[5]/MM if 234 <= y <= 248: print(f"y={y:6.2f} x={tm[4]/MM:6.2f} | {repr(t)}") page.extract_text(visitor_text=visitor) EOF C:/Python313/python.exe _tmp/rawdump.py
+思考
+·
+持续了几秒
+
+PyPDF2 的合并会携带过期坐标，不可靠。终极方案：直接解析 PDF 内容流（逐字符 Tj+Td，可精确重建每行文本与位置）。需要先解析字体的 ToUnicode 映射：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/cstream.py << 'EOF' # -*- coding: utf-8 -*- """从 PDF 内容流精确重建视觉行:逐 BT 块跟踪 Td/Tj,经 ToUnicode 解码""" import sys, io, re, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 MM = 72/25.4 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") def build_cmaps(page): cmaps = {} fonts = page["/Resources"].get("/Font", {}) for fname in fonts: f = fonts[fname].get_object() tu = f.get("/ToUnicode") if tu is None: cmaps[str(fname)] = {} continue data = tu.get_object().get_data().decode('latin-1') m = {} for bf, uni in re.findall(r'beginbfchar\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>', data): m[int(bf, 16)] = ''.join(chr(int(uni[i:i+4], 16)) for i in range(0, len(uni), 4)) for a, b, u in re.findall(r'beginbfrange\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>', data): a, b, u0 = int(a,16), int(b,16), int(u,16) for g in range(a, b+1): m[g] = chr(u0 + (g - a)) cmaps[str(fname)] = m return cmaps TOK = re.compile(r''' (?P<hex><[0-9A-Fa-f\s]*>) | (?P<str>\((?:\\.|[^\\()])*\)) | (?P<num>[-+]?\d*\.?\d+) | (?P<op>/[^\s/\[\]<>()]+) | (?P<any>[\[\]{}]) | (?P<kw>[A-Za-z'"*]+) ''', re.X) def parse_page(pno): page = reader.pages[pno-1] cmaps = build_cmaps(page) data = page.get_contents().get_data().decode('latin-1') lines = [] # {y,x,text,fs,blk} x = y = 0.0; fs = 0.0; font = None in_bt = False blk = 0 for m in TOK.finditer(data): if m.lastgroup == 'kw': op = m.group() if op == 'BT': in_bt = True; blk += 1 elif op == 'ET': in_bt = False elif op == 'Td': pass # 数值在后面处理 elif m.lastgroup == 'num': pass # 简化:顺序扫描 token 流,维护操作数栈 stack = [] x = y = 0.0; fs = 0.0 in_bt = False; blk = 0 cur = None # 当前行 {y,x0,text} def flush(): nonlocal cur if cur and cur["text"].strip(): lines.append(cur) cur = None for m in TOK.finditer(data): kind, val = m.lastgroup, m.group() if kind == 'num': stack.append(float(val)); continue if kind == 'hex': stack.append(('hex', val)); continue if kind == 'str': stack.append(('str', val)); continue if kind != 'kw': stack.append(val); continue op = val if op == 'BT': in_bt = True; blk += 1; x = y = 0.0; flush() elif op == 'ET': in_bt = False; flush() elif not in_bt: stack = []; continue elif op == 'Td' and len(stack) >= 2: dx, dy = stack[-2], stack[-1] if cur and abs(dy) > 0.5: # 换行 flush() x += dx; y += dy if cur is None: cur = {"y": round(y/MM,2), "x": round(x/MM,2), "text": "", "fs": fs, "blk": blk} stack = [] elif op == 'Tf' and len(stack) >= 2: fs = stack[-1]; stack = [] elif op in ('Tj', "'", '"') and stack and isinstance(stack[-1], tuple): kind2, raw = stack[-1] cmap = cmaps.get('/'+font.split('/')[-1] if font else '', {}) if font else {} txt = '' if kind2 == 'hex': hx = re.sub(r'[<>\s]', '', raw) for i in range(0, len(hx)-3, 4): g = int(hx[i:i+4], 16) txt += cmap.get(g, '?') else: txt = raw[1:-1] if cur is None: cur = {"y": round(y/MM,2), "x": round(x/MM,2), "text": "", "fs": fs, "blk": blk} cur["text"] += txt stack = [] elif op == 'TJ': # 数组内 hex arr = [s for s in stack if isinstance(s, tuple) and s[0]=='hex'] if arr: cmap = cmaps.get('/'+font.split('/')[-1] if font else '', {}) if font else {} txt = '' for _, raw in arr: hx = re.sub(r'[<>\s]', '', raw) for i in range(0, len(hx)-3, 4): txt += cmap.get(int(hx[i:i+4],16), '?') if cur is None: cur = {"y": round(y/MM,2), "x": round(x/MM,2), "text": "", "fs": fs, "blk": blk} cur["text"] += txt stack = [] elif op == 'Tm' and len(stack) >= 6: x, y = stack[-2], stack[-1] if cur and abs(y/MM - cur["y"]) > 0.5: flush() if cur is None: cur = {"y": round(y/MM,2), "x": round(x/MM,2), "text": "", "fs": fs, "blk": blk} stack = [] elif op in ('Tc','Tw','Tz','TL','Ts','Tr','T*','gs','rg','k','K','w','J','j','d','cm','q','Q','Do','gs'): stack = [] else: stack = [] flush() return lines, cmaps if __name__ == "__main__": pno = int(sys.argv[1]) lines, _ = parse_page(pno) lines.sort(key=lambda l: (-l["y"], l["x"])) for l in lines: print(f"y={l['y']:7.2f} x={l['x']:7.2f} fs={l['fs']:4.1f} b{l['blk']:3d} | {l['text'][:50]}") EOF C:/Python313/python.exe _tmp/cstream.py 5 2>&1 | head -50
+思考
+·
+持续了几秒
+
+结构解析成功（每行位置/字号/栏位都对），只是字体名没跟踪上导致解码为 ?。修复字体跟踪：
+
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'EOF' import re p = r"_tmp/cstream.py" s = open(p, encoding="utf-8").read() s = s.replace(""" elif op == 'Tf' and len(stack) >= 2: fs = stack[-1]; stack = []""", """ elif op == 'Tf' and len(stack) >= 2: fs = stack[-1] for sv in stack: if isinstance(sv, list) and sv and sv[0] == 'op': font = sv[1] stack = []""") s = s.replace(""" if kind != 'kw': stack.append(val); continue""", """ if kind == 'op': stack.append(['op', val]); continue if kind != 'kw': stack.append(val); continue""") s = s.replace(""" cmap = cmaps.get('/'+font.split('/')[-1] if font else '', {}) if font else {} txt = '' if kind2 == 'hex':""", """ cmap = cmaps.get(font, {}) if font else {} txt = '' if kind2 == 'hex':""") s = s.replace(""" if arr: cmap = cmaps.get('/'+font.split('/')[-1] if font else '', {}) if font else {} txt = ''""", """ if arr: cmap = cmaps.get(font, {}) if font else {} txt = ''""") open(p, "w", encoding="utf-8").write(s) print("patched") EOF C:/Python313/python.exe _tmp/cstream.py 5 2>&1 | head -25
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/cmapdbg.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, re sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') import PyPDF2 reader = PyPDF2.PdfReader(r"D:\CloudyInkForge\pentium\2611\2611.pdf") page = reader.pages[4] fonts = page["/Resources"].get("/Font", {}) for fname in fonts: f = fonts[fname].get_object() tu = f.get("/ToUnicode") sub = f.get("/Subtype") bf = f.get("/BaseFont") print(fname, sub, bf, "ToUnicode:", "yes" if tu else "NO") if tu: data = tu.get_object().get_data().decode('latin-1') nchar = len(re.findall(r'beginbfchar', data)) nrange = len(re.findall(r'beginbfrange', data)) print(" bfchar:", nchar, "bfrange:", nrange, "len:", len(data)) # 样本 m = re.search(r'beginbfchar\s*<([0-9A-Fa-f]+)>\s*<([0-9A-Fa-f]+)>', data) print(" sample:", m.groups() if m else None) # 检查范围格式变体 m2 = re.search(r'beginbfrange(.{0,120})', data, re.S) print(" range sample:", repr(m2.group(1)[:100]) if m2 else None) EOF C:/Python313/python.exe _tmp/cmapdbg.py
+思考
+·
+持续了几秒
+
+找到 bug：CMap 只有一个 beginbfrange 后跟成百上千个三元组，我的正则要求每个三元组前都有关键字。修复：
+
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'EOF' p = r"_tmp/cstream.py" s = open(p, encoding="utf-8").read() s = s.replace(""" m = {} for bf, uni in re.findall(r'beginbfchar\\s*<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>', data): m[int(bf, 16)] = ''.join(chr(int(uni[i:i+4], 16)) for i in range(0, len(uni), 4)) for a, b, u in re.findall(r'beginbfrange\\s*<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>', data): a, b, u0 = int(a,16), int(b,16), int(u,16) for g in range(a, b+1): m[g] = chr(u0 + (g - a)) cmaps[str(fname)] = m""", """ m = {} for sec in re.findall(r'beginbfchar(.*?)endbfchar', data, re.S): for bf, uni in re.findall(r'<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>', sec): m[int(bf, 16)] = ''.join(chr(int(uni[i:i+4], 16)) for i in range(0, len(uni), 4)) for sec in re.findall(r'beginbfrange(.*?)endbfrange', data, re.S): for a, b, u in re.findall(r'<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>\\s*<([0-9A-Fa-f]+)>', sec): a, b, u0 = int(a,16), int(b,16), int(u,16) for g in range(a, b+1): m[g] = chr(u0 + (g - a)) cmaps[str(fname)] = m""") open(p, "w", encoding="utf-8").write(s) print("patched") EOF C:/Python313/python.exe _tmp/cstream.py 5 2>&1 | head -30
+思考
+·
+持续了几秒
+
+行重建工具完美工作。再加上图片矩形提取（cm /In Do），就能拿到完整版面真值。然后做全刊逐页核算：
+
+终端
+·
+2 个命令
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'EOF' p = r"_tmp/cstream.py" s = open(p, encoding="utf-8").read() s = s.replace("""import PyPDF2 if hasattr(sys.stdout, "buffer"): sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')""", "import PyPDF2") open(p, "w", encoding="utf-8").write(s) print("ok") EOF C:/Python313/python.exe _tmp/layout.py
+思考
+·
+持续了几秒
+
+版面真值全部提取完毕（还有意外收获：所有 pro-1 右页的插图都被完全挤出页面）。现在写核心分析器：HTML 元素 ↔ PDF 视觉行映射，生成每页逐栏账本：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/ledger.py << 'EOF' # -*- coding: utf-8 -*- """逐页账本:HTML元素序列 × PDF视觉行 → 每元素每栏行数/栏底/丢失检测""" import sys, io, re, json, html as hm sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') SRC = open(r"2611\2611.html", encoding="utf-8").read() LAY = json.load(open(r"_tmp\layout.json", encoding="utf-8")) lines_src = SRC.split('\n') starts = [i for i, l in enumerate(lines_src) if re.match(r'<div class="page[ "]', l)] # 每页栏数 P2COL = {4,5,8,12,13,14,15,18,22,23,24,25,26,27,28,29,34,36,37,40,46,47,49,54,62,66,67,71,74} PRO = {2,3,6,7,10,11,16,17,20,21,30,32,38,39,44,45,52,58,59,65,70,73} def ncol(p): if p in PRO: return None return 2 if p in P2COL else 3 def est_w(t, fs): return sum((fs*0.3528*0.5 if ord(c) < 0x2E80 else fs*0.3528) for c in t) EDGES = {2:[(16.0,102.25),(107.75,194.0)], 3:[(16.0,71.67),(77.17,132.83),(138.33,194.0)]} def assign_col(l, n): x0 = l["x"]; x1 = x0 + est_w(l["text"], l["fs"]) best, bd = -1, 1e9 for ci,(a,b) in enumerate(EDGES[n]): if x1 >= a-0.5 and x0 <= b+0.5: mid = (max(x0,a)+min(x1,b))/2 d = abs(mid-(a+b)/2) if d < bd: bd, best = d, ci return best def page_elements(seg): """页面 body 区元素序列: (kind, class, text, attrs)""" # 截取 body/cols/zone 到 folio 之前 m = re.search(r'<div class="body[^"]*">|<div class="cols">|<div class="zone-\w+[^"]*">', seg) if not m: return [] seg2 = seg[m.end():] cut = re.search(r'<div class="folio">', seg2) if cut: seg2 = seg2[:cut.start()] elems = [] for m2 in re.finditer(r'<(p|h2|div)\b([^>]*)>(.*?)</\1>', seg2, re.S): tag, attrs, inner = m2.group(1), m2.group(2), m2.group(3) cls = re.search(r'class="([^"]*)"', attrs) cls = cls.group(1) if cls else "" if tag == 'div': if 'photo-block' in cls: phw = re.search(r'--ph-w:([\d.]+)mm', attrs) phh = re.search(r'--ph-h:([\d.]+)mm', attrs) capm = re.search(r'<p class="cap">(.*?)</p>', inner, re.S) elems.append(("photo", cls, (capm.group(1) if capm else "").strip(), (float(phw.group(1)) if phw else 55.67, float(phh.group(1)) if phh else 36.6))) elif 'gap' in cls: elems.append(("gap", cls, "", None)) continue txt = re.sub(r'<[^>]+>', '', inner) txt = hm.unescape(txt) txt = re.sub(r'\s+', '', txt) if not txt: continue elems.append((tag, cls, txt, None)) return elems def analyze(pno): n = ncol(pno) seg = '\n'.join(lines_src[starts[pno-1]: (starts[pno] if pno < len(starts) else len(lines_src))]) elems = page_elements(seg) raw = LAY[str(pno)]["lines"] body = [l for l in raw if 20 < l["y"] < 265.5] if n is None: # PRO 页:整宽分类,栏位标 x 端 for l in body: l["col"] = 0 if l["x"] < 60 else (1 if l["x"] < 120 else 2) nprint = "PRO" else: for l in body: l["col"] = assign_col(l, n) return pno, n, elems, body if __name__ == "__main__": import collections for pno in range(1, 75): p, n, elems, body = analyze(pno) if not elems: print(f"P{pno:02d}: (无 body 元素)"); continue # 按元素匹配行 seq = [] # 每栏行序列(按 y 降序) cols = collections.defaultdict(list) for l in sorted(body, key=lambda l: (-l["y"], l["x"])): cols[l["col"]].append(l) # 元素匹配:总体阅读顺序 = 栏0→栏1→栏2 flat = [] for ci in sorted(cols): flat.extend(cols[ci]) ei = 0; consumed = [0]*len(elems) li = 0 assign = collections.defaultdict(list) # elem idx -> lines unmatched = [] for l in flat: t = re.sub(r'\s+', '', l["text"]) matched = False for k in range(ei, min(ei+3, len(elems))): et = elems[k][2] if not et: continue # 行文本是元素文本的子串(或元素文本以行文本开头) if t and (t in et or et.startswith(t[:max(4,len(t)//2)]) or t[:6] in et): assign[k].append(l); ei = k; matched = True; break if not matched: unmatched.append(l) # 输出 tot = {} print(f"── P{pno:02d} (ncol={n}) elems={len(elems)} lines={len(body)} unmatched={len(unmatched)}") for k,(kind, cls, txt, dim) in enumerate(elems): ls = assign.get(k, []) cs = collections.Counter(l["col"] for l in ls) tag = f"{kind}.{cls}" if cls else kind info = f" ph={dim}" if dim else "" tshow = (txt[:16] + "…") if len(txt) > 16 else txt print(f" [{k:2d}] {tag:22s} {info:16s} 行={dict(cs)} | {tshow}") if unmatched: for l in unmatched[:6]: print(f" ?? 未匹配 y={l['y']} x={l['x']} | {l['text'][:30]}") EOF C:/Python313/python.exe _tmp/ledger.py > _tmp/ledger.txt 2>&1; head -70 _tmp/ledger.txt
+思考
+·
+持续了几秒
+
+账本工具完成。查看全部页面的核算结果：
+
+终端
+cd "D:\CloudyInkForge\pentium" && wc -l _tmp/ledger.txt && sed -n '70,200p' _tmp/ledger.txt
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && sed -n '200,420p' _tmp/ledger.txt
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && sed -n '420,700p' _tmp/ledger.txt
+思考
+·
+持续了几秒
+查阅
+·
+3 文件
+思考
+·
+持续了几秒
+
+账本揭示了全部问题。先修正页型判定（P36/P37/P49 是三栏），输出干净的逐栏摘要（行数+栏底位置）作为修复依据：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/colsum.py << 'EOF' # -*- coding: utf-8 -*- """逐栏摘要:行数/栏底/首末行 — 以 x 范围精确分栏""" import sys, io, re, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') LAY = json.load(open(r"_tmp\layout.json", encoding="utf-8")) SRC = open(r"2611\2611.html", encoding="utf-8").read() lines_src = SRC.split('\n') starts = [i for i, l in enumerate(lines_src) if re.match(r'<div class="page[ "]', l)] def est_w(t, fs): return sum((fs*0.3528*0.5 if ord(c) < 0x2E80 else fs*0.3528) for c in t) # 页面栏数:从 HTML class 推断 def page_ncol(pno): seg = '\n'.join(lines_src[starts[pno-1]: starts[pno] if pno < len(starts) else len(lines_src)]) m = re.search(r'<div class="page([^"]*)"', seg) cls = m.group(1) if m else "" if 'page-pro' in cls: return None if 'page-2col' in cls: return 2 return 3 EDGES = {2:[(16.0,102.25),(107.75,194.0)], 3:[(16.0,71.67),(77.17,132.83),(138.33,194.0)]} for pno in range(1, 75): d = LAY[str(pno)] ls = [l for l in d["lines"] if 20 < l["y"] < 265.5] n = page_ncol(pno) if n is None: print(f"P{pno:02d} PRO imgs={len(d['images'])} lines={len(ls)}") for im in d['images']: print(f" img {im['name']} {im['w']}x{im['h']} @({im['x']},{im['y']})") continue edges = EDGES[n] cols = [[] for _ in edges] for l in ls: x0 = l["x"]; x1 = x0 + est_w(l["text"], l["fs"]) best, bd = -1, 1e9 for ci,(a,b) in enumerate(edges): if x1 >= a-0.5 and x0 <= b+0.5: mid = (max(x0,a)+min(x1,b))/2 dd = abs(mid-(a+b)/2) if dd < bd: bd, best = dd, ci if best >= 0: cols[best].append(l) parts = [] for ci, c in enumerate(cols): if not c: parts.append(f"c{ci+1}:—"); continue c.sort(key=lambda l: -l["y"]) top, bot = c[0]["y"], c[-1]["y"] parts.append(f"c{ci+1}:{len(c):3d}行[{bot:5.1f}..{top:5.1f}]") print(f"P{pno:02d} {n}栏 imgs={len(d['images'])} " + " ".join(parts)) EOF C:/Python313/python.exe _tmp/colsum.py
+思考
+·
+持续了几秒
+
+P01 的栏行数出现矛盾（57 行 > 容量 48），需要直接查原始行数据验证：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/p1chk.py << 'EOF' # -*- coding: utf-8 -*- import sys, io, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') LAY = json.load(open(r"_tmp\layout.json", encoding="utf-8")) ls = [l for l in LAY["1"]["lines"] if 20 < l["y"] < 265.5] ls.sort(key=lambda l: (-l["y"], l["x"])) prev = None for l in ls: print(f"y={l['y']:7.2f} x={l['x']:7.2f} fs={l['fs']:4.1f} | {l['text'][:40]}") EOF C:/Python313/python.exe _tmp/p1chk.py | head -75
+思考
+·
+持续了几秒
+
+找到 P01 计数虚高的原因：<strong> 字体切换导致同一视觉行被拆成多个条目。修复 colsum（同行片段合并 + 按起点分栏）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/colsum.py << 'EOF' # -*- coding: utf-8 -*- """逐栏摘要 v2:视觉行合并(同栏同y且x衔接) + 按起点x分栏""" import sys, io, re, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') LAY = json.load(open(r"_tmp\layout.json", encoding="utf-8")) SRC = open(r"2611\2611.html", encoding="utf-8").read() lines_src = SRC.split('\n') starts = [i for i, l in enumerate(lines_src) if re.match(r'<div class="page[ "]', l)] def est_w(t, fs): return sum((fs*0.3528*0.55 if ord(c) < 0x2E80 else fs*0.3528) for c in t) def page_ncol(pno): seg = '\n'.join(lines_src[starts[pno-1]: starts[pno] if pno < len(starts) else len(lines_src)]) m = re.search(r'<div class="page([^"]*)"', seg) cls = m.group(1) if m else "" if 'page-pro' in cls: return None if 'page-2col' in cls: return 2 return 3 EDGES = {2:[(16.0,102.25),(107.75,194.0)], 3:[(16.0,71.67),(77.17,132.83),(138.33,194.0)]} def page_cols(pno): n = page_ncol(pno) d = LAY[str(pno)] ls = [l for l in d["lines"] if 20 < l["y"] < 265.5] if n is None: return None, ls, d["images"] edges = EDGES[n] buckets = [[] for _ in edges] for l in ls: x0 = l["x"] best = -1 for ci,(a,b) in enumerate(edges): if a-1.0 <= x0 <= b+1.0: best = ci; break if best < 0: # 右对齐元素(图注/落款):按估宽右端归属 x1 = x0 + est_w(l["text"], l["fs"]) for ci,(a,b) in enumerate(edges): if a-1.0 <= x1 <= b+1.0: best = ci; break if best >= 0: buckets[best].append(l) # 合并同栏同 y 且 x 衔接的片段 merged = [] for ci, c in enumerate(buckets): byy = {} for l in c: byy.setdefault(round(l["y"],1), []).append(l) col_lines = [] for y, frags in byy.items(): frags.sort(key=lambda l: l["x"]) cur = None for f in frags: if cur is None: cur = dict(f) elif f["x"] - (cur["x"] + est_w(cur["text"], cur["fs"])) <= 3.0: cur["text"] += f["text"] else: col_lines.append(cur); cur = dict(f) if cur: col_lines.append(cur) col_lines.sort(key=lambda l: -l["y"]) merged.append(col_lines) return n, merged, d["images"] if __name__ == "__main__": show_text = "-t" in sys.argv for pno in range(1, 75): n, cols, imgs = page_cols(pno) if n is None: print(f"P{pno:02d} PRO lines={len(cols)} imgs={len(imgs)}") continue parts = [] for ci, c in enumerate(cols): if not c: parts.append(f"c{ci+1}:—"); continue parts.append(f"c{ci+1}:{len(c):3d}[{c[-1]['y']:5.1f}]") print(f"P{pno:02d} {n}栏 " + " ".join(parts) + f" imgs={len(imgs)}") if show_text: for ci, c in enumerate(cols): for l in c: print(f" c{ci+1} y={l['y']:6.1f} x={l['x']:6.1f} | {l['text'][:38]}") EOF C:/Python313/python.exe _tmp/colsum.py
+思考
+·
+持续了几秒
+
+P01 数据矛盾解开：栏内容实际溢出到了正文区之下（c1 底 20.2 < 22.9），这正是“无余地”问题。现在做 P01 的逐条目精确行数对齐：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/align1.py << 'EOF' # -*- coding: utf-8 -*- """P01: 条目文本与渲染行精确对齐 → 每条目行数""" import sys, io, re, json, html as hm sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') sys.path.insert(0, r"_tmp") from colsum import page_cols n, cols, imgs = page_cols(1) SRC = open(r"2611\2611.html", encoding="utf-8").read() lines_src = SRC.split('\n') starts = [i for i, l in enumerate(lines_src) if re.match(r'<div class="page[ "]', l)] seg = '\n'.join(lines_src[starts[0]:starts[1]]) items = re.findall(r'<p>(.*?)</p>', seg, re.S) items = [re.sub(r'\s+', '', hm.unescape(re.sub(r'<[^>]+>', '', t))) for t in items] # 阅读顺序行序列 flat = [] for ci, c in enumerate(cols): for l in c: flat.append((ci, l)) # 全文拼接(不含标题/作者行——从 body 第一行起) alltext = ''.join(t for _, l in flat for t in [l["text"]]) # 对齐:顺序消费 pos = 0 res = [] for ii, it in enumerate(items): cnt = 0 # 每行:检查该行文本是否在 item 文本的当前起点 matched_chars = 0 while pos < len(alltext) and matched_chars < len(it): # 找当前行 pass # 简化:按行顺序,行文本与 item 剩余文本前缀匹配 res.append((ii, it)) # 直接做:遍历行,维护 (item_idx, char_pos) lines_out = [] ii, cp = 0, 0 for ci, l in flat: t = l["text"] # 跳过页眉行 if t in ("时政汇编", "原初167班 高125班 王晨玮整理", "时政摘编"): lines_out.append((ci, l["y"], -1, t)); continue # 若当前行以 t 开头匹配 item[ii][cp:] remain = items[ii][cp:] if remain.startswith(t[:min(len(t), len(remain))]) or t[:6] in remain: cp += len(t) if remain.startswith(t[:len(t)]) else 0 lines_out.append((ci, l["y"], ii, t)) if cp >= len(items[ii]): ii += 1; cp = 0 else: # 尝试推进到下一个条目 found = False for k in range(ii, min(ii+2, len(items))): if items[k].startswith(t[:min(len(t), len(items[k]))]): ii, cp = k, len(t) found = True; break lines_out.append((ci, l["y"], ii if found else -2, t)) from collections import Counter cnt = Counter() for ci, y, k, t in lines_out: if k >= 0: cnt[k] += 1 print("P01 每条目行数:", [cnt.get(i, 0) for i in range(len(items))], "总行数(含页眉3):", len(lines_out)) for ci, y, k, t in lines_out: mark = f"item{k}" if k >= 0 else ("HDR" if k == -1 else "??") print(f" c{ci+1} y={y:6.1f} {mark:7s} {t[:34]}") EOF C:/Python313/python.exe _tmp/align1.py 2>&1 | head -60
+任务输出
+exec_7ac87b16-ee2d-4749-baed-5dc3907d6cf8
+等待超时
+思考
+·
+持续了几秒
+
+脚本里有一段死循环代码。终止并修复：
+
+停止任务
+exec_7ac87b16-ee2d-4749-baed-5dc3907d6cf8
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' p = r"_tmp/align1.py" s = open(p, encoding="utf-8").read() dead = s[s.index("# 阅读顺序行序列"):s.index("# 直接做:遍历行")] s = s.replace(dead, "# 阅读顺序行序列\nflat = []\nfor ci, c in enumerate(cols):\n for l in c: flat.append((ci, l))\n") open(p, "w", encoding="utf-8").write(s) print("cleaned") PYEOF C:/Python313/python.exe _tmp/align1.py 2>&1 | head -55
+思考
+·
+持续了几秒
+
+colsum 模块导入时的 stdout 包装与调用方冲突。移除它：
+
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' p = r"_tmp/colsum.py" s = open(p, encoding="utf-8").read() s = s.replace("sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')\n", "") open(p, "w", encoding="utf-8").write(s) print("ok") PYEOF C:/Python313/python.exe _tmp/align1.py 2>&1 | head -60
+思考
+·
+持续了几秒
+
+现在精确计算 P01 每个条目的行数（用字宽模型校准实测值）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/linemodel.py << 'EOF' # -*- coding: utf-8 -*- """行数估算模型: em宽度(全角1/ASCII0.55) + 2em缩进, 每行 em 容量按栏宽/字号""" import sys, io, re, html as hm, math, json sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') def em_len(t): return sum(0.55 if ord(c) < 0x2E80 else 1.0 for c in t) def lines_for(text, col_mm, fs_pt, indent_em=2.0, cap_em=None): if cap_em is None: cap_em = col_mm / (fs_pt * 0.3528) # 每行全角字数 return math.ceil((em_len(text) + indent_em) / cap_em - 1e-9) if __name__ == "__main__": # 校验: P01 实测条目行数 1-7 = [9,8,6,8,6,7,3] SRC = open(r"2611\2611.html", encoding="utf-8").read() lines_src = SRC.split('\n') starts = [i for i, l in enumerate(lines_src) if re.match(r'<div class="page[ "]', l)] seg = '\n'.join(lines_src[starts[0]:starts[1]]) items = re.findall(r'<p>(.*?)</p>', seg, re.S) items = [re.sub(r'\s+', '', hm.unescape(re.sub(r'<[^>]+>', '', t))) for t in items] measured = [9,8,6,8,6,7,3] print("P01 校验 (3栏 55.67mm 8.7pt, cap=18.14em):") for i, it in enumerate(items[:7]): p = lines_for(it, 55.67, 8.7) m = measured[i] if i < len(measured) else '?' print(f" item{i+1}: 预测{p} 实测{m} {'✓' if p==m else '✗'} em={em_len(it):.0f}") # 其余条目 print(" 其余:", [(i+1, lines_for(it, 55.67, 8.7)) for i, it in enumerate(items[7:], 7)]) EOF C:/Python313/python.exe _tmp/linemodel.py
+思考
+·
+持续了几秒
+
+模型校准完成（±1 行误差，需留余量）。P01 的瓶颈是第 11 条（诺贝尔奖，18 行）跨越不了栏切点，需要在句界拆分为两段。开始动手修复——先加 CSS 工具类，再修 P01：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+3
+思考
+·
+持续了几秒
+
+P01 需要拆分第 11 条并精确落栏。先看第 2 栏的完整行序，确定诺奖条目内部的句界行号：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/p1c2.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') sys.path.insert(0, r"_tmp") from colsum import page_cols n, cols, imgs = page_cols(1) for ci, c in enumerate(cols): print(f"===== col{ci+1} ({len(c)} lines) =====") for l in c: print(f" y={l['y']:6.1f} | {l['text']}") EOF C:/Python313/python.exe _tmp/p1c2.py 2>&1 | sed -n '50,120p'
+思考
+·
+持续了几秒
+
+P01 完整方案确定：第 7 条起钉第二栏，第 11 条拆两段（化学奖后句界），44/42/44 行均匀分布。执行编辑：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+1
+-
+1
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+3
+-
+1
+思考
+·
+持续了几秒
+
+P01 完成。现在处理 PRO 页。先读 P03 的 HTML 并实施“.cols 定高 + 插图缩放”方案：
+
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+P03 方案：.cols 定高 90.5mm，插图加高到 104mm 吸收富余，栏底差仅 1 行。执行：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+6
+-
+5
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+1
+-
+1
+思考
+·
+持续了几秒
+
+P03 完成。继续 P31（流浪者的悲鸣 pro-1 右页，5 个文本节点丢失）：
+
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+P31 竟然已有 height:143mm 但仍失败——因为它没有任何 .cbrk，PeachPDF 自动切栏仍漂移丢字。看它的实际渲染行分布：
+
+终端
+cd "D:\CloudyInkForge\pentium" && cat > _tmp/p31.py << 'EOF' # -*- coding: utf-8 -*- import sys, io sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') sys.path.insert(0, r"_tmp") from colsum import page_cols n, cols, imgs = page_cols(31) # PRO 返回 (None, flatlines, imgs) LAY = __import__("json").load(open(r"_tmp\layout.json", encoding="utf-8")) ls = [l for l in LAY["31"]["lines"] if 20 < l["y"] < 265.5] ls.sort(key=lambda l: (-l["y"], l["x"])) for l in ls: col = "L" if l["x"] < 100 else "R" print(f"{col} y={l['y']:6.1f} x={l['x']:6.1f} | {l['text'][:44]}") EOF C:/Python313/python.exe _tmp/p31.py
+思考
+·
+持续了几秒
+
+关键发现：P31 即使有 height:143mm 仍单栏渲染——PeachPDF 的多栏分栏只在基础页 .body 的 flex 路径下生效，.cols 一律退化单栏。PRO 页改用表格显式双栏（PeachPDF 表格机制成熟可靠，folio 已验证）。加 CSS：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+3
+0
+思考
+·
+持续了几秒
+
+P03 转为表格双栏：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+9
+-
+8
+思考
+·
+持续了几秒
+
+P31 转表格双栏（左栏=第二节，右栏=三、四节）：
+
+编辑
+2611.html
+D:/CloudyInkForge/pentium/2611/
++
+7
+-
+7
+思考
+·
+持续了几秒
+
+P45 转表格。先读其 HTML：
+
+终端
+cd "D:\CloudyInkForge\pentium" && grep -n "P45\|首尔三星大楼" 2611/2611.html | head -5 && sed -n '/S09 · P45/,/page-no">45/p' 2611/2611.html | head -60
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' # -*- coding: utf-8 -*- import io, re p = r"2611/2611.html" s = open(p, encoding="utf-8").read() # --- P45: cols → ctab 表格; colA=p1-p3, colB=p4-p8; inset 96→108 --- old = ''' S09 · P45（右页文字版 · 社会热点开篇） 核算：题块 27.9（题 14 字 22pt 一行）｜导语 3 行 22.4 ｜双栏实测 ≈33.5 行(76.5) + 4｜inset 178×100 + 图注 4.2 ｜合计 ≈255 / 257±，余 ≥11 ✓（「李健熙是主张变革」段移 P46； inset DPI = 345 ✓✓）''' new = ''' S09 · P45（右页文字版 · 社会热点开篇 · 二修：显式表格双栏） 核算：题块 31.1｜导语 3 行 22.4｜表 max(73.2, 77.7) （左=3 段 16 行，右=5 段 17 行，底差 1 行） + 4｜inset 178×108 + 图注 4.8｜合计 247.9 / 257，余 9.1 ✓ （「李健熙是主张变革」段移 P46；inset DPI = 345×96/108 ✓✓）''' assert old in s s = s.replace(old, new) old = ''' <div class="cols"> <p>三星集团，成立于1938年，创始人是影响一代又一代韩国人的李秉喆。李秉喆最初创立三星，起家的肯定不是什么电子技术。三星物产是李家三星梦的起点。三星物产是1951年改的名字，它最开始的名字叫三星商会。三星商会靠往韩国南部、满洲里及中国华北地区运送蔬菜粮油一类的生活必需品，在抗战期间赚的盆满钵满。</p> <p>1948年，大韩民国建立，三星从大邱转移到了首都汉城。三星仅仅在汉城驻扎了三年，1951年，便又迁往釜山。其中，与南北朝鲜战争不无关系。但朝鲜战争于三星而言，可不仅仅是国难，还是一笔金钱来源。三星靠着运输，大发国难财，最终在战争结束后，还创办了三星制糖，一举结束了韩国长期以来进口白糖的历史。</p> <p>在50年代，三星便迎来了腾飞。其中，三星与政府的亲密关系同样引人注目。三星掌门人李秉喆和韩国首任总统李承晚私交甚笃。李承晚时期的主要腐败，大多数都与三星有说不清道不明的关系。依托着人和的优势，三星迅速发展。</p> <p>李承晚下台其实与他任内严重的腐败有很大关系，三星自然洗不清，但为什么在朴正熙发动军事政变后并没有追究三星呢？</p> <p class="cbrk">朴正熙也收了三星的好处。</p> <p>有一种狭隘的观点——朴正熙任内实现的汉江奇迹，一多半靠着三星。这样说肯定有失公允，但是，不得不说，三星在这一时期，确实发展的更加迅猛。</p> <p>为实现发展本国制造业的目标，朴正熙和李秉喆达成“协议”，不追究三星在李承晚政权时代的腐败问题，而三星则在政府扶持下进军电子制造业。韩国人的汉江奇迹，其实不过是在政商勾结这么一个宏大的历史背景下，一种非良性的发展。三星集团也在时代的洪流中，改变了企业模式，开始发展高新技术产业，成为那个时代最大的韩国企业，三星李家，也是韩国最大的财阀。</p> <p>朴正熙和李承晚一样，都是不折不扣的大独裁者，朴正熙同样被很多韩国官僚嫉恨。在朴正熙被情报局局长金载圭刺杀后，全斗焕盯上了总统宝座，并在次年发动军事政变，推翻代理总统崔圭夏，建立全斗焕政权。</p> </div> <div class="inset"> <div class="ph" style="height:96mm; background-image:url('photos/在韩国、政府和财阀谁是老大05.jpg');"></div>''' new = ''' <table class="ctab"><tr><td> <p>三星集团，成立于1938年，创始人是影响一代又一代韩国人的李秉喆。李秉喆最初创立三星，起家的肯定不是什么电子技术。三星物产是李家三星梦的起点。三星物产是1951年改的名字，它最开始的名字叫三星商会。三星商会靠往韩国南部、满洲里及中国华北地区运送蔬菜粮油一类的生活必需品，在抗战期间赚的盆满钵满。</p> <p>1948年，大韩民国建立，三星从大邱转移到了首都汉城。三星仅仅在汉城驻扎了三年，1951年，便又迁往釜山。其中，与南北朝鲜战争不无关系。但朝鲜战争于三星而言，可不仅仅是国难，还是一笔金钱来源。三星靠着运输，大发国难财，最终在战争结束后，还创办了三星制糖，一举结束了韩国长期以来进口白糖的历史。</p> <p>在50年代，三星便迎来了腾飞。其中，三星与政府的亲密关系同样引人注目。三星掌门人李秉喆和韩国首任总统李承晚私交甚笃。李承晚时期的主要腐败，大多数都与三星有说不清道不明的关系。依托着人和的优势，三星迅速发展。</p> </td><td> <p>李承晚下台其实与他任内严重的腐败有很大关系，三星自然洗不清，但为什么在朴正熙发动军事政变后并没有追究三星呢？</p> <p>朴正熙也收了三星的好处。</p> <p>有一种狭隘的观点——朴正熙任内实现的汉江奇迹，一多半靠着三星。这样说肯定有失公允，但是，不得不说，三星在这一时期，确实发展的更加迅猛。</p> <p>为实现发展本国制造业的目标，朴正熙和李秉喆达成“协议”，不追究三星在李承晚政权时代的腐败问题，而三星则在政府扶持下进军电子制造业。韩国人的汉江奇迹，其实不过是在政商勾结这么一个宏大的历史背景下，一种非良性的发展。三星集团也在时代的洪流中，改变了企业模式，开始发展高新技术产业，成为那个时代最大的韩国企业，三星李家，也是韩国最大的财阀。</p> <p>朴正熙和李承晚一样，都是不折不扣的大独裁者，朴正熙同样被很多韩国官僚嫉恨。在朴正熙被情报局局长金载圭刺杀后，全斗焕盯上了总统宝座，并在次年发动军事政变，推翻代理总统崔圭夏，建立全斗焕政权。</p> </td></tr></table> <div class="inset"> <div class="ph" style="height:108mm; background-image:url('photos/在韩国、政府和财阀谁是老大05.jpg');"></div>''' assert old in s s = s.replace(old, new) open(p, "w", encoding="utf-8").write(s) print("P45 done") PYEOF
+思考
+·
+持续了几秒
+
+P53 转表格（拆“试戏”段于“纵身跃下。”句界，插图加高吸收留白）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' # -*- coding: utf-8 -*- p = r"2611/2611.html" s = open(p, encoding="utf-8").read() old = ''' <div class="cols"> <p>1950年，刘晓庆诞生于重庆涪陵。爱吃辣的口味深深影响了每一个重庆人，自然也包括刘晓庆，她浓烈、开放的性格定然与巴山楚水间的一串串朝天椒离不开关系。刘晓庆的父母都是知识分子，她自己也从小便自带一股“文艺范儿”。13岁那年，刘晓庆考入四川音乐学院附中，学习扬琴和钢琴。毕业后，她的演艺路径无比曲折，先是被分配到农场，后又成为成都军区话剧团的一名演员。</p> <p>而刘晓庆的电影生涯，始于一次偶然间的试戏。1975年，八一电影制片厂原本计划重拍电影《海鹰》，导演张勇手在成都军区话剧团选角时，一眼相中了当时还在打杂、偶尔演样板戏的刘晓庆，认为她身上有一股未经雕琢的灵气。然而，当刘晓庆费尽周折借调到北京后，新版《海鹰》却因故停拍了。眼看机会就要溜走，张勇手不忍心埋没这个人才，便极力向当时正在筹备《南海长城》的导演李俊举荐刘晓庆。即便有了推荐，角色也并非唾手可得。当时剧组还有另一位候选女演员，两人难分高下。而为了选出最合适的“甜女”，剧组前往南海舰队体验生活。正是在这里，刘晓庆用一个大胆的举动为自己锁定了角色：在舰艇上，有人打趣问两个姑娘敢不敢从数米高的甲板跳入海中。另一位姑娘面露犹豫时，刘晓庆没有半分迟疑，纵身跃下。刘晓庆骨子里的拼劲儿彻底打动了导演和剧组成员。最终，她战胜了竞争对手，成功拿下了“甜女”这一角色。</p> <p class="cbrk">自此，刘晓庆开启了属于她自己的第一段演艺传奇。1977年，刘晓庆参演《同志，感谢你》。次年，与马骥等人共同参演电影《春歌》。1979年，她凭借《瞧这一家子》获得第三届大众电影百花奖最佳配角奖，这也是她第一个重量级的个人奖项。1981年，其主演的电影《原野》在香港首映，刘晓庆凭借该片获得第十一届大众电影百花奖最佳女演员，并提名第八届中国电影金鸡奖最佳女主角。之后，她又参演了许多重量级的港片，其中，《垂帘听政》的懿贵妃一角为她提名了第三届香港电影金像奖最佳女主角。在香港还没回归的那段日子里，刘晓庆的名字已经在维多利亚港打响。而《芙蓉镇》则将刘晓庆推向了她演艺生涯的第一个高峰——她获得了第七届中国电影金鸡奖和第十届大众电影百花奖的最佳女演员奖，奠定其“女皇”级别的影视地位。</p> <p>而这段时间里，最值得一提的便是《小花》这部电影。</p> </div> <div class="inset"> <div class="ph" style="height:70mm; background-image:url('photos/刘晓庆-一朵不败的小花03.jpg');"></div> <p class="cap">电影《小花》剧照</p> </div>''' new = ''' <table class="ctab"><tr><td> <p>1950年，刘晓庆诞生于重庆涪陵。爱吃辣的口味深深影响了每一个重庆人，自然也包括刘晓庆，她浓烈、开放的性格定然与巴山楚水间的一串串朝天椒离不开关系。刘晓庆的父母都是知识分子，她自己也从小便自带一股“文艺范儿”。13岁那年，刘晓庆考入四川音乐学院附中，学习扬琴和钢琴。毕业后，她的演艺路径无比曲折，先是被分配到农场，后又成为成都军区话剧团的一名演员。</p> <p>而刘晓庆的电影生涯，始于一次偶然间的试戏。1975年，八一电影制片厂原本计划重拍电影《海鹰》，导演张勇手在成都军区话剧团选角时，一眼相中了当时还在打杂、偶尔演样板戏的刘晓庆，认为她身上有一股未经雕琢的灵气。然而，当刘晓庆费尽周折借调到北京后，新版《海鹰》却因故停拍了。眼看机会就要溜走，张勇手不忍心埋没这个人才，便极力向当时正在筹备《南海长城》的导演李俊举荐刘晓庆。即便有了推荐，角色也并非唾手可得。当时剧组还有另一位候选女演员，两人难分高下。而为了选出最合适的“甜女”，剧组前往南海舰队体验生活。正是在这里，刘晓庆用一个大胆的举动为自己锁定了角色：在舰艇上，有人打趣问两个姑娘敢不敢从数米高的甲板跳入海中。另一位姑娘面露犹豫时，刘晓庆没有半分迟疑，纵身跃下。</p> </td><td> <p class="cont">刘晓庆骨子里的拼劲儿彻底打动了导演和剧组成员。最终，她战胜了竞争对手，成功拿下了“甜女”这一角色。</p> <p>自此，刘晓庆开启了属于她自己的第一段演艺传奇。1977年，刘晓庆参演《同志，感谢你》。次年，与马骥等人共同参演电影《春歌》。1979年，她凭借《瞧这一家子》获得第三届大众电影百花奖最佳配角奖，这也是她第一个重量级的个人奖项。1981年，其主演的电影《原野》在香港首映，刘晓庆凭借该片获得第十一届大众电影百花奖最佳女演员，并提名第八届中国电影金鸡奖最佳女主角。之后，她又参演了许多重量级的港片，其中，《垂帘听政》的懿贵妃一角为她提名了第三届香港电影金像奖最佳女主角。在香港还没回归的那段日子里，刘晓庆的名字已经在维多利亚港打响。而《芙蓉镇》则将刘晓庆推向了她演艺生涯的第一个高峰——她获得了第七届中国电影金鸡奖和第十届大众电影百花奖的最佳女演员奖，奠定其“女皇”级别的影视地位。</p> <p>而这段时间里，最值得一提的便是《小花》这部电影。</p> </td></tr></table> <div class="inset"> <div class="ph" style="height:110mm; background-image:url('photos/刘晓庆-一朵不败的小花03.jpg');"></div> <p class="cap">电影《小花》剧照</p> </div>''' assert old in s, "P53 pattern not found" s = s.replace(old, new) # 注释块更新 old2 = ''' P53 · 22 刘晓庆（pro-1 右页 · 艺体观察开篇）''' if old2 in s: s = s.replace(old2, ''' P53 · 22 刘晓庆（pro-1 右页 · 二修：显式表格双栏 核算：题块 31.1｜导语 3 行 22.4｜表 max(68.6, 73.2) （左 15 行，右 16 行，底差 1 行）+ 4｜inset 178×110 + 图注 4.8 ｜合计 245.4 / 257，余 11.6 ✓''') open(p, "w", encoding="utf-8").write(s) print("P53 done") PYEOF
+思考
+·
+持续了几秒
+
+P59（奥德赛）——先看结构：
+
+终端
+cd "D:\CloudyInkForge\pentium" && sed -n '/S11 · P59/,/page-no">59/p' 2611/2611.html
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' # -*- coding: utf-8 -*- p = r"2611/2611.html" s = open(p, encoding="utf-8").read() old = ''' S11 · P59（右页文字版 · 全文 840 字收束） 核算：题块 27.9（主题「奥德赛」，副题并入 byline）｜导语 3 行 22.4｜双栏实测 ≈31 行(70.7) + 4｜inset 178×100 + 4.2 ｜题句 14｜合计 ≈253.2 / 257±，余 ≥11 ✓（inset DPI 457 ✓✓）''' new = ''' S11 · P59（右页文字版 · 全文 840 字收束 · 二修：显式表格双栏） 核算：题块 31.1（副题并入 byline）｜导语 3 行 22.4 ｜表 max(64.0, 54.9)（左 14 行，右 12 行，底差 2 行）+ 4 ｜inset 178×108 + 4.8｜题句 14.7｜合计 248.9 / 257，余 8.1 ✓''' assert old in s s = s.replace(old, new) old = ''' <div class="cols"> <p>此外，诺兰电影的一贯风格，就是将配角彻底边缘化，基本每一部电影都是这样，这就导致人物单薄扁平、缺乏灵魂，全部为主角一人服务。但以往的诺兰电影，主角相对而言是刻画比较成功的，起码是复杂立体而非脸谱化的。但奥德修斯如此一个在原作中就如此复杂的人物，本应该在诺兰镜头中更具生命与表现力，而诺兰只是展现了一个深陷泥沼的中年失意男。可以理解诺兰的反英雄化叙事，但反英雄的普通人一样可以有血有肉。奥德修斯似乎被刻画为了一个完美的中年人，只是身边人不听他的，诺兰想拍出来转变，但战争中的应该展现的嗜杀、残暴并没有展现，反而从一开始，奥德修斯就是被迫出征。这确实是原著内容，但你想拍的是反战，这一块你就应该改编，你不能用一个一开始就不想打仗，后来打了仗还是不想打仗的人来宣传反战，就好像强迫一个不吸烟的人吸烟，吸了烟去宣传戒烟广告，那么戏剧张力就大大弱化了。</p> <p class="cbrk">最后，诺兰不是一个缺乏创造力的导演。电影中的每一个怪兽都对应了战后的 PTSD。残暴、变态、崩溃、贪念。这种表现主义不可谓不精彩，但诺兰电影已经太多次探讨反战这个主题了，敦刻尔克是通过亲历战争的人来体现反战，奥本海默是通过科学家视角了侧面宣传反战，这部电影是通过展现战士在战争后的创伤来宣传反战，每一部都有很多亮点，但作为诺兰这么一个大导演而言，反复挑战一个主题好比用十年前的饺子馅包饺子，醋是老陈醋，面皮是好面皮，但吃起来不免有股馊味，需要蘸饱了醋来压。</p> <p>因此，诺兰现在也像奥德修斯一样，面对着自己的地中海。他该如何驶过这片危险之域，首先要做的，就是对自己进行重构，打破自己的固有思维，返璞归真。</p> </div> <div class="inset"> <div class="ph" style="height:100mm; background-image:url('photos/奥德赛-诺兰该如何驶过自己的地中海02.jpg');"></div>''' new = ''' <table class="ctab"><tr><td> <p>此外，诺兰电影的一贯风格，就是将配角彻底边缘化，基本每一部电影都是这样，这就导致人物单薄扁平、缺乏灵魂，全部为主角一人服务。但以往的诺兰电影，主角相对而言是刻画比较成功的，起码是复杂立体而非脸谱化的。但奥德修斯如此一个在原作中就如此复杂的人物，本应该在诺兰镜头中更具生命与表现力，而诺兰只是展现了一个深陷泥沼的中年失意男。可以理解诺兰的反英雄化叙事，但反英雄的普通人一样可以有血有肉。奥德修斯似乎被刻画为了一个完美的中年人，只是身边人不听他的，诺兰想拍出来转变，但战争中的应该展现的嗜杀、残暴并没有展现，反而从一开始，奥德修斯就是被迫出征。这确实是原著内容，但你想拍的是反战，这一块你就应该改编，你不能用一个一开始就不想打仗，后来打了仗还是不想打仗的人来宣传反战，就好像强迫一个不吸烟的人吸烟，吸了烟去宣传戒烟广告，那么戏剧张力就大大弱化了。</p> </td><td> <p>最后，诺兰不是一个缺乏创造力的导演。电影中的每一个怪兽都对应了战后的 PTSD。残暴、变态、崩溃、贪念。这种表现主义不可谓不精彩，但诺兰电影已经太多次探讨反战这个主题了，敦刻尔克是通过亲历战争的人来体现反战，奥本海默是通过科学家视角了侧面宣传反战，这部电影是通过展现战士在战争后的创伤来宣传反战，每一部都有很多亮点，但作为诺兰这么一个大导演而言，反复挑战一个主题好比用十年前的饺子馅包饺子，醋是老陈醋，面皮是好面皮，但吃起来不免有股馊味，需要蘸饱了醋来压。</p> <p>因此，诺兰现在也像奥德修斯一样，面对着自己的地中海。他该如何驶过这片危险之域，首先要做的，就是对自己进行重构，打破自己的固有思维，返璞归真。</p> </td></tr></table> <div class="inset"> <div class="ph" style="height:108mm; background-image:url('photos/奥德赛-诺兰该如何驶过自己的地中海02.jpg');"></div>''' assert old in s s = s.replace(old, new) open(p, "w", encoding="utf-8").write(s) print("P59 done") PYEOF
+思考
+·
+持续了几秒
+
+P33 需要知道插图源图尺寸来定 inset 高度。查 phototags.txt：
+
+终端
+cd "D:\CloudyInkForge\pentium\2611" && grep -E "山西人的足迹" photos/phototags.txt 2>/dev/null | head; ls photos/ | grep 山西 | head; C:/Python313/python.exe -c " import struct, os for f in os.listdir('photos'): if '山西' in f: p = os.path.join('photos', f) d = open(p,'rb').read() i = 2 while i < len(d): if d[i] != 0xFF: break m = d[i+1] if m in (0xC0,0xC2): h, w = struct.unpack('>HH', d[i+5:i+9]) print(f, w, 'x', h) break i += 2 + struct.unpack('>H', d[i+2:i+4])[0] "
+思考
+·
+持续了几秒
+
+P33 的插图源图只有 800px 宽（178mm 下 114dpi 临界），保持整宽但不放太大。先读当前 HTML：
+
+终端
+·
+2 个命令
+思考
+·
+持续了几秒
+
+P33 完成。现在处理 zone 页。读 P10/P11（真理在谁手里 pro-4 跨页）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && sed -n '/S03 · P10/,/page-no at-l">10\|page-no">10/p' 2611/2611.html | head -75 && echo "=====P11=====" && sed -n '/S03 · 右页/,/page-no">11/p' 2611/2611.html | head -40
+读取
+2611.html
+D:/CloudyInkForge/pentium/2611/
+思考
+·
+持续了几秒
+
+P10/P11 方案定了。先改 P10（拆段平衡双栏）和 P11（zone-r 改整宽段）：
+
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' # -*- coding: utf-8 -*- p = r"2611/2611.html" s = open(p, encoding="utf-8").read() # ---------- P10 zone-l: cols → ctab;拆 p2 于「记得起来的有二十次」。后 ---------- old = ''' <div class="zone-l"> <p class="lead">一九三四年到一九三五年，中央红军走完二万五千里长征。这段路对毛泽东而言，不只是地理上的跋涉……</p> <div class="cols"> <h2 class="subhead">担架筹谋</h2> <p>一九三四年十月，中央红军从于都出发时，毛泽东是躺在担架上走的。</p> <p>他刚得过一场严重的疟疾，反反复复，差点丢了性命。但比身体更让他难受的，是政治上的边缘化。从一九三一年赣南会议开始，他接连遭受处分打击，用他自己的话说，“记得起来的有二十次”。被撤掉前委书记，被撤掉军职，只剩下一个“中华苏维埃共和国主席”的空头衔。他后来的比喻，是“过了四年的小媳妇生活”。</p> <p>长征出发时，军事指挥权掌握在博古、李德、周恩来组成的“三人团”手里。毛泽东不在其中。很多人绕着他走，生怕沾上这个受排挤的人。</p> <p>但毛泽东没有躺平。担架上的日子，他没有用来抱怨。他的全部行装里，最重的是一挑书。红军总政治部主任王稼祥问他装了些什么，他说：“我连饭锅、牙刷都轻装了。”王稼祥又问铁皮箱里的古书也是必要的？毛泽东说：“《三国演义》《水浒传》，路上捡来的地方志，都是必要的。书比粮食重要。”</p> <p class="cbrk">担架不只载着他一个人。王稼祥——红军总政治部主任，第四次反“围剿”中被敌机炸伤，伤口未愈，也坐在担架上。张闻天——党内有名的理论家，时任中央政治局常委，身体不好，有时也步行。这两个人在党内地位都不低，但此前都站在“左”倾路线一边，跟毛泽东谈不上亲近。</p> <p>担架上的日子改变了这一切。三个人在行军间隙朝夕相处，从战场形势聊到军事路线，从第五次反“围剿”的失败聊到湘江血战的惨痛。毛泽东没有急于拉拢谁，只是把自己的判断一条一条摆出来，讲得清楚，讲得透彻。王稼祥越听越觉得在理，张闻天也渐渐意识到过去的路确实走错了。</p> <p>张闻天后来被人问：“你怎么老是跟着毛泽东跑？”他回答：“真理在谁手里，就跟谁走。”</p> </div> </div>''' new = ''' <div class="zone-l"> <p class="lead">一九三四年到一九三五年，中央红军走完二万五千里长征。这段路对毛泽东而言，不只是地理上的跋涉……</p> <table class="ctab"><tr><td> <h2 class="subhead">担架筹谋</h2> <p>一九三四年十月，中央红军从于都出发时，毛泽东是躺在担架上走的。</p> <p>他刚得过一场严重的疟疾，反反复复，差点丢了性命。但比身体更让他难受的，是政治上的边缘化。从一九三一年赣南会议开始，他接连遭受处分打击，用他自己的话说，“记得起来的有二十次”。</p> <p>长征出发时，军事指挥权掌握在博古、李德、周恩来组成的“三人团”手里。毛泽东不在其中。很多人绕着他走，生怕沾上这个受排挤的人。</p> </td><td> <p class="cont">被撤掉前委书记，被撤掉军职，只剩下一个“中华苏维埃共和国主席”的空头衔。他后来的比喻，是“过了四年的小媳妇生活”。</p> <p>但毛泽东没有躺平。担架上的日子，他没有用来抱怨。他的全部行装里，最重的是一挑书。红军总政治部主任王稼祥问他装了些什么，他说：“我连饭锅、牙刷都轻装了。”王稼祥又问铁皮箱里的古书也是必要的？毛泽东说：“《三国演义》《水浒传》，路上捡来的地方志，都是必要的。书比粮食重要。”</p> <p>担架不只载着他一个人。王稼祥——红军总政治部主任，第四次反“围剿”中被敌机炸伤，伤口未愈，也坐在担架上。张闻天——党内有名的理论家，时任中央政治局常委，身体不好，有时也步行。这两个人在党内地位都不低，但此前都站在“左”倾路线一边，跟毛泽东谈不上亲近。</p> <p>担架上的日子改变了这一切。三个人在行军间隙朝夕相处，从战场形势聊到军事路线，从第五次反“围剿”的失败聊到湘江血战的惨痛。毛泽东没有急于拉拢谁，只是把自己的判断一条一条摆出来，讲得清楚，讲得透彻。王稼祥越听越觉得在理，张闻天也渐渐意识到过去的路确实走错了。</p> <p>张闻天后来被人问：“你怎么老是跟着毛泽东跑？”他回答：“真理在谁手里，就跟谁走。”</p> </td></tr></table> </div>''' assert old in s, "P10 zone-l pattern not found" s = s.replace(old, new) open(p, "w", encoding="utf-8").write(s) print("P10 done") PYEOF
+思考
+·
+持续了几秒
+
+缩进不匹配。用精确缩进重试：
+
+终端
+·
+2 个命令
+思考
+·
+持续了几秒
+终端
+cd "D:\CloudyInkForge\pentium" && python - << 'PYEOF' # -*- coding: utf-8 -*- p = r"2611/2611.html" s = open(p, encoding="utf-8").read() # ---------- P11 zone-r: 单段改整宽（避免 2 栏只填 1 栏的半空态） ---------- old = ''' <div class="zone-r"> <p class="continued-mark">真理在谁手里 · 续</p> <div class="cols"> <p>这句话不是客气。湘江之后，八万六千人锐减到三万，所有人都看清博古和李德的路走不通了，所谓苏联经验，用在中国身上实质是生搬教条。而毛泽东在担架上，已经把下一步该怎么走想清楚了。</p> </div> </div>''' new = ''' <div class="zone-r"> <p class="continued-mark">真理在谁手里 · 续</p> <p>这句话不是客气。湘江之后，八万六千人锐减到三万，所有人都看清博古和李德的路走不通了，所谓苏联经验，用在中国身上实质是生搬教条。而毛泽东在担架上，已经把下一步该怎么走想清楚了。</p> </div>''' assert old in s, "P11 pattern not found" s = s.replace(old, new) open(p, "w", encoding="utf-8").write(s) print("P11 done") PYEOF
+思考
+·
+持续了几秒
+
+P16/P17（四渡赤水）——读 HTML：
+
+查阅
+·
+1 搜索, 2 文件
+去 ZCode 继续
