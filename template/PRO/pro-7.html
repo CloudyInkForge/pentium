@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 7 · 跨页「对角双图 · 上下错位」（简洁杂志式）</title>
+<style>
+/* ============================================================
+   PRO 模板 7：pro-7.html（跨页 · 对角双图、上下错位排版）
+   ------------------------------------------------------------
+   版式语言（2026-10 重做 · 简洁杂志式）：
+     同 pro-6：小字栏目名 + 大标题 + 一行作者 + 发丝线；
+     图为"装裱式"贴图（四周留白、不出血、不压字），
+     图注贴图下右对齐灰字。两图对角呼应，"之"字形动线：
+     左页文字 → 左页图 → 右页图 → 右页文字。
+
+   用途：两张独立大图分居跨页对角（左页图在下、右页图在
+         上），图约占两页面积 33%，互不连线、换图互不牵连、
+         无连图数学——PRO 族里换图最省事的跨页。
+         适用：2 张同气质配图 + 1200–2000 字的文章开篇。
+
+   跨页方向：左偶在前、右奇在后，示例页码 36 / 37。
+
+   ★ 分区机制（无连图，纯分区 + 流内图注）：
+     左页：文字区 y16..112 + 图 A（x16..194，y120..266，
+           高 146）+ 图注 y268 + 页脚
+     右页：图 B（x16..194，y16..126，高 110）+ 图注 y128
+           + 文字区 y138..273（续题行 + 双栏 + 题句）
+     每页"图不压文、文不压图"；改图高时同步挪对侧文字区
+     的 top（图顶 − 8 呼吸）与图注 top（图底 + 2）。
+
+   换图四步：
+     1. 换 .art-a / .art-b 的 background-image（两张不同图，
+        同一文章、同一气质；cover 自动裁，宽高比 1.1–1.8 皆宜）；
+     2. 按主体调各图 background-position（本例均 center）；
+        DPI = 图宽px ÷ 178mm ≥ 150（本例 458 / 249 ✓）；
+     3. 图注 ≤ 22 字写 .cap-a / .cap-b（贴图下，右对齐灰字）；
+     4. 左页文字区容量 96mm（标题块 26.8 + 导语 + 双栏 ≤10 行
+        /栏），右页 135mm（续题行 + 双栏 ≤23 行/栏 + 题句），
+        每页占用 ≤ 容量 − 9mm。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     无远程资源；无 opacity / filter / grid / JS / 透明渐变；
+     图块显式 width/height + cover + 定位 + no-repeat；
+     双栏 column-fill:auto + .cbrk；无任何元素压图。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 16mm 16mm 171mm;    /* 左页：底部让位图 A（顶 120 − 呼吸） */
+}
+.page-right {
+  padding-top: 140mm;          /* 右页：图 B 126 + 图注 + 呼吸 */
+  padding-bottom: 12mm;        /* 页脚带 */
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 对角双图（装裱式贴图 · 不出血 · cover 居中）---------- */
+.art-a, .art-b {
+  position: absolute;
+  left: 16mm;
+  width: 178mm;
+  background-size: cover;
+  background-position: center center;   /* 换图后按主体调 */
+  background-repeat: no-repeat;
+}
+.art-a { top: 120mm; height: 146mm; }   /* 左页下部 */
+.art-b { top: 16mm;  height: 110mm; }   /* 右页上部 */
+
+/* ---------- 图注（贴图下 · 右对齐灰字 · 不压图）---------- */
+.cap-a, .cap-b {
+  position: absolute;
+  left: 16mm;
+  width: 178mm;
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  letter-spacing: 0.04em;
+  text-align: right;
+  text-indent: 0;
+}
+.cap-a { top: 268mm; }
+.cap-b { top: 128mm; }
+
+/* ---------- 文字区 ----------
+   ⚠ PeachPDF 分栏成立条件（实测 0.9.23）：多栏容器必须是
+   flex item（flex:1 + min-height:0），且第二栏起点带 .cbrk；
+   绝对定位或普通流的 multicol 不分栏（内容全灌第一栏）。 */
+.zone-t, .zone-r {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 简洁页眉：栏目名 → 大标题 → 作者 → 发丝线 */
+.slug {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.6mm 0;
+}
+
+h1.title {
+  font-size: 20pt;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.6mm 0 0 0;
+}
+
+.hairline {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  margin: 2.6mm 0 3.5mm 0;
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.2pt;
+  line-height: 1.68;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 双栏正文：切分点钉死（.cbrk = 第二栏起点，缺省不分栏） */
+.cols {
+  flex: 1 1 auto;
+  min-height: 0;
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0 0 4mm 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* 续页标识 */
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.4mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+}
+
+/* 题句：居中灰字 + 上下发丝线（右页收束） */
+.quote {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+  padding: 2.4mm 0;
+  margin: 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 11.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  color: #333333;
+  color: device-cmyk(0 0 0 0.8);
+}
+
+/* ---------- 细线页脚 ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 36）：标题 + 导语 + 双栏（上），图 A（下）
+     文字区核算（y16..112，容量 96mm）：
+       标题块 26.8 ｜ 导语 2 行 × 6.00 = 12.0 + 3.5
+       双栏 2×8 行 × 4.57 = 36.6 + 4
+       合计 ≈ 82.9 / 96，余 13.1mm + 栏内空气 ✓
+     图 A：布袋和尚像 3200×2401 → 窗口 178×146，按高缩放
+     显宽 194.5，横裁 8%；DPI 458 ✓✓。
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="zone-t">
+    <p class="slug">艺体观察</p>
+    <h1 class="title">怀念游本昌：永远的济公</h1>
+    <p class="byline">文｜斯沅述影</p>
+    <div class="hairline"></div>
+
+    <p class="lead">2026 年 9 月 24 日，游本昌先生走了，享年 93 岁。游本昌的文艺生涯，始于 1951 年，中学毕业后，他加入南京文工团，次年再赴上海戏剧学院深造。</p>
+
+    <div class="cols">
+      <p>但绝大多数时间，游本昌所饰演的都是舞台上的小角色，五十多岁的他作为一个演员依然默默无闻，换作别人可能早已放弃或者退居幕后，但游本昌没有，他依然坚持表演，尽管只是在聚光灯下的边缘。</p>
+      <p>转折发生在 1985 年，在演了 79 个小角色后，游本昌终于迎来了演员生涯中最为人熟知的角色——济公。</p>
+      <p class="cbrk">尽管如此，进入拍摄后，游本昌面临的困难依旧很多。开拍前两集，他始终找不到感觉。直到第三集在西湖三潭印月休息，导演喊开拍时，他踢踏着不跟脚的破鞋跑过去，摇摇晃晃、拖拖拉拉，他突然意识到，这不就是济公的步态吗？</p>
+      <p>在此之后，游本昌大胆的探索角色，将早年间在话剧舞台上所积累的哑剧和喜剧的表演方式融入济公，参与济公的人物设定，还将济公的袈裟、鞋帽剪破，从此，我们就看见了荧幕上那个衣衫褴褛、疯癫却不失善良本色的济公形象。</p>
+    </div>
+  </div>
+
+  <div class="art-a" style="background-image:url('../../2611/photos/怀念游本昌-永远的济公.jpg');"></div>
+  <p class="cap-a">《布袋和尚像》（17–18 世纪）· 大都会艺术博物馆藏</p>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">36</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 37）：图 B（上），续题行 + 双栏 + 题句（下）
+     文字区核算（y138..273，容量 135mm）：
+       续题行 7.7 ｜ 双栏 2×15 行 × 4.57 = 68.6 + 3
+       题句 1 行带衬 12.3
+       合计 ≈ 91.6 / 135，余 43.4mm（简洁版留白 ✓）
+     图 B：《繁花》爷叔剧照 1920×1080 → 窗口 178×110，
+     按高缩放显宽 195.8，横裁 9%；DPI 249 ✓。
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="art-b" style="background-image:url('../../2611/photos/怀念游本昌-永远的济公04.jpg');"></div>
+  <p class="cap-b">电视剧《繁花》剧照：游本昌饰“爷叔”</p>
+
+  <div class="zone-r">
+    <p class="continued-mark">怀念游本昌：永远的济公 · 续</p>
+    <div class="cols" style="margin:0 0 3mm 0;">
+      <p>游本昌能在演艺界立足数十年，与他的敬业离不开关系。拍摄《济公》时，有一场吃肘子的戏份。前一天买的肘子，经过杭州夏天火炉般的一个夜晚，早已发臭的难以入口。可到了拍摄的时候，游本昌不假思索地全部吃掉，直到喊停时才吐出来。这样的演员，如今又有几个呢？</p>
+      <p>济公给游本昌带来了数不清的荣誉，无数的奖项加身，天南海北的片约纷沓而来。但当游本昌终于在五十三岁大器晚成的时候，他却果断拒绝了大量的续集邀约，拒绝被角色捆绑。</p>
+      <p>1991 年，游本昌的妻子身患癌症，他一心一意守护四年，未接拍任何影视作品。</p>
+      <p>后来的故事，大家就都知道了，游本昌凭借爷叔一角再次被大众注意到。这位年逾九旬的老人没有停下脚步，始终为中国影视事业发光发热。从济公到爷叔，游本昌有一段很难的时间，自己出品的电视剧收视不理想，为了话剧事业，他卖掉房产，买话剧剧本，组织艺术团。在台前幕后的奔波，并没有累垮这位老人。</p>
+      <p class="cbrk">在生命的最后两年，他甚至参与了竖屏短剧的拍摄，入驻视频网站，拉近与年轻人的距离。</p>
+      <p>从 50 年代到今天，七十多年的时间，游本昌从话剧舞台走向卫视栏目，再到参与网剧、进军短剧，游本昌“活到老，学到老，干到老”，见证了中国影视行业的发展，并深度参与其中。</p>
+      <p>在视频平台上，他是不失童真的“老顽童”，越来越多的年轻人爱上了这位“曾祖父辈”的老艺术家，他的话更是为许多当代年轻人思考，并受益匪浅。</p>
+      <p>从跑龙套到成为备受瞩目的主角，游本昌用执着与热爱书写了不凡的演艺历程。</p>
+      <p>游本昌先生去世了，但他的音容笑貌宛在，济公、爷叔等一个个他演绎过的经典角色会继续陪伴着无数观众，他的坚定和执着会继续影响着每一位中国青年勇敢追梦！</p>
+    </div>
+    <div class="quote">
+      <p>为艺术事业鞠躬尽瘁，我觉得是值得的，也是快乐的。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">37</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

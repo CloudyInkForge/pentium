@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 6 · 跨页「顶部横带连图」（简洁杂志式 · 双页文字）</title>
+<style>
+/* ============================================================
+   PRO 模板 6：pro-6.html（跨页 · 顶部横带连图 + 双页文字）
+   ------------------------------------------------------------
+   版式语言（2026-10 重做 · 简洁杂志式）：
+     去掉色条/栏目眉粗红线/实底图注签；页眉只留三件事：
+     小字栏目名（暗红）→ 大标题（黑）→ 一行"文｜作者"（灰）
+     → 一根发丝线。图注贴图下方左对齐灰字，不压图。
+
+   用途：一张宽幅横图铺跨页顶部横带（210×120mm ×2，占两页
+         面积 42%），订口像素连续；带下两页都是完整文字页：
+         左页 标题 + 导语 + 双栏，右页 续题行 + 双栏 + 题句。
+         适用：长文（两页 1500–2200 字）+ 1 张宽幅主图
+         （宽高比 1.6–2.4 最佳）的开篇跨页。是 pro-3（整幅
+         连图、文字 ≤300 字）的"长文版"。
+
+   跨页方向：左偶在前、右奇在后，示例页码 34 / 35。
+
+   ★ 横带连图机制（pro-3 三定律的带状退化）：
+     平面宽 W = 420；图高 = 420 × 图高px ÷ 图宽px。
+     本例图 3200×1461 → 图高 191.8mm →
+       background-size: 420mm 191.8mm（两块共用）
+     纵向取居中一带：Y = −(191.8 − 120) ÷ 2 = −35.9mm
+     （两块同值负 mm）；X：左页 0%、右页 100%。
+     两块等高 → Y 禁百分比（防各自解算错位），用负 mm。
+
+   换图四步：
+     1. 换两块 .band 的 background-image（同一张图）；
+     2. 重算共用 background-size 与 Y 偏移；主体避开订口
+        8mm 带；DPI = 图宽px ÷ 420mm ≥ 150（本例 194 ✓）；
+     3. 图注 ≤ 22 字写 .cap（图下 y122，左对齐灰字）；
+     4. 文字区 .zone（y134..273，容量 139mm）：
+        左页 标题块 28.6 + 导语（10.5pt/1.7，47 字/行）
+        + 双栏（28 字/行，第二栏起点 .cbrk）；
+        右页 续题行 + 双栏 + 题句。每页占用 ≤ 容量 − 9mm。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     无远程资源；无 opacity / filter / grid / JS / 透明渐变；
+     图块显式 width/height + background-size + 定位 + no-repeat；
+     连图两块同 size、同 Y、X 0%/100%；双栏 column-fill:auto
+     + .cbrk；文字全部位于图带之外，无任何元素压图。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 134mm 16mm 12mm;   /* 顶：图带 120 + 图注 7 + 呼吸；底：页脚带 */
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 顶部横带连图（两页同一张图的左右半）---------- */
+.band {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 120mm;
+  background-size: 420mm 191.8mm;   /* 换图后按头注公式重算 */
+  background-repeat: no-repeat;
+}
+.band-l { background-position: 0% -35.9mm; }
+.band-r { background-position: 100% -35.9mm; }
+
+/* ---------- 图注（贴图下 · 左对齐灰字 · 不压图）---------- */
+.cap {
+  position: absolute;
+  left: 16mm;
+  top: 122mm;
+  width: 178mm;
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-indent: 0;
+}
+
+/* ---------- 文字区（两页同一容器：flex 列，内部自然流）----------
+   ⚠ PeachPDF 分栏成立条件（实测 0.9.23）：多栏容器必须是
+   flex item（flex:1 + min-height:0），且第二栏起点带 .cbrk；
+   绝对定位或普通流的 multicol 不分栏（内容全灌第一栏）。 */
+.zone {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 简洁页眉：栏目名 → 大标题 → 作者 → 发丝线 */
+.slug {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.6mm 0;
+}
+
+h1.title {
+  font-size: 24pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.6mm 0 0 0;
+}
+
+.hairline {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  margin: 2.6mm 0 3.5mm 0;
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.5pt;
+  line-height: 1.7;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 双栏正文：切分点钉死（.cbrk = 第二栏起点，缺省不分栏） */
+.cols {
+  flex: 1 1 auto;
+  min-height: 0;
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0 0 4mm 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* 续页标识：右对齐小字 + 发丝线 */
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.4mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+}
+
+/* 题句：居中灰字 + 上下发丝线（右页收束） */
+.quote {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+  padding: 2.4mm 0;
+  margin: 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 11.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  color: #333333;
+  color: device-cmyk(0 0 0 0.8);
+}
+
+/* ---------- 细线页脚：期号 + 页码 ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 34）：横带连图左半 + 图注 + 标题 + 双栏
+     文字区核算（y134..273，容量 139mm）：
+       标题块 28.6（栏目名 5.8 + 题 10.6 + 作者 6.1 + 线 6.1）
+       导语 3 行 × 6.29 = 18.9 + 3.5
+       双栏 2×12 行 × 4.57 = 54.8 + 4
+       合计 ≈ 109.8 / 139，余 29.2mm（简洁版留白 ✓）
+     双栏切分（每栏容量 26 行）：
+       第一栏 12 行 ｜ 第二栏 11 行（.cbrk 钉死）
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="band band-l" style="background-image:url('../../2611/photos/把信念走成路.jpg');"></div>
+
+  <p class="cap">王翚《太行山色》（1669）· 大都会艺术博物馆藏</p>
+
+  <div class="zone">
+    <p class="slug">封面故事</p>
+    <h1 class="title">把信念走成路</h1>
+    <p class="byline">文｜王晨玮　原初167班 高125班</p>
+    <div class="hairline"></div>
+
+    <p class="lead">2026 年秋天，如果你有机会站在甘肃会宁的城楼下，会看到一座城门，飞檐翘角，土坯墙上还留着斑驳的弹痕。它如今有个庄重的名字——会师门。九十年前，1936 年的 10 月，红军三大主力就是穿过这道门，完成了人类历史上那场旷世的远征。</p>
+
+    <div class="cols">
+      <p>这座门，比任何一本教科书都更会讲故事。</p>
+      <p>时间拨回到更早的 1934 年。那一年，中央苏区第五次反“围剿”失利，一座座县城接连失守。蒋介石调集了上百万军队，对中央根据地层层合围。到了秋天，摆在共产党和红军面前的，已经不是打不打的问题，而是走不走、往哪走、能不能活下去的问题。</p>
+      <p>那年春天，在苏区北大门广昌，红军和敌人打了一场惨烈的阵地战。面对敌人的飞机大炮，红军硬碰硬地拼了十八天，伤亡五千多人。军团长彭德怀当时急得直跺脚，说过一句后来很有名的话：如果还这样固守下去，整个军团一万二千人，两天三天就会全部拼光。广昌最终没能守住。血的教训说明了一件事——方向错了，再勇敢，也只是白白流血。</p>
+      <p class="cbrk">10 月，江西于都。八万六千多人的队伍，在夜色里集结。他们当中有刚学会用枪的新兵，有从没出过远门的青年农民，有背着锅碗瓢盆的炊事员，也有戴着眼镜的知识分子。没有人告诉他们要去哪里，甚至很多人连“长征”这两个字都没听说过。他们只知道：跟着队伍走。</p>
+      <p>于都的老百姓连夜搭起浮桥，把家里的门板拆下来，铺在河面上。八万多人，用了几天几夜才全部渡河。有个细节，他们中的许多人，再也没有回来。</p>
+      <p>出发后的队伍，远没有后来想象中那么从容。他们带着笨重的辎重——印刷机、银元，甚至舍不得丢的坛坛罐罐——行军慢得惊人。更要命的是，前方有堵截，身后有追兵，天上还有飞机。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">34</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 35）：横带连图右半 + 续题行 + 双栏 + 题句
+     文字区核算（y134..273，容量 139mm）：
+       续题行 7.7 ｜ 双栏 2×21 行 × 4.57 = 96.0 + 4
+       题句 1 行带衬 12.3
+       合计 ≈ 120 / 139，余 19mm ✓
+     图：王翚《太行山色》，层峦横贯全带，订口带无关键主体。
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="band band-r" style="background-image:url('../../2611/photos/把信念走成路.jpg');"></div>
+
+  <div class="zone">
+    <p class="continued-mark">把信念走成路 · 续</p>
+    <div class="cols" style="margin:0 0 3mm 0;">
+      <p>1934 年 11 月底，队伍抵达广西境内的湘江。这是蒋介石精心布置的第四道封锁线，也是红军生死存亡的一关。近二十五万国民党军队从四面八方合围过来，企图把红军一举“消灭在湘江以东”。</p>
+      <p>中央红军在江边苦战了五天五夜。江上的浮桥，是战士们用身体和木板拼出来的；桥下的江水，被鲜血一层层染透。担任后卫的红五军团第三十四师，为了掩护大部队渡江，被死死地拖在湘江东岸，弹尽粮绝，几乎全军覆没。师长陈树湘腹部中弹被俘，敌人用担架抬着他去邀功，他却在担架上，硬是从腹部的伤口里扯断了自己的肠子，壮烈牺牲。那一年，他二十九岁。</p>
+      <p>这一仗之后，八万六千人，只剩下了三万多人。</p>
+      <p>当地至今流传着一首民谣：“英雄血染湘江渡，江底尽埋英烈骨；三年不饮湘江水，十年不食湘江鱼。”湘江的水本来是清的，但在那个冬天，它是红的。</p>
+      <p class="cbrk">湘江的惨痛，让所有人开始追问同一个问题：这样打下去，行吗？</p>
+      <p>行军途中，一副担架上，毛泽东、王稼祥、张闻天几个病号边走边聊。他们聊的，正是红军一次次流血换来的教训——再也不能这样打了。这几个人在担架上的讨论，后来被历史学家称作“担架上的会议”。它像一簇火星，在寒冷的行军路上慢慢聚拢。</p>
+      <p>翻过老山界，队伍一路向西，冲进了敌军力量相对薄弱的贵州。1935 年 1 月，红军攻占了黔北重镇遵义。这里有一栋灰墙的小楼，楼里开了一场会——遵义会议。</p>
+      <p>这场会没有炮火，却比任何一场战斗都更深刻地改变了历史。会上，错误的军事指挥被纠正，毛泽东进入了党和红军的领导核心。很多人后来都说，遵义会议是长征的转折点，其实它更是中国革命的转折点。从那一刻起，这支队伍不再是一支被追着跑的败军，而重新有了一颗能思考、能决断的“大脑”。</p>
+      <p>一颗清醒的头脑，比十万大军更珍贵。这是长征用几万条生命换来的道理。</p>
+    </div>
+    <div class="quote">
+      <p>我们不为胜利者，即为战败者。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">35</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

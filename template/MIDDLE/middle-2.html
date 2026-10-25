@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>MIDDLE 模板 2 · 单页「侧边大图 + 窄栏文字」（简洁杂志式）</title>
+<style>
+/* ============================================================
+   MIDDLE 模板 2：middle-2.html（单页 · 侧边通栏大图 + 窄栏）
+   ------------------------------------------------------------
+   MIDDLE 族定位：介于 PRO 与基础族之间的"单页增强版"。
+   版式语言（2026-10 · 简洁杂志式）：小字栏目名（暗红）→
+   大标题（黑）→ 一行"文｜作者（· 副题）"（灰）→ 发丝线；
+   图注贴图下右对齐灰字，不压图、不用实底签。
+
+   本模板：右侧一幅通高竖带大图（90×258mm，顶/右缘出血，
+   约占本页 31%），左侧 96mm 窄栏单列文字。人物/器物类竖图
+   + 900–1400 字短文整页排完的标准形态（环球人物式人物版）。
+   换边用法：图换到左侧（.rail 改 left:0），.zone 右移、
+   .folio 同步，机制不变。
+
+   页面方向：单页模板，不挑奇偶，任意位置可排；示例页码 62。
+
+   ★ 分区机制（无连图；图不出现在文字区）：
+     竖带：x120..210（90 宽）× y0..258，顶/右缘出血；
+     图注：y260，贴竖带下、右对齐（宽 74，不压图）；
+     文字区：x16..112（96 宽）× y16..273，单列窄栏；
+     页脚压文字区（宽 96），不与竖带相交。
+
+   换图三步：
+     1. 换 .rail 的 background-image（竖/方构图佳，宽高比
+        0.5–0.9；本例 3149×4000 = 0.787 → 按高铁满 258mm
+        显宽 203.1mm，横向裁 56% 保中央主体）；
+     2. DPI：取 图高px ÷ 258 与 图宽px ÷ 90 的较小者 ≥ 120
+        （本例 394 / 879 ✓✓）；主体务必居中或用 position
+        调入带内；竖带底如需多留图注位，图高减多少、
+        .cap 的 top 同步减多少；
+     3. 图注 ≤ 22 字写 .cap。
+
+   文字区核算基准（y16..273，容量 257mm）：
+     页眉 27.7 ｜ 导语（10.2pt/1.68，26 字/行）
+     窄栏正文 96mm ≈ 31 字/行（8.7pt/1.49）；
+     占用 ≤ 248mm、余量 ≥ 9mm。窄栏无分栏、无 .cbrk。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     无远程资源；无 opacity / filter / grid / JS / 透明渐变；
+     图块显式 width/height + cover + 定位 + no-repeat；
+     文字全部位于竖带之外，无任何元素压图。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 侧边通栏大图（顶/右缘出血，通高 258）---------- */
+.rail {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 90mm;
+  height: 258mm;
+  background-size: cover;
+  background-position: center center;   /* 换图后按主体调 */
+  background-repeat: no-repeat;
+}
+
+/* ---------- 图注（贴竖带下 · 右对齐灰字 · 不压图）---------- */
+.cap {
+  position: absolute;
+  left: 120mm;
+  top: 260mm;
+  width: 74mm;
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  letter-spacing: 0.04em;
+  text-align: right;
+  text-indent: 0;
+}
+
+/* ---------- 窄栏文字区（x16..112，宽 96mm）---------- */
+.zone {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 96mm;
+}
+
+/* 简洁页眉：栏目名 → 大标题 → 作者（· 副题）→ 发丝线 */
+.slug {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.6mm 0;
+}
+
+h1.title {
+  font-size: 22pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.6mm 0 0 0;
+}
+
+.hairline {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  margin: 2.6mm 0 3.5mm 0;
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.2pt;
+  line-height: 1.68;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 窄栏正文：单列（96mm ≈ 31 字/行，无分栏无 .cbrk） */
+.col1 p {
+  margin: 0;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+
+/* ---------- 细线页脚（压文字区 · 宽 96 · 不与竖带相交）---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  width: 96mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     单页（示例页码 62）：右侧通栏大图 + 左侧窄栏
+     文字区核算（y16..273，容量 257mm）：
+       页眉 27.7（栏目名 5.8 + 题 9.7 + 作者行 6.1 + 线 6.1）
+       导语 3 行 × 6.00 = 18.0 + 3.5
+       窄栏 34 行 × 4.57 = 155.4
+       合计 ≈ 204.6 / 257，余 52.4mm（简洁版留白 ✓）
+     图：古希腊青铜运动员像 3149×4000 → 按高铁满 258mm 显宽
+     203.1，横裁 56% 保主体；DPI 394 ✓✓。全文 1097 字收束。
+     ============================================================ -->
+<div class="page">
+
+  <div class="rail" style="background-image:url('../../2611/photos/跑向更好的自己.jpg');"></div>
+
+  <p class="cap">古希腊青铜运动员像（约公元前450年）· 大都会艺术博物馆藏</p>
+
+  <div class="zone">
+    <p class="slug">校园天地</p>
+    <h1 class="title">跑向更好的自己</h1>
+    <p class="byline">文｜王晨玮　高125班“牛牛健跑团”侧记</p>
+    <div class="hairline"></div>
+
+    <p class="lead">“大家每天坚持跑两圈，我们会有一个更好的身体。只要各位以后坚持跑步，养成这个习惯，一直坚持到你进入大学，到你参加工作，你会受益终生的。”</p>
+
+    <div class="col1">
+      <p>这是班主任牛建文老师常挂在嘴边的一句话。朴实，恳切，没有半句大道理，却像一粒种子，悄悄种进了125班每个同学的心里。</p>
+      <p>看啊，课间操后，操场上便出现了一道靓丽的风景线。是125班的牛牛健跑团。</p>
+      <p>“牛牛”二字，取自牛老师的姓，是同学们对这位带头奔跑的班主任的亲切称呼，更是我们对自己的肯定：“我真牛。”这道风景的起点，其实再平常不过——牛老师自己先跑了起来。每天课间操一结束，当同学们还三三两两散着，牛老师已经第一个站上了跑道，招呼一声“走，跑两圈！”，便迈开了步子。一位老师，没有发号施令，没有正襟危坐地说教，只是用一双跑鞋、一个背影，无声地做了示范。</p>
+      <p>开始只有三五个人跟着，慢慢地，一个、两个、越来越多。没有点名，更没有人强迫——大家凭着一股自觉自愿，在课间操结束的铃声里，绕上跑道，跑了起来。跑着跑着，这成了125班心照不宣的约定：谁想跑，就上跑道；跑多跑少，没人计较；跑快跑慢，全在自己。</p>
+      <p>这道风景，与寻常的跑操并不一样。跑操讲究整齐划一，步子、节奏、口号都要一致，仿佛一支被口令驱动的队伍；而牛牛健跑团的“健跑”，是让每个同学做自己的主人。这里没有“一二一”的号令，只有各自均匀的呼吸；没有固定的圈数，只有量力而行的距离。跑多长、跑多快，全凭各人根据当天的身体和状态自己来定：体力充沛的，多跑几圈，步子带风；状态一般的，就慢跑两圈，稳稳当当。快慢随心，长短由己，唯一不变的，是“坚持”二字。</p>
+      <p>日复一日，一个月下来，变化是实实在在的。最明显的写在每个人脸上：精神更足了，上课不再昏昏欲睡；体质更好了，换季时请假的同学少了；连体育课的长跑，也不再有人半路停下。身体素质的提升，就这样一圈一圈，被他们用脚步丈量了出来。</p>
+      <p>也有同学把这份坚持写进了心里。“一开始是被牛老师带着跑，后来是自己想跑。”一位同学说，“跑的时候什么都不用想，只听着自己的呼吸和脚步声，跑完一身汗，特别爽。”从被动跟随，到主动奔跑，这看似小小的一步，其实是一个人成长里很了不起的一步——他学会了对自己负责，学会了在不被催促的时候，依然向前。</p>
+      <p>牛老师常说，读书是一场长跑，人生更是一场长跑。而牛牛健跑团，正是让同学们早早尝到了“长跑”的滋味：不急于一时的快慢，不争一时的先后，只是日复一日，朝着更好的自己，稳稳地跑下去。习惯，是时间最好的礼物；而一个坚持一生的好习惯，是老师能送给学生的最珍贵的行囊。</p>
+      <p>今天跑下的每一圈，都是将来漫长岁月里，一份受益终生的底气和从容。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">62</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

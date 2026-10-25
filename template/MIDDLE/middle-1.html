@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>MIDDLE 模板 1 · 单页「上半页大图」（简洁杂志式）</title>
+<style>
+/* ============================================================
+   MIDDLE 模板 1：middle-1.html（单页 · 上半页满宽大图）
+   ------------------------------------------------------------
+   MIDDLE 族定位：介于 PRO（跨页大图）与基础族（page+ 系列）
+   之间的"单页增强版"。用 PRO 的全出血机制，但只有一页、
+   图只占上半页。版式语言（2026-10 · 简洁杂志式）：
+   小字栏目名（暗红）→ 大标题（黑）→ 一行"文｜作者"（灰）
+   → 一根发丝线；图注贴图下左对齐灰字，不压图。
+
+   本模板：上半页（210×130mm，约 46%）满宽出血大图 + 下半页
+   标题 + 导语 + 双栏。既可作文章第一页（带页眉），也可作
+   后续页（把页眉换成"篇名 · 续"一行，双栏容量增至约
+   2×25 行，换法见页尾注释）。适用：横构图主图 + 600–
+   1100 字的短文整页排完，或长文的单页开篇（续页接
+   page+.html 双栏机制）。
+
+   页面方向：单页模板，不挑奇偶，任意位置可排；示例页码 51。
+
+   换图四步：
+     1. 换 .band 的 background-image（横构图佳，宽高比
+        1.2–1.8 裁切最少；本例 3200×2542 = 1.26 → 按宽
+        铺满显高 166.8mm，纵向裁 22%）；
+     2. DPI = 图宽px ÷ 210mm ≥ 150（本例 388 ✓✓）；
+     3. 图注 ≤ 22 字写 .cap（图下 y132，左对齐灰字）；
+     4. 文字区 y144..273（容量 129mm）：页眉 27.7 +
+        导语（10.5pt/1.7，47 字/行）+ 双栏（28 字/行，
+        第二栏起点 .cbrk）；占用 ≤ 容量 − 9mm。
+        改图高时：图底上移多少，.cap 与 .zone 的 top
+        同步上移多少。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     无远程资源；无 opacity / filter / grid / JS / 透明渐变；
+     图块显式 width/height + cover + 定位 + no-repeat；
+     双栏 column-fill:auto + .cbrk；文字全部位于图带之外，
+     无任何元素压图。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 144mm 16mm 12mm;   /* 顶：图带 130 + 图注 7 + 呼吸；底：页脚带 */
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 上半页满宽出血大图 ---------- */
+.band {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 210mm;
+  height: 130mm;
+  background-size: cover;
+  background-position: center center;   /* 换图后按主体调 */
+  background-repeat: no-repeat;
+}
+
+/* ---------- 图注（贴图下 · 左对齐灰字 · 不压图）---------- */
+.cap {
+  position: absolute;
+  left: 16mm;
+  top: 132mm;
+  width: 178mm;
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-indent: 0;
+}
+
+/* ---------- 下半页文字区（y144..273，容量 129mm）----------
+   ⚠ PeachPDF 分栏成立条件（实测 0.9.23）：多栏容器必须是
+   flex item（flex:1 + min-height:0），且第二栏起点带 .cbrk；
+   绝对定位或普通流的 multicol 不分栏（内容全灌第一栏）。 */
+.zone {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 简洁页眉：栏目名 → 大标题 → 作者 → 发丝线 */
+.slug {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.6mm 0;
+}
+
+h1.title {
+  font-size: 22pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.6mm 0 0 0;
+}
+
+.hairline {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  margin: 2.6mm 0 3.5mm 0;
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.5pt;
+  line-height: 1.7;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 双栏正文：切分点钉死（.cbrk = 第二栏起点，缺省不分栏） */
+.cols {
+  flex: 1 1 auto;
+  min-height: 0;
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* 续页标识（本页作后续页时，用它替换整个页眉） */
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.4mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+}
+
+/* ---------- 细线页脚：期号 + 页码 ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     单页（示例页码 51 · 文章第一页形态）：上半页大图 + 标题 + 双栏
+     文字区核算（y144..273，容量 129mm）：
+       页眉 27.7（栏目名 5.8 + 题 9.7 + 作者 6.1 + 线 6.1）
+       导语 2 行 × 6.29 = 12.6 + 3.5
+       双栏 2×12 行 × 4.57 = 54.8
+       合计 ≈ 98.6 / 129，余 30.4mm（简洁版留白 ✓）
+     双栏切分（每栏容量 17 行）：第一栏 12 ｜ 第二栏 12（.cbrk）
+     图：德·拉雷塞油画 3200×2542 → 按宽铺满显高 166.8mm，
+     纵向裁 22%；DPI 388 ✓✓。全文 840 字单页收束。
+
+     ▶ 作后续页用法：删去 .zone 内 slug/title/byline/hairline
+       与 .lead，换成
+       <p class="continued-mark">篇名 · 续</p>；
+       双栏容量增至约 2×25 行，核算口径不变。
+     ============================================================ -->
+<div class="page">
+
+  <div class="band" style="background-image:url('../../2611/photos/奥德赛-诺兰该如何驶过自己的地中海02.jpg');"></div>
+
+  <p class="cap">德·拉雷塞《墨丘利命卡吕普索放行尤利西斯》（约1670）· 克利夫兰艺术博物馆藏</p>
+
+  <div class="zone">
+    <p class="slug">艺体观察</p>
+    <h1 class="title">奥德赛：诺兰该如何驶过自己的地中海？</h1>
+    <p class="byline">文｜斯沅述影</p>
+    <div class="hairline"></div>
+
+    <p class="lead">诺兰电影目前最大的问题，是将一种反套路变成了自己的套路。非线性叙事似乎已经变成了诺兰电影的代名词，但事实上并不是每一部诺兰电影都适合所谓的非线性叙事。比如奥德赛。</p>
+
+    <div class="cols">
+      <p>此外，诺兰电影的一贯风格，就是将配角彻底边缘化，基本每一部电影都是这样，这就导致人物单薄扁平、缺乏灵魂，全部为主角一人服务。但以往的诺兰电影，主角相对而言是刻画比较成功的，起码是复杂立体而非脸谱化的。但奥德修斯如此一个在原作中就如此复杂的人物，本应该在诺兰镜头中更具生命与表现力，而诺兰只是展现了一个深陷泥沼的中年失意男。可以理解诺兰的反英雄化叙事，但反英雄的普通人一样可以有血有肉。奥德修斯似乎被刻画为了一个完美的中年人，只是身边人不听他的，诺兰想拍出来转变，但战争中的应该展现的嗜杀、残暴并没有展现，反而从一开始，奥德修斯就是被迫出征。这确实是原著内容，但你想拍的是反战，这一块你就应该改编，你不能用一个一开始就不想打仗，后来打了仗还是不想打仗的人来宣传反战，就好像强迫一个不吸烟的人吸烟，吸了烟去宣传戒烟广告，那么戏剧张力就大大弱化了。</p>
+      <p class="cbrk">最后，诺兰不是一个缺乏创造力的导演。电影中的每一个怪兽都对应了战后的 PTSD。残暴、变态、崩溃、贪念。这种表现主义不可谓不精彩，但诺兰电影已经太多次探讨反战这个主题了，敦刻尔克是通过亲历战争的人来体现反战，奥本海默是通过科学家视角了侧面宣传反战，这部电影是通过展现战士在战争后的创伤来宣传反战，每一部都有很多亮点，但作为诺兰这么一个大导演而言，反复挑战一个主题好比用十年前的饺子馅包饺子，醋是老陈醋，面皮是好面皮，但吃起来不免有股馊味，需要蘸饱了醋来压。</p>
+      <p>因此，诺兰现在也像奥德修斯一样，面对着自己的地中海。他该如何驶过这片危险之域，首先要做的，就是对自己进行重构，打破自己的固有思维，返璞归真。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">51</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

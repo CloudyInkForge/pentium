@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PRO 模板 8 · 跨页「大题图版 + 全文字页」（简洁杂志式）</title>
+<style>
+/* ============================================================
+   PRO 模板 8：pro-8.html（跨页 · 左页大题图 + 右页全文字页）
+   ------------------------------------------------------------
+   版式语言（2026-10 重做 · 简洁杂志式）：
+     同 pro-6/7 的简洁页眉；左页 = 页眉 + 一幅"装裱式"大题图
+     （178×212mm，四周留白不出血，约占左页 46%、两页 23%），
+     图注贴图下；右页 = 完整文字页（续题行 + 导语 + 双栏 +
+     题句）。画册/博物馆气质，图最安静的一型。
+
+   用途：竖构图主图 + 长文（右页 1400–2000 字）的文章开篇；
+         也适合"图是藏品、文是正文"的文物/人物选题。
+         与 pro-1（左页整版出血图 + 右页复杂版）互补：
+         本模板图小一半、两页都极简。
+
+   跨页方向：左偶在前、右奇在后，示例页码 38 / 39。
+
+   ★ 分区机制（无连图、无出血，纯分区）：
+     左页：页眉 y16..~44 ｜ 题图 x16..194 / y50..262 ｜
+           图注 y264 ｜ 页脚
+     右页：文字区 y16..273（续题行 + 导语 + 双栏 + 题句）
+
+   换图四步：
+     1. 换 .plate 的 background-image（竖构图佳，宽高比
+        0.55–0.9 裁切最少；本例 1611×4000 = 0.403，按宽
+        缩放显高 441.7mm，纵向裁 52%，position center 35%）；
+     2. DPI = 图宽px ÷ 178mm ≥ 150（本例 337 ✓✓）；
+     3. 图注 ≤ 22 字写 .cap（图下 y264，左对齐灰字）；
+     4. 左页标题 1 行（20pt ≤ 26 字）；右页占用 ≤ 248mm、
+        余量 ≥ 9mm：续题行 7.7 + 导语（10.2pt/1.68）+
+        双栏 ≤ 44 行/栏（.cbrk 钉死）+ 题句 12.3。
+        改图高时：图底固定 262，图顶 = 262 − 图高；页眉
+        底线不得越过图顶 − 6。
+
+   PeachPDF 硬性自检（本文件已满足）：
+     无远程资源；无 opacity / filter / grid / JS / 透明渐变；
+     图块显式 width/height + cover + 定位 + no-repeat；
+     双栏 column-fill:auto + .cbrk；无任何元素压图。
+   ============================================================ */
+
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 285mm;
+  overflow: hidden;   /* 仅作最终裁切保险，不承担分页 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 16mm 16mm 12mm;
+}
+
+@media screen {
+  body {
+    background: #ebebeb;
+    background: device-cmyk(0 0 0 0.08);
+    padding: 10mm 0;
+  }
+  .page {
+    background: #fff;
+    background: device-cmyk(0 0 0 0);
+    margin: 0 auto 10mm;
+    box-shadow: 0 0.5mm 3mm rgba(0, 0, 0, 0.18);
+  }
+}
+
+@media print {
+  body { padding: 0; background: none; }
+  .page {
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- 左页页眉 ---------- */
+.head {
+  position: absolute;
+  left: 16mm;
+  top: 16mm;
+  width: 178mm;
+}
+
+.slug {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.6mm 0;
+}
+
+h1.title {
+  font-size: 20pt;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.6mm 0 0 0;
+}
+
+/* ---------- 左页大题图（装裱式 · 不出血）---------- */
+.plate {
+  position: absolute;
+  left: 16mm;
+  top: 50mm;
+  width: 178mm;
+  height: 212mm;
+  background-size: cover;
+  background-position: center 35%;   /* 换图后按主体调 */
+  background-repeat: no-repeat;
+}
+
+/* 图注（贴图下 · 左对齐灰字） */
+.cap {
+  position: absolute;
+  left: 16mm;
+  top: 264mm;
+  width: 178mm;
+  margin: 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-indent: 0;
+}
+
+/* ---------- 右页文字区（y16..273，容量 257mm）----------
+   ⚠ PeachPDF 分栏成立条件（实测 0.9.23）：多栏容器必须是
+   flex item（flex:1 + min-height:0），且第二栏起点带 .cbrk；
+   绝对定位或普通流的 multicol 不分栏（内容全灌第一栏）。 */
+.zone {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.continued-mark {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  color: #808080;
+  color: device-cmyk(0 0 0 0.5);
+  text-align: right;
+  margin: 0 0 2.4mm 0;
+  padding-bottom: 1mm;
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+}
+
+/* 导语：大一号、不缩进 */
+.lead {
+  font-size: 10.2pt;
+  line-height: 1.68;
+  text-indent: 0;
+  margin: 0 0 3.5mm 0;
+}
+
+/* 双栏正文：切分点钉死（.cbrk = 第二栏起点，缺省不分栏） */
+.cols {
+  flex: 1 1 auto;
+  min-height: 0;
+  column-count: 2;
+  column-gap: 5.5mm;
+  column-fill: auto;
+  font-size: 8.7pt;
+  line-height: 1.49;
+  margin: 0 0 4mm 0;
+}
+.cols p {
+  margin: 0;
+  text-indent: 2em;
+  orphans: 2;
+  widows: 2;
+}
+.cbrk { break-before: column; }
+
+/* 题句：居中灰字 + 上下发丝线（收束） */
+.quote {
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+  border-bottom: 0.5pt solid #b8b8b8;
+  border-bottom-color: device-cmyk(0 0 0 0.3);
+  padding: 2.4mm 0;
+  margin: 0;
+  text-align: center;
+}
+.quote p {
+  margin: 0;
+  font-size: 11.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  color: #333333;
+  color: device-cmyk(0 0 0 0.8);
+}
+
+/* ---------- 细线页脚 ---------- */
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 16mm;
+  right: 16mm;
+  height: 8.5mm;
+  border-top: 0.5pt solid #b8b8b8;
+  border-top-color: device-cmyk(0 0 0 0.3);
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.folio td {
+  padding: 1.4mm 0 0 0;
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  vertical-align: top;
+}
+.folio .month { text-align: left; letter-spacing: 0.04em; }
+.folio .page-no { text-align: right; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     左页（偶数页示例 · 38）：页眉 + 大题图 + 图注
+     核算：页眉 ≈ 28（y16..44）｜ 题图 y50..262（212mm）
+     图：宋紫石《花鸟图》1611×4000（0.403）→ 按宽缩放显高
+     441.7mm，纵向裁 52%，center 35% 保花枝主体；
+     DPI 337 ✓✓。图注 y264，页脚线 276.5 ✓
+     ============================================================ -->
+<div class="page page-left">
+
+  <div class="head">
+    <p class="slug">艺体观察</p>
+    <h1 class="title">刘晓庆：一朵不败的小花</h1>
+    <p class="byline">文｜蔺文航　高125班</p>
+  </div>
+
+  <div class="plate" style="background-image:url('../../2611/photos/刘晓庆-一朵不败的小花.jpg');"></div>
+
+  <p class="cap">宋紫石《花鸟图》（18 世纪）· 大都会艺术博物馆藏</p>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">38</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     右页（奇数页示例 · 39）：续题行 + 导语 + 双栏 + 题句
+     核算（y16..273，容量 257mm）：
+       续题行 7.7 ｜ 导语 2 段 4 行 × 6.00 = 24 + 3.5
+       双栏 2×35 行 × 4.57 = 160.0 + 3
+       题句 1 行带衬 12.3
+       合计 ≈ 210.5 / 257，余 46.5mm（简洁版留白 ✓）
+     双栏切分（每栏容量 44 行）：
+       第一栏 35 行 ｜ 第二栏 34 行（.cbrk 钉死）
+     ============================================================ -->
+<div class="page page-right">
+
+  <div class="zone">
+    <p class="continued-mark">刘晓庆：一朵不败的小花 · 续</p>
+
+    <p class="lead">2004 年，横店影视城外，一群龙套演员正蹲着吃剧组发的盒饭。他们大多是怀揣着演艺梦的年轻人，为了明天的希望而苦苦挣扎。</p>
+    <p class="lead">而坐在边缘的那个中年女人，眼里却已褪去了那份稚嫩。很难相信，两年以前，她还站在金鸡百花的颁奖礼上，享受着鲜花与掌声。更难相信的是，去年的时候，她一个人还独自望着铁窗外的月光。</p>
+
+    <div class="cols" style="margin:0 0 3mm 0;">
+      <p>她是刘晓庆，一朵不败的小花。</p>
+      <p>1950 年，刘晓庆诞生于重庆涪陵。爱吃辣的口味深深影响了每一个重庆人，自然也包括刘晓庆，她浓烈、开放的性格定然与巴山楚水间的一串串朝天椒离不开关系。刘晓庆的父母都是知识分子，她自己也从小便自带一股“文艺范儿”。13 岁那年，刘晓庆考入四川音乐学院附中，学习扬琴和钢琴。毕业后，她的演艺路径无比曲折，先是被分配到农场，后又成为成都军区话剧团的一名演员。</p>
+      <p>而刘晓庆的电影生涯，始于一次偶然间的试戏。1975 年，八一电影制片厂原本计划重拍电影《海鹰》，导演张勇手在成都军区话剧团选角时，一眼相中了当时还在打杂、偶尔演样板戏的刘晓庆，认为她身上有一股未经雕琢的灵气。然而，当刘晓庆费尽周折借调到北京后，新版《海鹰》却因故停拍了。眼看机会就要溜走，张勇手不忍心埋没这个人才，便极力向当时正在筹备《南海长城》的导演李俊举荐刘晓庆。即便有了推荐，角色也并非唾手可得。当时剧组还有另一位候选女演员，两人难分高下。而为了选出最合适的“甜女”，剧组前往南海舰队体验生活。正是在这里，刘晓庆用一个大胆的举动为自己锁定了角色：在舰艇上，有人打趣问两个姑娘敢不敢从数米高的甲板跳入海中。另一位姑娘面露犹豫时，刘晓庆没有半分迟疑，纵身跃下。刘晓庆骨子里的拼劲儿彻底打动了导演和剧组成员。最终，她战胜了竞争对手，成功拿下了“甜女”这一角色。</p>
+      <p>自此，刘晓庆开启了属于她自己的第一段演艺传奇。1977 年，刘晓庆参演《同志，感谢你》。次年，与马骥等人共同参演电影《春歌》。1979 年，她凭借《瞧这一家子》获得第三届大众电影百花奖最佳配角奖，这也是她第一个重量级的个人奖项。1981 年，其主演的电影《原野》在香港首映，刘晓庆凭借该片获得第十一届大众电影百花奖最佳女演员，并提名第八届中国电影金鸡奖最佳女主角。之后，她又参演了许多重量级的港片，其中，《垂帘听政》的懿贵妃一角为她提名了第三届香港电影金像奖最佳女主角。在香港还没回归的那段日子里，刘晓庆的名字已经在维多利亚港打响。而《芙蓉镇》则将刘晓庆推向了她演艺生涯的第一个高峰——她获得了第七届中国电影金鸡奖和第十届大众电影百花奖的最佳女演员奖，奠定其“女皇”级别的影视地位。</p>
+      <p>而这段时间里，最值得一提的便是《小花》这部电影。</p>
+      <p class="cbrk">其实“小花”这个角色并不是由刘晓庆来饰演的。尽管在初期选角时，导演组确实计划由刘晓庆来饰演天真单纯的赵小花，但最后还是决定让其来饰演成熟坚毅的何翠姑，而小花一角则让彼时初出茅庐的陈冲饰演。影片中最令人动容的华彩篇章，莫过于何翠姑为了送哥哥赵永生去医院，在陡峭的山路上抬着担架跪行的场景。拍摄的外景地选在黄山莲花峰西北麓的峭壁“百步云梯”，地形极为险峻。为了追求真实感，刘晓庆没有使用替身，而是真的在坚硬的石阶上反复跪行拍摄。据记载，她的膝盖多次磨破流血，疼痛难忍，但依然坚持完成了这一震撼人心的镜头。这一幕也成了中国电影史上的经典画面。这部电影实质上也是刘晓庆红遍大江南北的起点。</p>
+      <p>虽然没有出演天真烂漫的小花，但刘晓庆的人生却始终如同小花一样，永远灿烂、永远盎然。同时，何翠姑的坚韧也在她的人生中充分展现。做一朵不败的小花，成为刘晓庆下半生的缩影。</p>
+      <p>在演艺界大放异彩的同时，刘晓庆开始挑战不同的领域。1983 年，刘晓庆出版自传《我的路》，首开明星出书的先例，随后正式加入中国作协。1985 年，刘晓庆担任电影《无情的情人》的制片人，她也成了内地第一个独立制片人。此后，她在美国和法国举办了许多的个人影展，并于 1986 年担任央视春晚的主持人。90 年代，刘晓庆下海经商。一个女明星下海经商本就是一大热话题，刘晓庆不仅做了，还做到了独一份，跻身福布斯富豪榜前五十名。无论从哪个维度来看，刘晓庆的人生似乎已经达到了一个无法被超越的顶峰。</p>
+      <p>但是命运，偏偏在这个时候开了一个最大的玩笑。</p>
+      <p>2002 年，刘晓庆因涉嫌偷税漏税而锒铛入狱，422 天的铁窗生涯，足以击垮每一个聚光灯下的名人。</p>
+      <p>但是刘晓庆不一样。</p>
+      <p>“我不认命，也不是靠男人出来的，我是靠自己的双手……”这是后来刘晓庆接受采访时说的话。在狱中，刘晓庆深刻认识到了自己的错误，并抓住这段时间拼命学习。监狱里面没书看，她就托人拿文学和历史书籍，丰富自己的内心，厚实自己的底蕴。纵使每天只有冷水澡可洗，爱美的她只能天天穿着囚服，也保持自律，坚持每天跑八千步。这足以看出刘晓庆的韧劲与不服输的意志力。</p>
+    </div>
+
+    <div class="quote">
+      <p>除了生死，都是小事。</p>
+    </div>
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="page-no">39</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
