@@ -49,8 +49,8 @@
    P22/P27/P28/P34/P35/P36/P40/P41/P42/P43/P46/P48/P49/P50/
    P51/P54/P55/P56（亚洲雄风小节头随文前移）/P57/P61/P62/P66/
    P67/P68/P69（小节头「二」随文前移）。
-   ⑥ P19 诗词页重排：七律块移 c2、西江月随其后，手书图 82.5→
-   115，一诗一栏阶梯留白；字号 9.3pt。
+   ⑥ P19 诗词页重排：flex 三栏，c1 清平乐+西江月、c2 七律垂直
+   居中、c3 草书长卷；诗题/署名/诗句全部居中，手书图 82mm；字号 9.3pt。
    ⑦ PRO 文字页：P03 ctab 9.2pt/1.6 + inset 104→105（原下半
    118mm 全空）；P53 inset 110→96（图注原距页脚线仅 0.6mm）。
    ⑧ 全部 74 页经 Chromium 同字体（SimSun）逐页实测：无 SPILL/
@@ -290,6 +290,63 @@ h1.title {
   break-inside: avoid;
   break-after: avoid;
   page-break-after: avoid;
+}
+
+/* ---------- 诗页专用（.page-poem · P19 长征诗词选）----------
+   三栏 flex 布局，每栏独立控制垂直对齐；诗题/署名/诗句全部居中，
+   保证"整齐"。作用域 .page-poem，不影响其他页的 .verse/.attr。 */
+.page-poem .body {
+  display: flex;
+  flex-direction: row;
+  gap: 5.5mm;
+  column-count: auto;
+}
+
+.page-poem .poem-col {
+  width: 55.67mm;
+  flex: 0 0 55.67mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-poem .poem-col.top { justify-content: flex-start; }
+.page-poem .poem-col.mid { justify-content: center; }
+
+.page-poem .poem { width: 100%; }
+.page-poem .poem + .poem { margin-top: 8mm; }
+
+.page-poem .subhead {
+  text-align: center;
+  text-indent: 0;
+  margin: 0 0 0.8mm 0;
+}
+
+.page-poem .attr {
+  text-align: center;
+  text-indent: 0;
+  margin: 0 0 1.5mm 0;
+  font-size: 8.5pt;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+}
+
+.page-poem .verse {
+  text-align: center;
+  text-indent: 0;
+  line-height: 1.8;
+}
+
+.page-poem .photo-block {
+  width: 55mm;
+  margin: 0 auto;
+}
+
+.page-poem .photo-block .ph {
+  height: 82mm;
+}
+
+.page-poem .photo-block .cap {
+  text-align: center;
 }
 
 /* ---------- 续页标识 ---------- */
@@ -1590,12 +1647,12 @@ h1.title {
 </div>
 
 <!-- ============================================================
-     P19 · 08 长征诗词选（page++++ 三栏诗页 · 大留白）
-     容量 144｜c1 清平乐+七律 ≈14 行｜c2 西江月 ≈7 行
-     ｜c3 草书块 55×82.5(19.3)｜占用 ≈40｜余 ≥98 ✓
+     P19 · 08 长征诗词选（page-poem 三栏诗页 · 大留白）
+     布局：flex 三栏，c1 清平乐+西江月、c2 七律（垂直居中）、
+     c3 草书长卷；诗题/署名/诗句全部居中，整齐美观。
      顶图：宋理宗草书王维诗（1256）178×36 裁
      ============================================================ -->
-<div class="page page-first">
+<div class="page page-first page-poem">
 
   <div class="kicker">封面故事 · 纪念长征胜利九十周年</div>
 
@@ -1610,35 +1667,42 @@ h1.title {
 
   <div class="body" style="--body-font:9.3pt">
 
-    <h2 class="subhead">清平乐</h2>
+    <!-- c1：清平乐 + 西江月 -->
+    <div class="poem-col top">
+      <div class="poem">
+        <h2 class="subhead">清平乐</h2>
+        <p class="attr">高125班　韩煜</p>
+        <p class="verse">崔嵬路远，漫道怅寂寥。</p>
+        <p class="verse">金沙浪急可飞渡，不负赤胆志豪。</p>
+        <p class="verse">遥看东方破晓，踏破一万险礁。</p>
+        <p class="verse">峥嵘岁月飞兴，士气壮怀永昭。</p>
+      </div>
+      <div class="poem">
+        <h2 class="subhead">西江月·湘江血</h2>
+        <p class="attr">潞府闲人</p>
+        <p class="verse">湘水怒涛汹涌，炮声江岸连空。</p>
+        <p class="verse">烽烟蔽日战无穷，血染旌旗谁共？</p>
+        <p class="verse">斑竹泪凝千载，湘灵肠断秋风。</p>
+        <p class="verse">忠魂碧血化篁丛，唯有青山默送。</p>
+      </div>
+    </div>
 
-    <p class="attr">高125班　韩煜</p>
+    <!-- c2：七律·长征（垂直居中） -->
+    <div class="poem-col mid">
+      <div class="poem">
+        <h2 class="subhead">七律·长征</h2>
+        <p class="attr">原初164班　高128班　王文哲</p>
+        <p class="verse">日早酸眸行古道，天夕落雪卷重山。</p>
+        <p class="verse">千军踏马击层岭，孤身执剑斩中天。</p>
+        <p class="verse">志莽昆仑寒五岳，心怀九土热三川。</p>
+        <p class="verse">红旗漫野征敌寇，一片丹心莫等闲。</p>
+      </div>
+    </div>
 
-    <p class="verse">崔嵬路远，漫道怅寂寥。金沙浪急可飞渡，不负赤胆志豪。</p>
-
-    <p class="verse">遥看东方破晓，踏破一万险礁。峥嵘岁月飞兴，士气壮怀永昭。</p>
-
-    <h2 class="subhead cbrk">七律·长征</h2>
-
-    <p class="attr">原初164班　高128班　王文哲</p>
-
-    <p class="verse">日早酸眸行古道，天夕落雪卷重山。</p>
-
-    <p class="verse">千军踏马击层岭，孤身执剑斩中天。</p>
-
-    <p class="verse">志莽昆仑寒五岳，心怀九土热三川。</p>
-
-    <p class="verse">红旗漫野征敌寇，一片丹心莫等闲。</p>
-
-    <h2 class="subhead">西江月·湘江血</h2>
-
-    <p class="attr">潞府闲人</p>
-
-    <p class="verse">湘水怒涛汹涌，炮声江岸连空。烽烟蔽日战无穷，血染旌旗谁共？</p>
-
-    <p class="verse">斑竹泪凝千载，湘灵肠断秋风。忠魂碧血化篁丛，唯有青山默送。</p>
-
-    <div class="photo-block cbrk" style="--ph-w:55mm; --ph-h:115.0mm"><div class="ph" style="--ph-img: url('photos/长征诗词选02.jpg');"></div><p class="cap">刘子久草书《七律·长征》长卷</p></div>
+    <!-- c3：草书长卷 -->
+    <div class="poem-col top">
+      <div class="photo-block"><div class="ph" style="--ph-img: url('photos/长征诗词选02.jpg');"></div><p class="cap">刘子久草书《七律·长征》长卷</p></div>
+    </div>
 
   </div>
 

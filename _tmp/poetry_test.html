@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>诗歌页测试</title>
+<style>
+@page {
+  size: 210mm 285mm;
+  margin: 0;
+}
+
+:root {
+  --body-font: 8.7pt;
+  --body-lh: 1.49;
+  --line: 4.57mm;
+  --col-gap: 5.5mm;
+  --col-w: 55.67mm;
+  --ph-w: 55.67mm;
+  --ph-h: 36.6mm;
+}
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC",
+               "SimSun", "STSong", serif;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  text-align: justify;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.page {
+  position: relative;
+  width: 178mm;
+  height: 253.5mm;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 15mm 16mm 16mm;
+  background: #fff;
+}
+
+.kicker {
+  font-size: 8pt;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #9e1b32;
+  color: device-cmyk(0 0.78 0.62 0.08);
+  margin: 0 0 1.5mm 0;
+}
+
+h1.title {
+  font-size: 22pt;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.byline {
+  font-size: 8.5pt;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+  margin: 1.5mm 0 0 0;
+}
+
+.rule {
+  border-top: 0.5pt solid #808080;
+  border-top-color: device-cmyk(0 0 0 0.5);
+  margin: 2.5mm 0 3mm 0;
+}
+
+.photo {
+  width: 100%;
+  height: 36mm;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin: 0 0 2.8mm 0;
+}
+
+.cap {
+  font-size: 7.5pt;
+  line-height: 1.5;
+  color: #666;
+  color: device-cmyk(0 0 0 0.6);
+  margin: 0.5mm 0 1.8mm 0;
+  text-align: right;
+  text-indent: 0;
+  letter-spacing: 0.04em;
+}
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  font-size: var(--body-font);
+  line-height: var(--body-lh);
+  margin-bottom: 5.8mm;
+}
+
+/* 诗页专用：flex 三栏，每栏独立控制垂直对齐 */
+.poem-body {
+  display: flex;
+  flex-direction: row;
+  gap: 5.5mm;
+}
+
+.poem-col {
+  width: 55.67mm;
+  flex: 0 0 55.67mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.poem-col.top { justify-content: flex-start; }
+.poem-col.mid { justify-content: center; }
+
+.poem {
+  width: 100%;
+}
+
+.poem + .poem { margin-top: 8mm; }
+
+.subhead {
+  font-size: 10.5pt;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #000;
+  color: device-cmyk(0 0 0 1);
+  margin: 0 0 0.8mm 0;
+  text-indent: 0;
+  text-align: center;
+}
+
+.attr {
+  text-indent: 0;
+  text-align: center;
+  margin: 0 0 1.5mm 0;
+  font-size: 8.5pt;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+}
+
+.verse {
+  text-indent: 0;
+  text-align: center;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.photo-block {
+  width: 55mm;
+  margin: 0 auto;
+  text-indent: 0;
+}
+
+.photo-block .ph {
+  width: 100%;
+  height: 82mm;
+  background-image: var(--ph-img);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.photo-block .cap {
+  margin: 0.8mm 0 0 0;
+  text-align: center;
+}
+
+.folio {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4.2mm;
+}
+
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  color: #525252;
+  color: device-cmyk(0 0 0 0.68);
+}
+
+.folio .month { text-align: left; }
+.folio .center { text-align: center; color: #9e1b32; color: device-cmyk(0 0.78 0.62 0.08); }
+.folio .page-no { text-align: right; }
+</style>
+</head>
+<body>
+
+<div class="page page-first">
+
+  <div class="kicker">封面故事 · 纪念长征胜利九十周年</div>
+
+  <div class="rule"></div>
+
+  <h1 class="title">长征诗词选</h1>
+
+  <p class="byline">高125班　韩煜　原初164班　高128班　王文哲　潞府闲人</p>
+
+  <div class="photo" style="background-image:url('../2611/photos/长征诗词选.jpg')"></div>
+  <p class="cap">宋理宗草书王维诗（1256）</p>
+
+  <div class="body poem-body" style="--body-font:9.3pt">
+
+    <!-- c1: 清平乐 + 西江月 -->
+    <div class="poem-col top">
+      <div class="poem">
+        <h2 class="subhead">清平乐</h2>
+        <p class="attr">高125班　韩煜</p>
+        <p class="verse">崔嵬路远，漫道怅寂寥。</p>
+        <p class="verse">金沙浪急可飞渡，不负赤胆志豪。</p>
+        <p class="verse">遥看东方破晓，踏破一万险礁。</p>
+        <p class="verse">峥嵘岁月飞兴，士气壮怀永昭。</p>
+      </div>
+      <div class="poem">
+        <h2 class="subhead">西江月·湘江血</h2>
+        <p class="attr">潞府闲人</p>
+        <p class="verse">湘水怒涛汹涌，炮声江岸连空。</p>
+        <p class="verse">烽烟蔽日战无穷，血染旌旗谁共？</p>
+        <p class="verse">斑竹泪凝千载，湘灵肠断秋风。</p>
+        <p class="verse">忠魂碧血化篁丛，唯有青山默送。</p>
+      </div>
+    </div>
+
+    <!-- c2: 七律·长征（垂直居中） -->
+    <div class="poem-col mid">
+      <div class="poem">
+        <h2 class="subhead">七律·长征</h2>
+        <p class="attr">原初164班　高128班　王文哲</p>
+        <p class="verse">日早酸眸行古道，天夕落雪卷重山。</p>
+        <p class="verse">千军踏马击层岭，孤身执剑斩中天。</p>
+        <p class="verse">志莽昆仑寒五岳，心怀九土热三川。</p>
+        <p class="verse">红旗漫野征敌寇，一片丹心莫等闲。</p>
+      </div>
+    </div>
+
+    <!-- c3: 草书长卷 -->
+    <div class="poem-col top">
+      <div class="photo-block"><div class="ph" style="--ph-img: url('../2611/photos/长征诗词选02.jpg');"></div><p class="cap">刘子久草书《七律·长征》长卷</p></div>
+    </div>
+
+  </div>
+
+  <div class="folio">
+    <table>
+      <tr>
+        <td class="month">2026·11</td>
+        <td class="center">■</td>
+        <td class="page-no">19</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
