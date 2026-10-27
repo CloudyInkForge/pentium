@@ -4,22 +4,24 @@
 <meta charset="utf-8">
 <title>HERO-3COL · 210×285 单页模板</title>
 <!--
-  HERO-3COL  v1
+  HERO-3COL  v1.6
   ------------------------------------------------------------------
   尺寸：210mm × 285mm（纵向单页）
   结构：上半部 60%（171mm）满幅无边框大图 + 下半部三栏正文
   机制：栏内无流内图块；正文区 = flex item + column-count:3 + column-fill:auto
   切分：分栏起点元素加 class="cbrk"（break-before:column），每页 cbrk 数 = 2
-  颜色：全 device-cmyk，无透明度、无 filter、无 grid 主布局、无 JS、无外链
+  颜色：全 device-cmyk，无透明度属性、无 filter、无 grid 主布局、无 JS、无外链
+  ------------------------------------------------------------------
+  v1.6 修改：
+  · 正文首段左侧绿色小竖条再向左移动 2mm：left 由 -0.86mm 改为 -2.86mm。
+    此时竖条距首行文字 8mm（2em 缩进 6.14mm + 2.86mm − 1mm 竖条宽 ≈ 8mm），
+    距页面左边缘 16 − 2.86 = 13.14mm，仍在页边距内，不会被裁切。
+  · 页码竖条（gap: 6mm）位置保持不变。
   ------------------------------------------------------------------
   容量核算（正文 8.7pt / 行距 1.49 → 行高 4.5736mm）
     285 − 171（图）− 8.7（图注含上下边距）− 8.8（页底留白）= 96.5mm
     96.5 ÷ 4.5736 ≈ 21.1 行/栏  →  每栏 21 行，三栏合计 63 行
     按硬性规则留 ≥6 行余地 → 单页实际可排 ≤57 行
-  ------------------------------------------------------------------
-  填版杠杆（用户明确要求时）：① 调 .cap 上下边距；② 调 .body 的
-  margin-bottom（页底留白）；③ 调 --body-lh（不换行，需同步图注）；
-  禁止为排得下改栏数/栏宽/页尺寸。
   ------------------------------------------------------------------
 -->
 
@@ -41,8 +43,8 @@ html, body {
   height: 285mm;
   position: relative;
   display: flex;
-  flex-direction: column;      /* 祖先必须是 flex 列，否则 multicol 在 PeachPDF 退化 */
-  overflow: hidden;            /* 仅作最终裁切保险，不作分页手段 */
+  flex-direction: column;
+  overflow: hidden;
   background: device-cmyk(0 0 0 0);
   page-break-after: always;
   break-after: page;
@@ -73,7 +75,7 @@ html, body {
   background-repeat: no-repeat;
 }
 
-/* 图内文字层：一律白色，绝对定位压在图上，不进入正文流 */
+/* 图内文字层：除编者按外一律黑色 */
 .h-head {
   position: absolute;
   left: 16mm;
@@ -87,7 +89,7 @@ html, body {
   font-size: 21pt;
   line-height: 1.18;
   letter-spacing: 0.02em;
-  color: device-cmyk(40 30 30 100);
+  color: device-cmyk(0 0 0 0.95);
 }
 
 .h-author {
@@ -96,14 +98,19 @@ html, body {
   font-size: 9.5pt;
   line-height: 1.4;
   letter-spacing: 0.08em;
-  color: device-cmyk(40 30 30 100);
+  color: device-cmyk(0 0 0 0.95);
 }
 
+/* 右上：栏目名 + 页码（仅数字）+ 小竖条，横向并排 */
 .h-meta {
   position: absolute;
-  left: 114mm;
+  right: 16mm;
   top: 15mm;
-  width: 80mm;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 6mm;
   text-align: right;
 }
 
@@ -112,16 +119,32 @@ html, body {
   font-size: 8.5pt;
   line-height: 1.4;
   letter-spacing: 0.24em;
-  color: device-cmyk(0 0 0 0);
+  color: device-cmyk(0 0 0 0.95);
+}
+
+/* 页码 + 右侧小竖条：间距 6mm 保持不变 */
+.h-folio-wrap {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6mm;
 }
 
 .h-folio {
-  margin-top: 1.6mm;
   font-family: "SimHei", "Heiti SC", "Microsoft YaHei", sans-serif;
   font-size: 8.5pt;
   line-height: 1.4;
   letter-spacing: 0.10em;
-  color: device-cmyk(0 0 0 0);
+  color: device-cmyk(0 0 0 0.95);
+}
+
+/* 页码右侧小竖条：与正文首栏竖条同色，高度略小于页码行高 */
+.h-folio-bar {
+  display: block;
+  width: 1mm;
+  height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08);
+  border-radius: 0.5mm;
 }
 
 .h-note {
@@ -131,6 +154,7 @@ html, body {
   width: 116mm;
 }
 
+/* 编者按：标签与正文保持浅白色 */
 .h-note-k {
   font-family: "SimHei", "Heiti SC", "Microsoft YaHei", sans-serif;
   font-size: 7.8pt;
@@ -149,7 +173,7 @@ html, body {
   text-align: justify;
 }
 
-/* ===================== 图注（图片正下方，贴正文左边界） ===================== */
+/* ===================== 图注 ===================== */
 .cap {
   flex: 0 0 auto;
   margin: 2mm 16mm 3mm 16mm;
@@ -157,26 +181,26 @@ html, body {
   font-size: 7.5pt;
   line-height: 1.4;
   letter-spacing: 0.02em;
-  color: device-cmyk(0 0 0 0.55);
+  color: device-cmyk(0 0 0 0.90);
   text-align: left;
 }
 
 /* ===================== 下半部：三栏正文 ===================== */
 .body {
-  flex: 1 1 auto;              /* 必须是 flex item */
+  flex: 1 1 auto;
   min-height: 0;
   align-self: flex-start;
   width: 178mm;
-  margin: 0 0 8.8mm 16mm;      /* 左 16mm；178+16+16 = 210 */
+  margin: 0 0 8.8mm 16mm;
 
   column-count: 3;
   column-gap: 5.5mm;
-  column-fill: auto;           /* 关键：否则 PeachPDF 自动平衡，切分失控 */
+  column-fill: auto;
 
   font-family: "SimSun", "Songti SC", "STSong", serif;
   font-size: 8.7pt;
   line-height: 1.49;
-  color: device-cmyk(0 0 0 0.88);
+  color: device-cmyk(0 0 0 0.92);
   text-align: justify;
 }
 
@@ -187,46 +211,64 @@ html, body {
 
 .body p.noindent { text-indent: 0; }
 
-/* 分栏切分点：每页必须且只能出现 2 个（栏数 − 1），
-   两个 .cbrk 之间必须夹自然流内容，禁止连续两个 */
+/* 最左栏第一段：左侧绿色竖条，细短款——仅覆盖第一行 */
+.body p.first-para {
+  position: relative;
+}
+
+/* 竖条再向左移 2mm：left = -0.86mm − 2mm = -2.86mm
+   距首行文字约 8mm，距页面左边缘 16 − 2.86 = 13.14mm，安全 */
+.body p.first-para .vbar {
+  position: absolute;
+  left: -2.86mm;
+  top: 0;
+  height: 4.5736mm;      /* 恰为正文一行行高（8.7pt × 1.49） */
+  width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08);
+  border-radius: 0.5mm;
+}
+
+/* 分栏切分点：每页必须且只能出现 2 个，两个 .cbrk 之间必须夹自然流内容 */
 .cbrk { break-before: column; }
 </style>
 </head>
 
 <body>
 
-<!-- ============ 单页示例 ============ -->
 <div class="page">
 
-  <!-- ---------- 上半部：满幅大图 + 图内文字 ---------- -->
+  <!-- ---------- 上半部：满幅大图 + 图内文字（无蒙版） ---------- -->
   <div class="hero">
     <div class="ph" style="--hero-img:url('../../2611/photos/山西人的足迹02.jpg')"></div>
 
-    <!-- 左上：标题 + 作者 -->
+    <!-- 左上：标题 + 作者（黑色） -->
     <div class="h-head">
       <h1 class="h-title">文章主标题占位</h1>
       <p class="h-author">作者姓名</p>
     </div>
 
-    <!-- 右上：栏目名 + 页码 -->
+    <!-- 右上：栏目名 + 页码（仅数字，右侧带小竖条），横向并排 -->
     <div class="h-meta">
       <p class="h-col">栏目名</p>
-      <p class="h-folio">第 012 页</p>
+      <span class="h-folio-wrap">
+        <span class="h-folio">012</span>
+        <span class="h-folio-bar"></span>
+      </span>
     </div>
 
-    <!-- 左下：编者按 -->
+    <!-- 左下：编者按（浅白色） -->
     <div class="h-note">
       <p class="h-note-k">编者按</p>
       <p class="h-note-t">此处为编者按正文，建议控制在 120 字以内。图片内所有文字均为白色，请选择中调或暗调照片，保证对比度与清晰度。</p>
     </div>
   </div>
 
-  <!-- ---------- 图注 ---------- -->
+  <!-- ---------- 图注（黑色） ---------- -->
   <p class="cap">图注：此处为图片说明文字，单行，紧贴图片下方，左对齐至正文栏左边界。</p>
 
   <!-- ---------- 下半部：三栏正文 ---------- -->
   <div class="body">
-    <p>第一栏正文占位。正文区为三栏固定流，字号 8.7pt、行距 1.49，每栏可排 21 行，单页合计 63 行；按交付规则需留 ≥6 行余地，实际可排约 57 行。请按栏人工切分内容。</p>
+    <p class="first-para"><span class="vbar"></span>第一栏正文占位。正文区为三栏固定流，字号 8.7pt、行距 1.49，每栏可排 21 行，单页合计 63 行；按交付规则需留 ≥6 行余地，实际可排约 57 行。请按栏人工切分内容。</p>
     <p>第一栏继续。本模板上半部图片固定占 171mm（页高 60%），正文区高度随图注与页底留白联动，不可擅自改动图片高度比例。</p>
 
     <p class="cbrk">第二栏起点。此段带 class="cbrk"，用于钉死第二栏的起点元素，使每栏装哪些内容与渲染引擎无关。</p>
