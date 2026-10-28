@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>山西人的足迹 · 续页</title>
+<!--
+  PAGE-CONT 2COL · 双栏续页版
+  ────────────────────────────────────────────────────────────
+  基于 b2.html 三栏版改为双栏：
+  · .body 由 column-count:3 改为 column-count:2，column-gap 仍 5.5mm
+  · 双栏正文每栏宽 (178 - 5.5) / 2 = 86.25mm
+  · .lead 保持“左文右图”并排：
+      左侧 .lead-text 占第一栏 86.25mm
+      右侧 .lead-fig 占第二栏 86.25mm（图宽随栏宽，高仍 82mm）
+  · 下方 .body 双栏，一个 .cbrk 钉在“六”前
+  · 页眉 16mm、.lead 高 95.7208mm、下方 .body 高 164.4792mm、
+    页脚 8.8mm 均未改
+  · 图片路径未改，图注样式未改
+  ────────────────────────────────────────────────────────────
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+
+.page {
+  width: 210mm; height: 285mm; position: relative;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: device-cmyk(0 0 0 0);
+  page-break-after: always; break-after: page;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+/* ===== 页眉：与首页 .h-meta 同坐标（right 16mm / top 6mm） ===== */
+.p-head {
+  position: relative;
+  flex: 0 0 16mm;
+  width: 178mm; margin: 0 16mm;
+}
+.p-meta {
+  position: absolute; right: 0; top: 6mm;
+  display: flex; flex-direction: row; justify-content: flex-end;
+  align-items: baseline; gap: 6mm; text-align: right;
+}
+.p-col {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.p-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.p-folio {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.p-folio-bar {
+  display: block; width: 1mm; height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+/* ===== 图文区：双栏下改为“左文 86.25mm + 右图 86.25mm” ===== */
+.lead {
+  flex: 0 0 95.7208mm;
+  width: 178mm; height: 95.7208mm;
+  margin: 0 16mm;
+  display: flex; flex-direction: row; gap: 5.5mm;
+}
+.lead-text {
+  flex: 0 0 86.25mm; width: 86.25mm; height: 95.7208mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+.lead-text p { text-indent: 2em; margin: 0; }
+.lead-text p.first-para { position: relative; }
+.lead-text p.first-para .vbar {
+  position: absolute; left: -2.86mm; top: 0;
+  height: 4.5736mm; width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+.lead-fig {
+  flex: 1 1 auto; min-width: 0; height: 95.7208mm;
+  display: flex; flex-direction: column;
+}
+.plate-ph {
+  flex: 0 0 82mm;
+  width: 100%; height: 82mm;
+  position: relative; overflow: hidden;
+  background-image: var(--plate-img, none);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.plate-cap {
+  flex: 0 0 13.7208mm;
+  width: 100%; height: 13.7208mm;
+  display: flex; align-items: center;
+  padding: 0 3mm;
+}
+.plate-cap p {
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em;
+  color: device-cmyk(0 0 0 0.95); text-align: justify;
+}
+.plate-cap-k {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
+  color: device-cmyk(0 0 0 0.95); margin-right: 1.5mm;
+}
+
+/* ===== 下方正文：双栏（由三栏改双栏） ===== */
+.body {
+  flex: 1 1 auto; min-height: 0; align-self: flex-start;
+  width: 178mm; margin: 0 0 8.8mm 16mm;
+  column-count: 2; column-gap: 5.5mm; column-fill: auto;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+.body p { text-indent: 2em; margin: 0; }
+.body p.cont { text-indent: 0; }
+.cbrk { break-before: column; }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- ===== 页眉：栏目名 + 期号页码 + 绿条 ===== -->
+  <div class="p-head">
+    <div class="p-meta">
+      <p class="p-col">散文</p>
+      <span class="p-folio-wrap">
+        <span class="p-folio">013</span>
+        <span class="p-folio-bar"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ===== 图文区：左侧正文（第一栏）+ 右侧图（第二栏）+ 图注 ===== -->
+  <div class="lead">
+
+    <!-- 左侧正文栏：双栏宽 86.25mm，适当增加票号段落填充高度 -->
+    <div class="lead-text">
+      <p class="first-para"><span class="vbar"></span>山西人的足迹，从来不只落在一条路上。商道走远了，文脉留住了，工匠的手艺传下来了，还有一样东西藏在算盘珠子里——那是山西人的另一种语言。</p>
+      <p>四</p>
+      <p>山西的票号，是中国金融史上一座绕不过去的高峰。平遥西大街上那间不起眼的铺面，柜台后的人却能凭一纸汇票，调动半个中国的银子。</p>
+      <p>日升昌的掌柜雷履泰，原本做的是颜料生意。因为常年异地汇兑太不方便，他索性把生意做成了汇兑本身。把真金白银交给一张纸，靠的全是信用两个字。</p>
+      <p>信用说起来轻。可要让一个在包头卖茶的商人相信，他在平遥存下的银子能在千里之外原样取出，靠的不是官府背书，也不是律法约束，而是一代代掌柜用几十年攒下的名声。</p>
+      <p>汇票有汇票的规矩。票面用暗语，密押定期更换，字迹、印章、水印层层相扣。外人看着像天书，柜上的伙计一眼就能断出真伪。这套本事不写进律法，只写进号规和师徒之间的口传心授。</p>
+      <p>分号的掌柜由总号选派，三年一换，家眷留在平遥。人在外头管着万两银子，根却拴在老家的一口井、一座院、一封家书上。票号能汇通天下，靠的正是这种既远又近的牵绊。</p>
+    </div>
+
+    <!-- 右侧图区：双栏下占第二栏 86.25mm，图高仍 82mm -->
+    <div class="lead-fig">
+      <div class="plate-ph" style="--plate-img:url('../../2611/photos/山西人的足迹02.jpg')"></div>
+      <div class="plate-cap">
+        <p><span class="plate-cap-k">图注</span>应县木塔，全塔不用一根铁钉，历经近千年地震、战火而不倒，是山西工匠留下的最好证词。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 下方双栏正文：一个 .cbrk 钉在“六”前 ===== -->
+  <div class="body">
+
+    <!-- —— 第一栏 —— -->
+    <p>鼎盛时，日升昌在全国设三十多个分号，南到广州，北到张家口，西到迪化。汇通天下四个字挂在门楣上，不是自夸，是账本上实打实走出来的路。</p>
+    <p>可衰落也来得快。近代银行兴起，官办资本入场，加上战乱里一次接一次的挤兑，曾经固若金汤的信用网络，在十几年间土崩瓦解。</p>
+    <p>今天的日升昌是座博物馆。游客挤在柜台前拍照，很少有人抬头看那副对联：轻重权衡千金日利，中西汇兑一纸风行。</p>
+    <p>五</p>
+    <p>山西人对面的感情，是刻在骨子里的。刀削面、剔尖、揪片、猫耳朵、河捞、碗托，一样的白面能变出几十种花样来。外地人看着眼花，本地人却分得清每一款的脾气：削面要筋，剔尖要滑，揪片要厚。</p>
+    <p>削面用的是弯刀，一片一片削进滚水里，讲究薄、长、匀。好师傅削出来的面，落进锅里像鱼跃，一片不粘一片。剔尖使筷子，面糊摊在碗边，一根一根拨进锅，两头尖中间粗。</p>
+    <p>浇头是另一门学问。西红柿鸡蛋最家常，打卤要用黄花、木耳、香菇、肉片，一样不能少。老太原人吃面，末了一定要喝一碗面汤，说是原汤化原食。这一碗热汤下去，一顿饭才算圆满。</p>
+    <p>面食之外，山西人还爱醋。清徐的老陈醋，一缸一缸晒在院子里，夏天晒，冬天捞冰，几年下来才得那一口绵酸。面里点醋，菜里点醋，连喝汤都要滴两滴，像是给日子提个味。</p>
+    <p>平遥的牛肉切得薄，冠云的肉香得厚。街边小铺一口大锅，老汤翻滚，肉在里头慢慢煨着。客人来了，现切一盘，撒一点盐，配一壶温过的黄酒，话就慢慢多起来。</p>
+
+    <!-- —— 第二栏起点：.cbrk —— -->
+    <p class="cbrk">六</p>
+    <p>从票号到面食，从木塔到石窟，山西人的足迹散落在黄土高原的沟沟坎坎里。它们不总是光鲜的，有些已经模糊，有些被风沙掩埋，有些只剩下半截碑文。</p>
+    <p>可只要你蹲下来细看，那些痕迹还在。平遥的青石板上有一道道车辙，是几百年间骡马碾出来的；应县的塔身上有一层层木纹，是工匠一刀一刀刻出来的。</p>
+    <p>云冈的佛像脸上有风化的痕迹，眉眼已经不那么清楚了。可正是这些残缺，让人想起它们曾经完整过，曾经被无数双手抚摸过、供奉过，曾经有过香火和钟声。</p>
+    <p>晋祠的侍女像又是另一种气息。她们站在祠里几百年，衣褶还在，神情还在，有的低头，有的侧目，像是刚说完一句话，还没转过身来。工匠把人的呼吸留在了泥胎里。</p>
+    <p>应县木塔的斗拱一层叠一层，像一朵木头的花。没有铁钉，全靠榫卯咬合，地震来时能晃，晃完了还能站住。这种本事不是一天练成的，是师徒之间一斧一凿传下来的。</p>
+    <p>山西的民居也值得看。乔家、王家、常家，一座座大院把砖雕、木雕、石雕都用在门楣、照壁、柱础上。商人把银子带回家乡，工匠把心思刻进砖缝，黄土坡上就有了可以住人的史书。</p>
+    <p>壶口的水一年年地吼，岸边的石头一年年地薄。山西人的性子里有水的硬，也有土的厚。走出去的人带着一口乡音，留下来的人守着一座老院，都是足迹。</p>
+    <p>无论是晋商，抑或山西的文化人，再或是山西的工匠，他们都在山西的黄土地上，留下了自己的足迹。这些足迹不一定通向远方，但都从同一片黄土出发。</p>
+
+  </div>
+</div>
+</body>
+</html>
