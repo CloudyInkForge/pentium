@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <title>世界屋脊上的生命“搬家史”</title>
 <!--
-  青藏高原动物 · B1 首页 + B2 续页 ×3（模板 template/next_genera/b1.html、b2.html）
+  青藏高原动物 · B1B 首页 + B2 续页 ×3（模板 template/next_genera/b1B.html、b2.html）
+  B1B 与 B1 唯一差别：首页大图新增 .hero-mask 白色半透明蒙版（62%），文字层 z-index:2。
   ────────────────────────────────────────────────────────────
   版式机制与模板一致：B1 上 80mm 通栏图 + 三栏正文；B2 页眉 + 左栏正文/右跨两栏图 + 三栏正文。
   栏目：科学前沿；页码 001–004；正文 8.7pt / 1.49，行高 4.5733mm 未改。
@@ -35,7 +36,7 @@ html, body { background: device-cmyk(0 0 0 0); }
 }
 .page:last-child { page-break-after: auto; break-after: auto; }
 
-/* ===== B1 首页：上半部大图 ===== */
+/* ===== B1B 首页：上半部大图 ===== */
 .hero {
   position: relative; flex: 0 0 80mm;
   width: 210mm; height: 80mm; overflow: hidden;
@@ -45,9 +46,23 @@ html, body { background: device-cmyk(0 0 0 0); }
   width: 210mm; height: 80mm;
   background-image: var(--hero-img, none);
   background-size: cover; background-position: center center; background-repeat: no-repeat;
+  z-index: 0;
 }
 
-.h-head { position: absolute; left: 16mm; top: 12mm; width: 126mm; }
+/* 封面图半透明蒙版：白色 62% 不透明度，深色文字更清晰 */
+.hero-mask {
+  position: absolute;
+  left: 0; top: 0;
+  width: 210mm; height: 80mm;
+  background-color: device-cmyk(0 0 0 0);
+  opacity: 0.62;
+  z-index: 1;
+}
+
+.h-head {
+  position: absolute; left: 16mm; top: 12mm; width: 126mm;
+  z-index: 2;
+}
 .h-title {
   font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
   font-weight: normal; font-size: 21pt; line-height: 1.18;
@@ -63,6 +78,7 @@ html, body { background: device-cmyk(0 0 0 0); }
   position: absolute; right: 16mm; top: 6mm;
   display: flex; flex-direction: row; justify-content: flex-end;
   align-items: baseline; gap: 6mm; text-align: right;
+  z-index: 2;
 }
 .h-col {
   font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
@@ -80,7 +96,10 @@ html, body { background: device-cmyk(0 0 0 0); }
   background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
 }
 
-.h-note { position: absolute; left: 16mm; bottom: 22.5mm; width: 100mm; }
+.h-note {
+  position: absolute; left: 16mm; bottom: 22.5mm; width: 100mm;
+  z-index: 2;
+}
 .h-note-k {
   font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
   font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
@@ -202,11 +221,13 @@ html, body { background: device-cmyk(0 0 0 0); }
 </head>
 
 <body>
-<!-- ================= P01 · B1 首页 ================= -->
+<!-- ================= P01 · B1B 首页 ================= -->
 <div class="page">
 
+  <!-- ===== 上半部：80mm 大图 + 半透明蒙版 + 标题/作者/栏目/页码/编者按 ===== -->
   <div class="hero">
     <div class="ph" style="--hero-img:url('photos/青藏雪域精灵.jpg')"></div>
+    <div class="hero-mask"></div>
 
     <div class="h-head">
       <h1 class="h-title">世界屋脊上的生命“搬家史”</h1>
