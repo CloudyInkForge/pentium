@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>山西人的足迹</title>
+<!--
+  HERO-3COL · 山西人的足迹
+  修摘要（本轮）：
+  · 新增 .hero-mask 白色半透明蒙版，覆盖封面图，文字层 z-index:2
+  · .h-note bottom 18mm → 22.5mm（再上移约一行 4.57mm）
+  · 正文改为按行容量切分，不按节切：
+      第一栏：首段 → 民歌段（约 39 行，余 2 行空气）
+      第二栏 .cbrk 起“二” → “但可惜”段前半（约 39 行，余 2 行）
+      第三栏 .cbrk 起“但可惜”段尾 → 结尾段（约 33 行，末栏不满）
+    “但可惜”段按句界拆为头（普通 p 留第二栏）+ 尾（p.cont.cbrk 落第三栏顶）
+  · 前两栏估算 39/39 行，底差 0 行，均留 2 行空气；.cbrk 共 2 个，无连续
+  · 图高 80mm、图片路径均未改
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+
+.page {
+  width: 210mm; height: 285mm; position: relative;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: device-cmyk(0 0 0 0);
+  page-break-after: always; break-after: page;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+/* 上半部大图：80mm（不压图高） */
+.hero {
+  position: relative; flex: 0 0 80mm;
+  width: 210mm; height: 80mm; overflow: hidden;
+}
+.hero .ph {
+  position: absolute; left: 0; top: 0;
+  width: 210mm; height: 80mm;
+  background-image: var(--hero-img, none);
+  background-size: cover; background-position: center center; background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* 封面图半透明蒙版：白色 62% 不透明度，深色文字更清晰 */
+.hero-mask {
+  position: absolute;
+  left: 0; top: 0;
+  width: 210mm; height: 80mm;
+  background-color: #ffffff;
+  opacity: 0.62;
+  z-index: 1;
+}
+
+.h-head {
+  position: absolute; left: 16mm; top: 12mm; width: 126mm;
+  z-index: 2;
+}
+.h-title {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-weight: normal; font-size: 21pt; line-height: 1.18;
+  letter-spacing: 0.02em; color: device-cmyk(0 0 0 0.95);
+}
+.h-author {
+  margin-top: 3mm; font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 9.5pt; line-height: 1.4; letter-spacing: 0.08em;
+  color: device-cmyk(0 0 0 0.95);
+}
+
+/* 栏目名 + 页码：top 6mm，不与标题对齐 */
+.h-meta {
+  position: absolute; right: 16mm; top: 6mm;
+  display: flex; flex-direction: row; justify-content: flex-end;
+  align-items: baseline; gap: 6mm; text-align: right;
+  z-index: 2;
+}
+.h-col {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.h-folio-bar {
+  display: block; width: 1mm; height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+/* 编者按：bottom 22.5mm（再上移约一行），宽 100mm，黑色 */
+.h-note {
+  position: absolute; left: 16mm; bottom: 22.5mm; width: 100mm;
+  z-index: 2;
+}
+.h-note-k {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
+  color: device-cmyk(0 0 0 0.95); margin-bottom: 1.2mm;
+}
+.h-note-t {
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em;
+  color: device-cmyk(0 0 0 0.95); text-align: justify;
+}
+
+/* 图注：紧贴图下，与正文保持 2mm/3mm 间距 */
+.cap {
+  flex: 0 0 auto; margin: 2mm 16mm 3mm 16mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+  color: device-cmyk(0 0 0 0.90); text-align: left;
+}
+
+/* 下半部三栏正文 */
+.body {
+  flex: 1 1 auto; min-height: 0; align-self: flex-start;
+  width: 178mm; margin: 0 0 8.8mm 16mm;
+  column-count: 3; column-gap: 5.5mm; column-fill: auto;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+.body p { text-indent: 2em; margin: 0; }
+.body p.cont { text-indent: 0; }
+.body p.first-para { position: relative; }
+.body p.first-para .vbar {
+  position: absolute; left: -2.86mm; top: 0;
+  height: 4.5736mm; width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+.cbrk { break-before: column; }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- ===== 上半部：80mm 大图 + 半透明蒙版 + 标题/作者/栏目/页码/编者按 ===== -->
+  <div class="hero">
+    <div class="ph" style="--hero-img:url('../../2611/photos/山西人的足迹02.jpg')"></div>
+    <div class="hero-mask"></div>
+
+    <div class="h-head">
+      <h1 class="h-title">山西人的足迹</h1>
+      <p class="h-author">原初172班 高130班　白梓宸</p>
+    </div>
+
+    <div class="h-meta">
+      <p class="h-col">散文</p>
+      <span class="h-folio-wrap">
+        <span class="h-folio">012</span>
+        <span class="h-folio-bar"></span>
+      </span>
+    </div>
+
+    <div class="h-note">
+      <p class="h-note-k">编者按</p>
+      <p class="h-note-t">山西，黄土厚重，足迹深深。从明清晋商的辉煌到王维的诗篇，从应县木塔的匠心到云冈石窟的庄严，这片土地承载着商道、文脉与工匠精神。本文以三重视角，勾勒山西人的历史身影。</p>
+    </div>
+  </div>
+
+  <!-- ===== 图注 ===== -->
+  <p class="cap">图注：应县木塔，山西工匠的千年杰作。</p>
+
+  <!-- ===== 下半部：三栏正文（按行容量切分） ===== -->
+  <div class="body">
+
+    <!-- —— 第一栏：首段 → 民歌段末（约 39 行，余 2 行空气） —— -->
+    <p class="first-para"><span class="vbar"></span>山西的土地，是土黄色的，上面铭刻着世世代代山西人的足迹。</p>
+    <p>一</p>
+    <p>山西在明清富庶之至，且北部城关很多都是重要的关隘。在这个时期，山西踊跃了大量商人，做着各式各样的生意，享誉全国。在浙商、闽商都还名不见经传的时候，晋商成为中国商人的代表。</p>
+    <p>在山西晋中，雄厚气派的王家大院已扎根在这黄土地上数百年，乔家大院同样光芒耀眼。他们是那个时期晋商的优秀代表，他们在自己的家乡修了这样一座民间的宫殿，供后人瞻仰，财力可见一斑。</p>
+    <p>晋商中不乏小人，就像现在的奸商一样。但他们又浅薄了些，因为他们要的，不是巨额财富，而是要逞口舌之快，商场上的一些竞争对手，为了侮辱对方，出些下流低俗的招数从不少见，这是晋商中的蛀虫，他们与那些为了未来走西口、闯天下的怀揣希望的山西人不能相提并论。</p>
+    <p>民国时期的财政部部长孔祥熙，是那时候晋商的领袖，他和他的夫人宋霭龄居住在山西太谷，这里在当时也被称作东方的华尔街，他们坐在耀眼的黑色老爷车上，向着骑着驴的农民打招呼，农民顾不得回敬，他急着去逃窜……</p>
+    <p>黑色的老爷车也离开了太谷。</p>
+    <p>时至今日，新一代山西商人出现了一些跳梁小丑，曾经的山西首富，现在的被执行人，欠款无数。十年便败光了家族数百亿的财产，彷徨逃窜。</p>
+    <p>新时代的晋商，财力已不可与浙商、闽商、港商等地域商人相提并论，但他们大多数人之中，心里还时不时响起那首民歌。</p>
+    <p>哥哥你走西口，小妹妹我实在难留。手拉着那哥哥的手，送哥送到大门口。哥哥你出村口，小妹妹我有句话儿留。走路走哪的路口……</p>
+
+    <!-- —— 第二栏起点（.cbrk）：二 → “但可惜”段前半（约 39 行，余 2 行） —— -->
+    <p class="cbrk">二</p>
+    <p>山西的文化人太多了，数不胜数。</p>
+    <p>在盛唐时期，泱泱中国繁荣昌盛。这时候，许多肚子里有点墨水的年轻人，都想要实现入朝为官的理想。在山西河东，有一个青年人也这么想，他叫王维。</p>
+    <p>他的文采超群，成功入朝为官，并在不久之后将官做到了中央，前途不可限量，那是天宝年间，帝国东北部的节度使安禄山正和史思明讨论着他们的惊天阴谋。</p>
+    <p>不久之后，他们高举龙虎旗，誓要攻下长安。帝国的权力中枢仓皇离开长安，其中自然有王维，他听说叛军攻下了洛阳，便想随大流一起逃离。</p>
+    <p>但他没有成功，他被安史叛军生擒，并让他在新朝廷里继续做官，王维做了唐奸。但也不对，在乱世里，一个腐败到根子里的帝国，在此时抛弃有何不可。</p>
+    <p>可安禄山，不是第二个李渊。</p>
+    <p>安禄山不善收买人心，后来被自己的儿子暗杀，后来史思明也是同样的下场。年轻的后辈没有能力统帅大军，安史之乱很快平定，这时候，唐帝国该惩治王维了。</p>
+    <p>但王维在此时展现了一个极其睿智的政治家形象，他早就预料这场荒唐的叛乱最终一定会以唐帝国的胜利而告终，投靠叛军只是为了保住自己的脑袋。于是，他早就写了一首完完全全表达了自己爱国之情的诗文，叫凝碧池。</p>
+    <p>万户伤心生野烟，百僚何日更朝天。秋槐叶落空宫里，凝碧池头奏管弦。</p>
+    <p>这首诗，让王维平安度过此劫，并在日后加官晋爵为正四品尚书右丞。反观李白，追随错了主公，最后还是靠着人脉没有掉了脑袋，不说其他，在这场比拼中，四川文化人的情商不如山西文化人。</p>
+    <p>但可惜的是，王维鲜少回到山西河东老家，很多山西文化人离开了故乡也没有回来，</p>
+
+    <!-- —— 第三栏起点（.cbrk）：续段尾 → 结尾段（约 33 行，末栏不满） —— -->
+    <p class="cont cbrk">但是他们在山西的黄土地上，留下了自己的足迹。</p>
+    <p>三</p>
+    <p>地下建筑看陕西，地上建筑看山西，这是历史界的一句有意思的话。而现在，山西的文化历史，被严重的低估了。</p>
+    <p>每一座巍峨雄伟的建筑，都有无数的工匠在辛勤修筑。这些工匠，可能是山西本地人，也有可能是外地的游子，他们到了山西这片黄土地，就都是山西人。山西，也是海纳百川，吞吐日月的山西。</p>
+    <p>应县木塔是目前中国保存最好的木质古建筑之一，山西的工匠用发了钝的刻刀细腻的一笔一画的刻着木建筑上的纹饰，他们的汗水滴到了木头上，那是时代的声音，掷地有声，如雷贯耳，至今犹存。应县木塔矗立在朔州应县的黄土地上，阶前留下了一个个踩得坚实的脚印。</p>
+    <p>大同云冈石窟的佛像，安详而又平和，这是盛世的光辉，永恒的色彩。佛像没有颜色，却有万丈光芒，除了它本身的伟大，还有工匠们赋予它的美丽，也有山西赋予它的安宁。落叶扫去秋色，给秋日里的佛像带去春天的美好，佛祖端详着这一切，工匠们端详着这一切，山西端详着这一切。</p>
+    <p>山西的每一座建筑，都有无数的工匠在背后默默修葺。他们在山西，留下了浓重的一笔，颜色特别浓烈。他们给山西带来了自信，山西给他们带来了骄傲。</p>
+    <p>无论是晋商，抑或山西的文化人，再或是山西的工匠，他们都在山西的黄土地上，留下了自己的足迹。</p>
+
+  </div>
+</div>
+</body>
+</html>
