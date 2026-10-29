@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>世界屋脊上的生命“搬家史”</title>
+<!--
+  青藏高原动物 · B1 首页 + B2 续页 ×3（模板 template/next_genera/b1.html、b2.html）
+  ────────────────────────────────────────────────────────────
+  版式机制与模板一致：B1 上 80mm 通栏图 + 三栏正文；B2 页眉 + 左栏正文/右跨两栏图 + 三栏正文。
+  栏目：科学前沿；页码 001–004；正文 8.7pt / 1.49，行高 4.5733mm 未改。
+  配图：P1 青藏雪域精灵（雪原图）；P2 青藏奔跑；P3 青藏湖畔精灵；P4 青藏凝视（均未用三区图）。
+  小节标题用 .sub（黑体、同字号同行距，不改变行容量）。
+  修摘要（§2.6 headless Chrome 实测定稿，行数为 ÷1.034 真实行数；
+  容量：B1 栏 39.5 / B2 栏 34.8 / B2 lead 20.2；要求非末栏≥2、末栏≥6、lead≥2）：
+    P1 (B1)  c1 #00–#01 36L 余3.5 / c2 #02–#05头 37L 余2.5 / c3 #05尾–#08 31L 余8.5
+    P2 (B2)  lead #09+#10头 16L 余4.2 / c1 #10尾–#13 32L 余2.8 / c2 #14头–#17 31L 余3.8 / c3 #14尾–#21头 28L 余6.8
+    P3 (B2)  lead #21尾+#22头 15L 余5.2 / c1 #22尾–#24 31L 余3.8 / c2 #25–#27 31L 余3.8 / c3 #26尾–#30头 28L 余6.8
+    P4 (B2)  lead #30尾+#31 15L 余5.2 / c1 #32–#33 22L 余12.8 / c2 #34 10L 余24.8（收尾页第三栏留空，cbrk×1）
+  拆段（均句界）：#05"…外来迁入。/科学家要做的"；#10"…最大数量。/这里的"最大""；
+  #14"…古北界之间的走廊；/高原平台与外界"；#21"…喜马拉雅开始最早，/约6400万年前"；
+  #22"…分子适应。/高原平台现代动物区系"；#26"…"助推器"。/横断山有强烈地形破碎"；
+  #29"…相似响应。/但在迁入时间上"；#30"…营养角色。/这个例外也提示"。
+  全文五步流程至 P2 lead 止，三大亚区路线、抬升与多样化、植物先动动物后、意义与展望依序收于 P3–P4。
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+
+.page {
+  width: 210mm; height: 285mm; position: relative;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: device-cmyk(0 0 0 0);
+  page-break-after: always; break-after: page;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+/* ===== B1 首页：上半部大图 ===== */
+.hero {
+  position: relative; flex: 0 0 80mm;
+  width: 210mm; height: 80mm; overflow: hidden;
+}
+.hero .ph {
+  position: absolute; left: 0; top: 0;
+  width: 210mm; height: 80mm;
+  background-image: var(--hero-img, none);
+  background-size: cover; background-position: center center; background-repeat: no-repeat;
+}
+
+.h-head { position: absolute; left: 16mm; top: 12mm; width: 126mm; }
+.h-title {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-weight: normal; font-size: 21pt; line-height: 1.18;
+  letter-spacing: 0.02em; color: device-cmyk(0 0 0 0.95);
+}
+.h-author {
+  margin-top: 3mm; font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 9.5pt; line-height: 1.4; letter-spacing: 0.08em;
+  color: device-cmyk(0 0 0 0.95);
+}
+
+.h-meta {
+  position: absolute; right: 16mm; top: 6mm;
+  display: flex; flex-direction: row; justify-content: flex-end;
+  align-items: baseline; gap: 6mm; text-align: right;
+}
+.h-col {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.h-folio-bar {
+  display: block; width: 1mm; height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+.h-note { position: absolute; left: 16mm; bottom: 22.5mm; width: 100mm; }
+.h-note-k {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
+  color: device-cmyk(0 0 0 0.95); margin-bottom: 1.2mm;
+}
+.h-note-t {
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em;
+  color: device-cmyk(0 0 0 0.95); text-align: justify;
+}
+
+.cap {
+  flex: 0 0 auto; margin: 2mm 16mm 3mm 16mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+  color: device-cmyk(0 0 0 0.90); text-align: left;
+}
+
+/* ===== 三栏正文（B1/B2 共用，模板常量） ===== */
+.body {
+  flex: 1 1 auto; min-height: 0; align-self: flex-start;
+  width: 178mm; margin: 0 0 8.8mm 16mm;
+  column-count: 3; column-gap: 5.5mm; column-fill: auto;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+.body p { text-indent: 2em; margin: 0; }
+.body p.cont { text-indent: 0; }
+.body p.sub { text-indent: 0; font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; }
+.body p.first-para { position: relative; }
+.body p.first-para .vbar {
+  position: absolute; left: -2.86mm; top: 0;
+  height: 4.5736mm; width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+.cbrk { break-before: column; }
+
+/* ===== B2 续页：页眉 ===== */
+.p-head {
+  position: relative;
+  flex: 0 0 16mm;
+  width: 178mm; margin: 0 16mm;
+}
+.p-meta {
+  position: absolute; right: 0; top: 6mm;
+  display: flex; flex-direction: row; justify-content: flex-end;
+  align-items: baseline; gap: 6mm; text-align: right;
+}
+.p-col {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.p-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.p-folio {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+  color: device-cmyk(0 0 0 0.95);
+}
+.p-folio-bar {
+  display: block; width: 1mm; height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+/* ===== B2 续页：图文区 ===== */
+.lead {
+  flex: 0 0 95.7208mm;
+  width: 178mm; height: 95.7208mm;
+  margin: 0 16mm;
+  display: flex; flex-direction: row; gap: 5.5mm;
+}
+.lead-text {
+  flex: 0 0 55.67mm; width: 55.67mm; height: 95.7208mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+.lead-text p { text-indent: 2em; margin: 0; }
+.lead-text p.cont { text-indent: 0; }
+.lead-text p.sub { text-indent: 0; font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; }
+.lead-text p.first-para { position: relative; }
+.lead-text p.first-para .vbar {
+  position: absolute; left: -2.86mm; top: 0;
+  height: 4.5736mm; width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+.lead-fig {
+  flex: 1 1 auto; min-width: 0; height: 95.7208mm;
+  display: flex; flex-direction: column;
+}
+.plate-ph {
+  flex: 0 0 82mm;
+  width: 100%; height: 82mm;
+  position: relative; overflow: hidden;
+  background-image: var(--plate-img, none);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.plate-cap {
+  flex: 0 0 13.7208mm;
+  width: 100%; height: 13.7208mm;
+  display: flex; align-items: center;
+  padding: 0 3mm;
+}
+.plate-cap p {
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em;
+  color: device-cmyk(0 0 0 0.95); text-align: justify;
+}
+.plate-cap-k {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
+  color: device-cmyk(0 0 0 0.95); margin-right: 1.5mm;
+}
+</style>
+</head>
+
+<body>
+<!-- ================= P01 · B1 首页 ================= -->
+<div class="page">
+
+  <div class="hero">
+    <div class="ph" style="--hero-img:url('photos/青藏雪域精灵.jpg')"></div>
+
+    <div class="h-head">
+      <h1 class="h-title">世界屋脊上的生命“搬家史”</h1>
+      <p class="h-author">科学家重建青藏高原特有动物五千万年组装过程</p>
+    </div>
+
+    <div class="h-meta">
+      <p class="h-col">科学前沿</p>
+      <span class="h-folio-wrap">
+        <span class="h-folio">001</span>
+        <span class="h-folio-bar"></span>
+      </span>
+    </div>
+
+    <div class="h-note">
+      <p class="h-note-k">编者按</p>
+      <p class="h-note-t">动物从哪里来？中国科学院成都生物研究所团队整合两万余物种的家谱，重建527个青藏高原特有动物的演化史——气候转折按下启动键，横断山输出谱系，喜马拉雅与高原平台接收谱系，植物先到，动物后到。</p>
+    </div>
+  </div>
+
+  <p class="cap">图注：雪域高原上的野鹿群，踏雪而行。</p>
+
+  <div class="body">
+
+    <!-- 第一栏：#00–#01（约33行） -->
+    <p class="first-para"><span class="vbar"></span>本报讯 如果把亚洲大陆比作一本厚重的地质书，青藏高原无疑是书脊。它被称为“第三极”，面积约307万平方公里，海拔从88米一直延伸到8848米，横跨高原平台、喜马拉雅和横断山三个自然与地质历史都很不相同的地块。这里既有藏羚羊、鼠兔、热泉蛇这样的高原“原住民”，也有横断山和喜马拉雅这两个全球知名的生物多样性热点。长期以来，植物学家已经较清楚地描绘出青藏高原植物区系的演化轮廓，但动物世界的故事却一直比较零散：有的研究说动物“走出西藏”，有的说“走出喜马拉雅”，还有的说“走进青藏高原再走出去”。这些结论往往来自单个类群或局部地区，难以拼成完整图景。</p>
+    <p>近日，中国科学院成都生物研究所李家堂研究员团队联合国内外合作者，在《美国国家科学院院刊》发表研究，尝试用一张覆盖两万多个物种的“生命家谱网”回答这个问题。论文第一作者为姜德纯和毛利亮，通讯作者为李家堂。研究整合了无脊椎动物、两栖类、爬行类、鸟类和哺乳类五大类群的时间校准系统发育树，重点重建了527个青藏高原特有陆地动物的演化历史。研究告诉我们：青藏高原不仅是物种就地演化的“工厂”，也是一个接收周边物种的“生物地理汇”；横断山更像“源”，喜马拉雅和高原平台更像“汇”；而动物区系真正开始大规模组装，主要触发点不是过去常说的晚期抬升，而是约3400万年前的始新世—渐新世气候转折。更耐人寻味的是，动物和植物对比后呈现出一条清晰规律：植物先到，动物后到。</p>
+
+    <!-- 第二栏起点：#02–#05头（实测37行） -->
+    <p class="sub cbrk">从“世界屋脊”到“生命枢纽”</p>
+    <p>青藏高原的生物多样性为什么如此特别？要理解这项研究，先要明白三个亚区的差别。高原平台位于青藏高原腹地，今天气候寒冷干旱，生物多样性不算最高，但特有性很强，热泉蛇、沙蜥、藏羚羊和高原鼠兔等都在这里演化出独特适应。横断山位于高原东南缘，山河相间、河谷深切，拥有约1.2万种维管植物、4800多种昆虫、中国一半以上的鸟类和三分之一以上的两栖爬行动物，是著名的多样化中心。喜马拉雅则是另一片热点，约有1万种植物，其中3500种特有，还分布着124种两栖动物、194种爬行动物、987种鸟类和240种哺乳动物。三块土地相邻，却有着不同的抬升历史和季风影响，这为比较研究提供了天然实验场。</p>
+    <p>过去，关于青藏高原动物从哪里来，学界提出过多种假说：“走出喜马拉雅”“走出西藏”“走进和走出青藏高原与喜马拉雅”“走出喜马拉雅—横断山”“走出横断山”等。它们各有化石或单支系系统发育证据，但问题也很明显：一个类群的故事不等于整个动物区系的故事。不同动物扩散能力、生态需求和演化速度不同，对同一场地史事件的反应可能完全不同。要判断青藏高原整体是“源”还是“汇”，必须把许多类群放在同一时间轴上比较。</p>
+    <p>所谓“源”，可以理解为某个地区不断向周围输出谱系，像生物多样性的“输出港”；“汇”则是周围谱系不断迁入并在当地积累，像“接收站”。而“原地分化”指的是一个谱系在当地长期演化并分裂出新物种，不一定依赖外来迁入。</p>
+
+    <!-- 第三栏起点：#05尾–#08（#09 移 P2 导语栏） -->
+    <p class="cont cbrk">科学家要做的，就是为每个特有物种追溯祖先分布，判断它是在当地分化出来的，还是从别处迁入的，抑或从当地迁出到别处。</p>
+    <p class="sub">527个特有种的“家谱”是怎样读出来的</p>
+    <p>这项研究的流程可以分成几步。第一步是搭建“家谱”。研究团队没有只测少数物种，而是整合了五大类群已有的大规模时间校准系统发育树，并补充重建了一些缺乏完整家谱的无脊椎动物、爬行类和哺乳类支系。最终数据覆盖两万多种动物。系统发育树像一棵家族树，枝长代表演化时间；所谓“时间校准”，就是利用化石或可靠的二次校准点，把DNA序列差异换算成地质时间，好比给家谱上的每个分叉标上年代。研究者使用贝叶斯方法估算分歧时间，并检查分析是否收敛，确保结果稳定。</p>
+    <p>第二步是确定“谁是青藏高原特有种”。论文把物种的整个全球分布都落在青藏高原边界内，才定义为“青藏高原特有”。为此，他们查阅了世界自然保护联盟红色名录、中国两栖类数据库、爬行动物数据库、鸟类分布数据以及原始文献和模式产地。随后，他们把青藏高原及周边划成八个生物地理区域：高原平台、横断山、喜马拉雅、中亚与北亚、东亚、华南、东南亚、南亚，其余陆地合并为“世界其他地区”。这样，一个物种的分布就可以被编码成若干区域组合。</p>
+    <!-- #09 移至 P2 导语栏 -->
+
+  </div>
+</div>
+<!-- ================= P02 · B2 续页 ================= -->
+<div class="page">
+
+  <div class="p-head">
+    <div class="p-meta">
+      <p class="p-col">科学前沿</p>
+      <span class="p-folio-wrap">
+        <span class="p-folio">002</span>
+        <span class="p-folio-bar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="lead">
+
+    <!-- 左侧正文栏：#09 + #10 头（实测17行） -->
+    <div class="lead-text">
+      <p class="first-para"><span class="vbar"></span>第三步是“追溯祖籍”。研究使用生物地理学中常用的DEC模型和DEC+J模型，在系统发育树上重建每个节点祖先可能分布在哪里，并推断每一次分支事件中发生了扩散、灭绝还是原地分化。可以把它想成一部倒放的纪录片：从今天的分布出发，沿着家谱往回推，判断某个家族的祖先最初住在横断山、喜马拉雅还是东南亚。</p>
+      <p>第四步是统计“事件时间表”。研究者把6500万年切成每100万年一格，统计每百万年发生多少次原地分化、迁入和迁出事件，再用500万年滑动窗口平滑，得到两条核心曲线：MID，即每百万年原地分化事件的最大数量；MDE，即每百万年扩散事件的最大数量。</p>
+    </div>
+
+    <!-- 右侧图区 -->
+    <div class="lead-fig">
+      <div class="plate-ph" style="--plate-img:url('photos/青藏奔跑.jpg')"></div>
+      <div class="plate-cap">
+        <p><span class="plate-cap-k">图注</span>藏野驴群沿山坡疾驰而下。迁入与迁出，是高原动物区系五千万年组装史里的日常。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="body">
+
+    <!-- 第一栏起点：#10尾–#13（实测31行） -->
+    <p class="cont cbrk">这里的“最大”不是指某一次事件，而是平滑曲线的高度，用来反映某一时期事件发生的强度。为了检验曲线是否可靠，他们还做了100次自助重采样，并把真实曲线与随机化曲线比较。结果真实曲线的主要峰谷在重采样中反复出现，而随机曲线没有这些峰，说明观察到的节奏不是家谱结构造成的假象。</p>
+    <p class="sub">谁在输出，谁在接收</p>
+    <p>统计结果给出了一个清晰的“收支表”。在527个青藏高原特有陆生动物中，研究共识别出367次原地分化事件、103次迁入事件和56次迁出事件。整体看，迁入几乎是迁出的两倍，说明青藏高原整体更像一个“接收汇”，但三个亚区的角色差别很大。</p>
+    <p>横断山是原地分化热点，记录到201次原地分化事件，远高于喜马拉雅的34次和高原平台的7次。同时，横断山迁出56次、迁入40次，迁出多于迁入，表现出明显的“源”角色。它像一座物种输出港，把谱系送往周围地区。喜马拉雅则相反，迁入61次、迁出28次，是典型的“汇”，大量东南亚和横断山谱系在这里积累；但它也不是只进不出，34次原地分化说明它同时是局部多样化的重要舞台。高原平台原地分化只有7次，迁入却有20次，说明那里的动物区系主要靠外来谱系填充，是物种积累区而非扩散中心。高原平台环境严酷、地形相对均一，可能限制了原地成种和向外扩散。</p>
+    <!-- 第二栏起点：#14头–#17（实测30行） -->
+    <p class="cbrk">从周边来源看，东南亚是青藏高原最重要的物种来源地，向高原贡献35次迁入，同时接收18次迁出；华南次之，贡献25次迁入、接收12次迁出。分亚区看，喜马拉雅从东南亚迁入23次、向东南亚迁出9次，像一条南向北的生物输入前沿；横断山与华南交换最频繁，迁入18次、迁出9次，是东洋界与古北界之间的走廊；</p>
+    <p class="sub">时间表被改写</p>
+    <p>这项研究最引人注目的结论之一，是动物区系大规模组装的时间。过去不少分子系统发育论文把青藏高原生物多样化归因于上新世—更新世的“晚期快速抬升”。但近年地质研究越来越支持另一种场景：高原平台和横断山在始新世中晚期已经快速抬升，喜马拉雅的主要抬升则发生在晚渐新世到早中新世。论文作者指出，如果继续把年轻节点简单归因于“晚期抬升”，可能与更新后的地质证据不符。</p>
+    <p>新的时间曲线显示，6500万年前到始新世晚期，原地分化水平较低且缓慢上升，扩散事件几乎缺席。约4600万年前，迁入开始持续增加；约3500万年前，原地分化明显加速；约3200万年前起，迁出也持续增加。真正的大幅增长出现在中新世：2400万至1600万年间原地分化积累加快，1500万至1300万年间再次陡增，约700万年前达到峰值，随后在500万年前后快速下降。</p>
+
+    <!-- 第三栏起点：#14尾–#21头（#22 整段移 P3，实测28行） -->
+    <p class="cont cbrk">高原平台与外界交流最少，主要从横断山迁入9次，只向喜马拉雅迁出2次。这些数字与传统的动物地理分区相呼应：喜马拉雅南翼靠近东洋界，横断山处于过渡带，高原平台深处古北界。</p>
+    <p>约3400万年前的始新世—渐新世转折，是全球气候从“温室”走向“冰室”的关键时刻。全球变冷、海平面下降、生态系统重组和大规模生物周转同时发生。论文认为，正是这场气候剧变，而不是晚期抬升，启动了青藏高原动物区系的持续分化和生物交换。这个结论并不否定抬升的重要性，而是把“抬升”从唯一触发器调整为背景舞台：抬升塑造地形和季风，气候转折则提供了生态机会。</p>
+    <p class="sub">三个亚区，三条不同的演化路线</p>
+    <p>如果只看整个青藏高原，容易忽略内部差异。研究比较三个亚区的曲线后发现，它们的演化轨迹并不同步。</p>
+    <p>横断山和高原的原地分化都在约3500万年前启动，但横断山一路上升，约700万年前达到峰值后快速下降；喜马拉雅的原地分化则逐渐上升，约1000万年前出现陡峭高峰，随后稳定下降；高原平台没有明显大起大落，只在约2200万年前和900万年前有小波动。迁入方面，喜马拉雅开始最早，</p>
+    <!-- #21尾+#22 移 P3 -->
+
+  </div>
+</div>
+<!-- ================= P03 · B2 续页 ================= -->
+<div class="page">
+
+  <div class="p-head">
+    <div class="p-meta">
+      <p class="p-col">科学前沿</p>
+      <span class="p-folio-wrap">
+        <span class="p-folio">003</span>
+        <span class="p-folio-bar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="lead">
+
+    <!-- 左侧正文栏：#21尾 + #22头（实测17行） -->
+    <div class="lead-text">
+      <p class="first-para cont"><span class="vbar"></span>约6400万年前已有低水平迁入，3600万年前后分阶段上升，1100万至1000万年前达到高峰；横断山迁入峰较晚，约1600万至500万年前；高原平台最晚，约700万至500万年前才达到峰值。</p>
+      <p>这些差异与三个亚区的地质气候史对应。高原平台在中始新世以前还可能是海拔不高的盆地，后来逐渐变成高寒高原。环境从低地森林变成寒冷荒漠，许多原有低地类群消失，留下的生态位吸引预适应类群迁入。高原鼠兔从低海拔扩散上来，靠增强产热和洞穴行为适应严寒；热泉蛇则既有迁入历史，又在当地分化，演化出对低温和热泉高氨环境的分子适应。</p>
+    </div>
+
+    <!-- 右侧图区 -->
+    <div class="lead-fig">
+      <div class="plate-ph" style="--plate-img:url('photos/青藏湖畔精灵.jpg')"></div>
+      <div class="plate-cap">
+        <p><span class="plate-cap-k">图注</span>夕阳下的湖畔草场，藏原羚群自在活动。山河相间的横断山与腹地高原，孕育着性情各异的动物区系。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="body">
+
+    <!-- 第一栏起点：#22尾–#24（#25/#26 移第二栏，实测30行） -->
+    <p class="cont cbrk">高原平台现代动物区系的殖民大约始于3200万年前，与植物殖民时间接近，但两栖类明显缺席，可能因为它们难以耐受高寒干旱。</p>
+    <p>横断山在始新世抬升中从炎热荒漠低地变成湿润山地森林，约3400万年前已接近现代景观，并逐渐形成双峰季风。河谷切割、河流袭夺、冰川侵蚀等过程制造出大量孤立生境，为异域成种提供条件。研究显示，横断山动物原地分化在现代环境建立后加速，并持续到约700万年前。无脊椎动物对地形和环境变化最敏感，约3400万年前就开始增强分化；其他类群多在 Miocene 才明显多样化。东亚季风在1300万至900万年前全面建立，迁入和迁出也在季风增强期达到高峰，说明湿润气候可能通过改变植被和生境连通性，打开扩散走廊。</p>
+    <p>喜马拉雅是三个亚区中最年轻的，主要受南亚季风影响。它在中古新世开始缓慢抬升，早始新世约900米，晚渐新世至早中新世约2100米，中新世快速抬升并超过5000米。研究观察到，生物地理事件在快速抬升期明显脉冲式增加，说明短时间出现大量新生态位，促进了本地成种和殖民。喜马拉雅的鸟类尤其突出，原地分化和扩散峰值高于其他类群，支持喜马拉雅是许多鸟类支系起源中心的观点。快速抬升与南亚季风增强叠加，可能是喜马拉雅生物组装的主动力。</p>
+
+    <!-- 第二栏起点：#25–#27（实测30行） -->
+    <p class="sub cbrk">抬升不等于自动多样化</p>
+    <p>论文还检验了一个直观假设：山脉抬升会触发动物成种。如果成立，抬升越早的亚区应该拥有更深的系统发育分歧和更高的多样化。结果只部分支持。横断山确实符合：早抬升、深分歧、高原地分化。高原平台虽然抬升早、殖民时间深，却多样化很低，因为抬升后环境变得寒冷干旱，反而限制生物积累。喜马拉雅抬升晚，却在 Miocene 快速抬升期出现年轻的分化和扩散高峰。可见，早期抬升通常对应更深的分歧时间，但不自动带来高多样化；还需要地形异质性、季风带来的生态机会等“助推器”。</p>
+    <p>研究还发现一个与经典岛屿生物地理学相反的规律。传统理论认为，面积大、隔离少的地区应该接收更多迁入。但在青藏高原内部，面积越小、地理隔离越强、谱系累积时间越短的亚区，反而接收了比例更高的迁入。研究者解释，这些小而孤立的高海拔峰顶或残余生境可能不是扩散屏障，而是气候避难所和边缘生境：冰川期微气候稳定，物种在此积累；边缘生境竞争较弱，殖民更容易成功。喜马拉雅抬升较晚，生态位尚未饱和，因而接收更多迁入；横断山谱系积累时间长，生态位趋于饱和，新迁入受到限制。这个发现提醒我们，山地的“源汇”关系不能简单套用海岛模型。</p>
+
+    <!-- 第三栏起点：#26尾–#30头（#30尾+#31 移 P4，实测28行） -->
+    <p class="cont cbrk">横断山有强烈地形破碎，喜马拉雅有季风和高差，高原平台缺少这些条件，因此尽管古老，却没有成为多样化工厂。</p>
+    <p class="sub">植物先搭台，动物后唱戏</p>
+    <p>论文的另一个亮点，是把动物时间曲线与曹光林等2025年发表的青藏高原植物区系组装数据放在一起比较。结果发现，无论是整个高原还是三个亚区，动物和植物原地分化的峰值时间都相当接近，说明两类生物对同一场地史和气候事件作出了相似响应。</p>
+    <p class="cont">但在迁入时间上，规律更微妙：植物迁入峰值普遍早于动物。论文因此提出“植物先到、动物后到”的跨类群组装顺序。</p>
+    <p>这并不难理解。植物扩散潜力较强、世代时间较短、生理耐受范围较宽，往往能更快 colonize 新形成的生境。它们先稳定土壤、构建植被结构、提高初级生产力，为动物创造食物、遮蔽和微气候。动物随后迁入和分化，形成更复杂的群落。研究显示，两栖类、爬行类、鸟类和哺乳类的迁入开始时间大多晚于植物；鸟类和哺乳类尤其符合“后到”模式。无脊椎动物是例外，部分类群的分化和迁入峰值甚至早于或与植物组装重叠，可能因为它们可利用既有微型生境或具有不同营养角色。</p>
+
+  </div>
+</div>
+<!-- ================= P04 · B2 收尾页 ================= -->
+<div class="page">
+
+  <div class="p-head">
+    <div class="p-meta">
+      <p class="p-col">科学前沿</p>
+      <span class="p-folio-wrap">
+        <span class="p-folio">004</span>
+        <span class="p-folio-bar"></span>
+      </span>
+    </div>
+  </div>
+
+  <div class="lead">
+
+    <!-- 左侧正文栏：#30尾 + #31（实测14行） -->
+    <div class="lead-text">
+      <p class="first-para cont"><span class="vbar"></span>这个例外也提示，不同生物类群的响应并不完全一致，未来需要更细尺度研究。</p>
+      <p>这项研究的意义不只是讲清青藏高原的故事。它展示了一种研究思路：把跨类群系统发育树、地质历史、古气候记录和植物数据放在同一时间轴上，可以重建一个生物多样性热点是如何一步步“组装”起来的。对高中读者来说，这也是理解演化生物学的生动案例。系统发育树不是教科书上静止的树，而是可以和山脉抬升、季风增强、全球变冷对话的时间机器；物种分布也不是地图上的点，而是几千万年迁入、迁出和原地分化的结果。</p>
+    </div>
+
+    <!-- 右侧图区 -->
+    <div class="lead-fig">
+      <div class="plate-ph" style="--plate-img:url('photos/青藏凝视.jpg')"></div>
+      <div class="plate-cap">
+        <p><span class="plate-cap-k">图注</span>猞猁行走在河滩之上。捕食者的存续，同样依赖源、汇、走廊与避难所之间的平衡。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="body">
+
+    <!-- 第一栏：#32–#33（实测22行）；第二栏起点：#34 收尾（cbrk×1，第三栏留空） -->
+    <p>当然，研究仍有需要继续探索的地方。比如，特有种定义依赖现有分布数据，某些类群分子数据仍不完整；不同动物扩散能力差异很大，统计模型只能近似；植物与动物的“先来后到”是时间相关，不等于严格因果。但论文提供的证据已经足够有力：青藏高原不是单一的“物种摇篮”，也不是单纯的“物种接收站”，而是一个由源、汇、走廊和避难所共同构成的动态网络。横断山输出谱系，喜马拉雅和高原平台积累谱系，东南亚和华南提供源源不断的迁入，季风和抬升则不断改写通道与屏障。</p>
+    <p>从保护角度看，这一框架也有启示。保护生物多样性不能只盯着物种最多的“热点”，还要理解物种从哪里来、往哪里去，哪些区域是源，哪些是汇，哪些走廊维系着交流。对于青藏高原这样对气候变化敏感的地区，弄清生命组装的历史，有助于判断未来环境变化可能如何影响物种分布和群落稳定。</p>
+    <p class="cbrk">五千万年的地质剧变，塑造了今天世界屋脊上的生命图景。科学家用两万多个物种的家谱，拼出一部关于迁入、分化与输出的长篇故事。故事的主线并不复杂：气候转折按下启动键，抬升和季风塑造不同舞台，植物先搭起生态台子，动物随后登场。青藏高原因此不仅是地理意义上的“第三极”，也是一座研究生命如何在地球动力系统中组装起来的天然实验室。</p>
+
+  </div>
+</div>
+
+</body>
+</html>
