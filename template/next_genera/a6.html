@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>潮汐为什么一天有两次</title>
+<!--
+  图框 99.25×100mm（比例 0.993），右缘出血至 210mm；原图 1.5。cover 按高铺满，缩放后 150×100mm，左右各裁 25.375mm（约 33.8%）。裁切基点 center；可调范围 宽 90–108mm / 高 84–100mm
+  页面 210mm × 285mm（成品尺寸，无出血）
+  版心 left 22mm（订口）/ right 194mm（外侧）；上 22mm / 下 269mm
+  正文字体 SimSun 8.7pt，行高 1.49（4.5736mm）；三栏 53.667mm / 两栏 83.25mm，栏间距 5.5mm
+  文字仅使用 K；点缀色为 CMYK(0.88 0.10 0.92 0.08)
+  所有元素绝对锚定；替换文案时请保持每栏行数一致，以保证栏底平行
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); page-break-after: always; break-after: page; }
+
+/* 页眉：左为文章题名，右为栏目名 + 页码 + 绿色小条（与 a1 一致） */
+.run { position: absolute; left: 22mm; top: 6mm; width: 104mm;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 8pt; line-height: 1.4; letter-spacing: 0.16em;
+       color: device-cmyk(0 0 0 0.95); }
+.meta { position: absolute; top: 6mm; right: 16mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+/* 图框：background-size:cover = 先等比缩放至覆盖框，再由 background-position 裁切 */
+.ph { position: absolute; background-image: url('photos/showmaker.jpeg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat; }
+
+/* 图注 */
+.cap { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.90); text-align: left; }
+
+/* 正文栏：绝对锚定，行高 4.5736mm（8.7pt × 1.49） */
+.col { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 1.49; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.col p { margin: 0; text-indent: 2em; }
+.col p.cont { text-indent: 0; }
+
+/* 段首绿色小条（承接 a1 的 vbar 语言） */
+.tick { position: absolute; width: 1mm; height: 4.5736mm;
+        background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <p class="run">潮汐为什么一天有两次</p>
+  <div class="meta">
+    <p class="h-col">科学</p>
+    <span class="h-folio-wrap"><span class="h-folio">017</span><span class="h-folio-bar"></span></span>
+  </div>
+
+  <!-- 图框 99.25×100mm（比例 0.993），右缘出血至 210mm；原图 1.5。cover 按高铺满，缩放后 150×100mm，左右各裁 25.375mm（约 33.8%）。裁切基点 center；可调范围 宽 90–108mm / 高 84–100mm -->
+  <div class="ph" style="left:110.75mm; top:22mm; width:99.25mm; height:100mm;"></div>
+
+  <p class="cap" style="left:110.75mm; top:123.5mm; width:83.25mm; height:5.3mm;">图注：退潮后的滩涂与潮沟。摄影 / 林知远。</p>
+
+  <span class="tick" style="left:19mm; top:22mm;"></span>
+
+  <!-- 第 1 栏：83.25mm×54 行；文本 54 行 -->
+  <div class="col" style="left:22mm; top:22mm; width:83.25mm; height:246.974mm;">
+    <p>住在海边的人都知道，海水每天涨落两次。清晨一次，傍晚一次，时间每天往后推大约五十分钟。这件事看起来平常，却困扰了航海者几千年：既然月亮只有一个，为什么潮水不是一天一次？</p>
+    <p>最早的解释来自观察。古人发现，潮水最高的那几天，总是农历初一和十五前后，也就是月亮、地球、太阳连成一线的时候。于是他们推测，是月亮把海水“吸”了起来。这个推测方向是对的，但只对了一半。</p>
+    <p>牛顿给出万有引力之后，人们才明白，潮汐不是简单的“吸引”，而是引力在不同位置上的差异。月亮对靠近它那一侧海水的引力更强，对背面那一侧更弱，两侧的海水便被相对“甩”了出去，形成两个隆起。引力差越大，隆起越明显。</p>
+    <p>于是地球上同时存在两个潮汐隆起：一个在月亮正下方，一个在地球背面。地球每天自转一圈，海岸线会依次经过这两个隆起和两个低点，所以大多数地方一天有两次涨潮、两次落潮。涨潮不是水“涌过来”，而是整个海面在缓慢变形。</p>
+    <p>但真实潮汐并不对称。两个隆起中的一个通常比另一个高，因为大陆阻挡、海底地形、海水深度都会改变潮波的形状。这也是为什么不同海湾的潮差可能相差十几倍：有的地方每天只涨落几十厘米，有的地方能差十几米。加拿大芬迪湾的潮差接近十六米，船在退潮时会搁在泥滩上。</p>
+    <p>太阳也参与其中。太阳的引潮力大约只有月亮的百分之四十六，但当太阳、地球、月亮连成一线时，两个力叠加，潮差达到最大，这叫大潮；当它们成直角时，两力部分抵消，潮差最小，这叫小潮。所以农历初一、十五前后潮水最大，初八、二十三前后潮水最小。</p>
+    <p>还有一类特殊情况：在墨西哥湾、波罗的海这样的半封闭海域，潮波被地形限制，可能出现一天只有一次高潮的“全日潮”。所以“一天两次”是普遍规律，而不是铁律。潮汐的类型取决于海盆的形状、深度和开口方向。</p>
+    <p>潮汐对生活的影响远比想象中具体。渔船趁着涨潮出海，盐场在退潮时晒盐，候鸟在滩涂上觅食，红树林的种子随潮水漂到新的泥滩。沿海城市的排水系统也要按潮位设计，否则一场大潮加上暴雨，就可能让街道积水。潮汐还是一种可以预测的能源，法国朗斯河口就建有一座潮汐电站。</p>
+    <p>今天，潮汐可以提前几年算出来。科学家把月球、太阳的位置和海底地形一起放进模型，用计算机逐小时求解。但模型再精确，也要靠岸边的验潮站不断校正。海是活的，模型只能追着它跑。一次台风、一场地震，都可能让原来的曲线偏移。</p>
+    <p>潮汐还留下了更长的痕迹。科学家在古老的沉积岩里找到层层叠叠的潮汐韵律，据此推算几亿年前月球离地球更近，一天只有二十几个小时。海水的涨落，原来也记录着时间本身。我们读岩层，就像读一本很慢的日历。</p>
+    <p>潮汐力不只作用在海面上，也作用在地球本身。固体地球每天也会被月亮拉起大约三十厘米，只是我们感觉不到。这种形变会产生摩擦，让地球自转变慢；而地球的自转又把角动量传给月球，使它每年远离地球约三点八厘米。</p>
+    <p>在河口，潮水逆流而上，会形成“涌潮”。钱塘江大潮就是典型：潮头推进时像一堵移动的水墙，声音先到，水再到。涌潮的形态取决于河床坡度、水深和潮差，条件合适时能持续推进几十公里。</p>
+    <p>生物早就学会了看潮汐的日历。</p>
+  </div>
+
+  <!-- 第 2 栏：83.25mm×30 行；文本 22 行 -->
+  <div class="col" style="left:110.75mm; top:131.8mm; width:83.25mm; height:137.208mm;">
+    <p class="cont">招潮蟹在退潮时出来觅食，涨潮前回到洞里；牡蛎在潮间带固着，随潮水开合；珊瑚的产卵常常与月相同步，在满月后的夜里集中释放。它们不看表，却很少迟到。</p>
+    <p>人类也曾用潮汐计时。在没有钟表的年代，港口靠潮汐表安排进出，潮汐表又被写进历书。今天卫星导航可以精确到厘米，但老渔民仍然会看月亮，说大潮前后水流急，网要下得深一些。</p>
+    <p>如果把海洋看作一个巨大的水盆，潮波就是盆里来回晃动的涟漪。盆的大小决定了晃动的周期，接近潮汐驱动周期的海盆会产生共振，潮差被放大；远离共振的海盆则反应平淡。这就是为什么相邻的两个海湾，潮水可能完全不同。</p>
+    <p>潮汐也参与塑造地貌。涨潮把泥沙推上滩涂，退潮把它带回海里，日复一日，岸线被磨平、被拉长。潮间带的生物因此有了稳定的家，渔民也因此有了深浅不一的水道。</p>
+    <p>潮汐的节律也写进了语言里。渔谚说“初八二十三，潮水早晚看”，说的是小潮期间潮时变化最快；又说“初三水，十八潮”，把大潮的日子编成口诀。没有仪器的年代，人们用这些句子记住海。</p>
+    <p>下次站在海边，不妨看看表。潮水来的时间，比昨天晚了大约五十分钟。那不是海在迟到，而是月亮绕地球走了一圈之后，又往前挪了一点。我们脚下的海水，一直在跟着天上的节奏呼吸。</p>
+  </div>
+
+</div>
+</body>
+</html>
