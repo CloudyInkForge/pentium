@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>旧书店的下午</title>
+<!--
+  b3ob / 对开跨页（第三位 o） / 标题型（b 亚型） / 偶数 024 · 奇数 025
+  页面 210mm × 285mm（两页，对开印刷；成品尺寸，无出血）；订口在页面内侧边缘
+  左页版心 x 16–188；右页版心 x 232–404；版心 y 22–269
+  四角跨页图·标题型：图贴向页面右上边缘，x 134.333–420、y 0–240，
+  跨订口占据 4 栏宽；图上覆黑色 55% 浅蒙版，标题 / 作者 / 编者按反白置于图上。
+  左页保留 2 栏满高正文（每栏 54 行），图注置于右页图下。
+  文字仅用 K；反白字为 0% 墨；点缀色 CMYK(0.88 0.10 0.92 0.08)。
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); }
+.page + .page { break-before: page; }
+
+.meta { position: absolute; top: 6mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+.ph { position: absolute; background-image: url('photos/showmaker.jpeg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat; }
+
+/* 图片浅蒙版（标题型：55%，保证反白字可读） */
+.mask { position: absolute; background-color: #000000; opacity: 0.55; }
+
+/* 图上的反白题名块：靠右，落在图上较暗的一侧 */
+.tblock { position: absolute; text-align: right; }
+.tblock .tt { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+              font-size: 21pt; line-height: 1.18; letter-spacing: 0.02em;
+              color: device-cmyk(0 0 0 0); }
+.tblock .au { margin-top: 3mm; font-family: "SimSun","Songti SC","STSong",serif;
+              font-size: 9.5pt; line-height: 1.4; letter-spacing: 0.08em;
+              color: device-cmyk(0 0 0 0); }
+.note { position: absolute; color: device-cmyk(0 0 0 0); }
+.note .nk { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+            font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em; margin-bottom: 1.2mm; }
+.note .nt { font-family: "SimSun","Songti SC","STSong",serif;
+            font-size: 8.2pt; line-height: 4.775mm; letter-spacing: 0.01em; text-align: justify; }
+
+.cap { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.90); text-align: left; }
+
+.col { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 4.5736mm; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.col p { margin: 0; text-indent: 2em; }
+.col p.cont { text-indent: 0; }
+
+.tick { position: absolute; width: 1mm; height: 4.5736mm;
+        background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+</style>
+</head>
+
+<body>
+<div class="page"><!-- 左页（偶数页） -->
+
+  <div class="meta" style="left:16mm; justify-content:flex-start; text-align:left;">
+    <span class="h-folio-wrap"><span class="h-folio-bar"></span><span class="h-folio">024</span></span>
+    <p class="h-col">文学</p>
+  </div>
+
+  <!-- 四角跨页图 + 48% 浅蒙版 -->
+  <div class="ph" style="left:134.333mm; top:0mm; width:285.667mm; height:240mm; background-position:center center;"></div>
+
+  <div class="mask" style="left:134.333mm; top:0mm; width:285.667mm; height:240mm;"></div>
+
+  <!-- 正文：左页 2 栏满高 54 行 -->
+  <span class="tick" style="left:13mm; top:22mm;"></span>
+
+  <div class="col" style="left:16mm; top:22mm; width:53.667mm; height:246.974mm;" id="c1"><!--C1--><p>城南那条巷子没有名字，旧书店就开在巷口第二间。门脸窄，木门上的漆掉得只剩几道浅痕，风一吹，门轴会轻轻响一声，像有人在里面翻书。夏天的下午，光从门缝里斜进来，落在最下层那排书上，灰尘在光里浮着，慢慢往上，又慢慢落下去。</p>
+<p>我头一次进去是初三的秋天，刚考完一场不算重要的测验，书包里塞着没及格的卷子。店主是个戴旧呢帽的老人，正蹲在地上捆一摞过期的杂志，麻绳在书脊上勒出细细的印。他抬头看我一眼，说随便看，别把书放回去放错了架。我问他，放错了会怎样。他说，会有人找不到。</p>
+<p>店里没有分类牌。文学和历史挤在一起，旧课本压在画册上面，最里面那排架子上甚至有七十年代的电影连环画，封面上的颜色褪成了很浅的蓝。老人说，书都是别人送来的，送书的人怎么放，他就怎么放。要找一本书，得先学会在别人的秩序里绕路。有时绕了很久也找不到，他就从柜台底下抽出一本，说这个也可以看。</p>
+<p>那个下午我找到一本一九八三年的散文集，书脊裂了一道口子，用透明胶带补过，胶带已经发黄。扉页上有陌生的钢笔字：赠给阿禾，愿你此后所见皆是春天。字迹很轻，像怕压坏纸。我问老人这本书多少钱，他说三块。我又问阿禾是谁，他想了想，说不知道，送书的人没讲，只说是替一个朋友处理旧物。</p>
+<p>后来我常去。有时买书，有时只是坐在门口的矮凳上看半本，看到天黑，把书放回原处。老人从不赶人，只在傍晚收摊前把凳子搬回屋里，顺手把门口扫一遍。有一次我问他，这些书卖不掉怎么办。他说，卖不掉就留着，书又不会老。他说这话时正在给一本掉了封面的词典包书皮，动作很慢，很稳。</p>
+<p>书店里有一台旧收音机，下午三点会响，声音沙沙的，多半是评书。老人一边听一边整理书，偶尔跟着念两句，念错了自己笑。我问他为什么总在下午开门，他说上午要照顾院子里的花，书店不急。他说，急着卖书的人开不好书店，急着读书的人也读不进去。</p>
+<p>有一年冬天，店里来了个女孩，要找一本绝版的诗集。老人翻了很久，从最里面那排架子上抽出薄薄一</p><!--/C1--></div>
+
+  <div class="col" style="left:75.167mm; top:22mm; width:53.667mm; height:246.974mm;" id="c2"><!--C2--><p class="cont">册，封面已经磨白。女孩接过书，忽然哭了。老人没问为什么，只是把门口的灯打开，让她坐下慢慢看。那天雪很大，书店里很安静，只有翻页的声音。</p>
+<p>我上高中后去得少了。偶尔路过，会看见老人坐在柜台后面，膝盖上摊着一本没读完的书。他总是同一个姿势，像时间在店里走得慢一些。有一次我问他，看了这么多年，最喜欢哪一本。</p>
+<p>他说，说不上来，看过的书都忘得差不多了，倒是记得谁拿走过哪一本。</p>
+<p>后来巷子说要改造，墙上被画了很大的拆字，红漆顺着砖缝往下滴。我赶在动工前去看，门开着，架子上空了大半，地上堆着纸箱。老人坐在门口，把最后一摞书装进去，胶带扯得很快，声音很响。他认出我，说来得巧，挑几本吧，不要钱。我站在原地，忽然不知道该挑什么。</p>
+<p>我挑了那本散文集，其实它早就是我的了。老人笑了笑，又从箱底抽出一本旧地图册，说这个也拿走吧，以后巷子没了，至少还能在图上找到它。地图册是一九七九年的，纸已经发黄，折痕很深，翻的时候要轻。我把它夹在腋下，跟老人说了声谢谢。他摆摆手，说书到了你手上，就算没白留。</p>
+<p>书店拆掉那天我没有去。听邻居说，老人把剩下的书捐给了街道的文化站，自己搬去了城北的儿子家，临走前把门口的矮凳送给了隔壁修鞋的师傅。后来我经过那里，只看见一排新砌的白墙，墙根种了几株很矮的冬青。巷口的电线杆还在，上面贴着一张褪色的招租纸。</p>
+<p>我把地图册翻到城南那一页，巷子还在，细细的一条线，没有名字。旁边印着几个小字，表示那里曾经有一所学校、一间邮局、一个菜场。没有书店。我拿铅笔在空白处画了一个很小的方框，写了两个字：旧书。</p>
+<p>那本散文集我一直没读完。它放在书架上，和别的书挤在一起，书脊上的胶带越来越黄。偶尔抽出来，翻到扉页，看见那行钢笔字，就会想起老人在灯下包书皮的样子。字是写给阿禾的，可阿禾是谁，也许连送书的人都记不清了。</p>
+<p>有些书被人认真地送出去，又被另一个人认真地留下来，这就够了。</p><!--/C2--></div>
+
+</div>
+
+<div class="page"><!-- 右页（奇数页） -->
+
+  <!-- 页眉：右页（奇 025，压在图上，反白） -->
+  <div class="meta" style="right:16mm;">
+    <p class="h-col" style="color:device-cmyk(0 0 0 0);">文学</p>
+    <span class="h-folio-wrap"><span class="h-folio" style="color:device-cmyk(0 0 0 0);">025</span><span class="h-folio-bar"></span></span>
+  </div>
+
+  <!-- 四角跨页图 + 48% 浅蒙版 -->
+  <div class="ph" style="left:-75.667mm; top:0mm; width:285.667mm; height:240mm; background-position:center center;"></div>
+
+  <div class="mask" style="left:-75.667mm; top:0mm; width:285.667mm; height:240mm;"></div>
+
+  <!-- 图上的题名 / 作者 / 编者按：右对齐，避开图中的亮部 -->
+  <div class="tblock" style="left:81.167mm; top:40mm; width:112.833mm;">
+    <p class="tt">旧书店的下午</p>
+    <p class="au">林知远</p>
+  </div>
+
+  <div class="note" style="left:110.75mm; top:64.4mm; width:83.25mm;">
+    <p class="nk">编者按</p>
+    <p class="nt">一间没有名字的旧书店，一位把书按别人的秩序摆放的老人。作者用一下午的时间，记录书被送来、被翻看、被带走的过程，也记录一条巷子慢慢消失的声音。</p>
+  </div>
+
+  <p class="cap" style="left:22mm; top:243.5mm; width:172mm; height:3.9mm;">图注：旧书店的门脸与书架，浅蒙版下仍能看见木纹。</p>
+
+</div>
+</body>
+</html>

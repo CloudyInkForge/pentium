@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>旧书店的下午</title>
+<!--
+  b1oa / B 系列 · 对开跨页（第三位 o，无 l/r） / B1 单图跨页型 · 内容型 / 偶数 020 · 奇数 021
+  页面 210mm × 285mm ×2（成品尺寸，无出血）；订口在每页内侧边缘
+  对开坐标：左页 x 0–210，右页 x 210–420；HTML 中右页 left 减 210
+  版心：左页 16–188，右页 232–404；y 22–269
+  三栏：16/75.167/134.333（右页 232/291.167/350.333），栏宽 53.667、栏距 5.5
+
+  图带：跨页单图，上置。占用左页第 2–3 栏 + 内侧白边 + 右页内侧白边 + 第 1 栏（2+1）
+        逻辑框 x 75.167 / y 22 / w 210.5 / h 140
+        左页 .ph left:75.167 w210.5；右页 .ph left:-134.833 w210.5（同框、同图、同裁切）
+  图注：左页 2 栏一侧，图带下 3.5mm，x 75.167 / y 165.5 / w 112.833
+
+  正文（8.7pt / 4.5736mm）：
+        左 c1 x16     y22     w53.667 h246.974  54 行
+        左 c2 x75.167 y172.9  w53.667 h 96.046  21 行
+        左 c3 x134.333 y172.9 w53.667 h 96.046  21 行
+        右 c1 x232    y163.8  w53.667 h105.193  23 行
+        右 c2 x291.167 y22    w53.667 h246.974  54 行
+        右 c3 x350.333 y22    w53.667 h246.974  54 行
+  文字仅用 K；点缀色 CMYK(0.88 0.10 0.92 0.08)。全部元素绝对锚定。
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); }
+.page + .page { break-before: page; }
+
+.run { position: absolute; top: 6mm; width: 104mm;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 8pt; line-height: 1.4; letter-spacing: 0.16em;
+       color: device-cmyk(0 0 0 0.95); }
+.meta { position: absolute; top: 6mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+/* 图框：cover 先等比铺满，再按 center 裁切 */
+.ph { position: absolute; background-image: url('photos/showmaker.jpeg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat; }
+
+.cap { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.90); text-align: left; }
+
+.col { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 4.5736mm; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.col p { margin: 0; text-indent: 2em; }
+.col p.cont { text-indent: 0; }
+
+.tick { position: absolute; width: 1mm; height: 4.5736mm;
+        background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+</style>
+</head>
+
+<body>
+<div class="page"><!-- 左页（偶数页 020） -->
+
+  <p class="run" style="right:22mm; text-align:right;">旧书店的下午</p>
+
+  <div class="meta" style="left:16mm; justify-content:flex-start; text-align:left;">
+    <span class="h-folio-wrap"><span class="h-folio-bar"></span><span class="h-folio">020</span></span>
+    <p class="h-col">文学</p>
+  </div>
+
+  <!-- 图带左半：逻辑框 x75.167–285.667，本页 75.167–210 -->
+  <div class="ph" style="left:75.167mm; top:22mm; width:210.5mm; height:140mm; background-position:26% center;"></div>
+
+  <p class="cap" style="left:75.167mm; top:165.5mm; width:112.833mm; height:3.9mm;">图注：旧书店最里面的那排架子，书一直堆到屋顶。</p>
+
+  <span class="tick" style="left:13mm; top:22mm;"></span>
+
+  <!-- 左 c1：外侧，通高 54 行 -->
+  <div class="col" style="left:16mm; top:22mm; width:53.667mm; height:246.974mm;" id="l1"><!--C1--><p>城南那条巷子没有名字，旧书店就开在巷口第二间。门脸窄，木门上的漆掉得只剩几道浅痕，风一吹，门轴会轻轻响一声，像有人在里面翻书。夏天的下午，光从门缝里斜进来，落在最下层那排书上，灰尘在光里浮着，慢慢往上，又慢慢落下去。</p>
+<p>我头一次进去是初三的秋天，刚考完一场不算重要的测验，书包里塞着没及格的卷子。店主是个戴旧呢帽的老人，正蹲在地上捆一摞过期的杂志，麻绳在书脊上勒出细细的印。他抬头看我一眼，说随便看，别把书放回去放错了架。我问他，放错了会怎样。他说，会有人找不到。</p>
+<p>店里没有分类牌。文学和历史挤在一起，旧课本压在画册上面，最里面那排架子上甚至有七十年代的电影连环画，封面上的颜色褪成了很浅的蓝。老人说，书都是别人送来的，送书的人怎么放，他就怎么放。要找一本书，得先学会在别人的秩序里绕路。有时绕了很久也找不到，他就从柜台底下抽出一本，说这个也可以看。</p>
+<p>那个下午我找到一本一九八三年的散文集，书脊裂了一道口子，用透明胶带补过，胶带已经发黄。扉页上有陌生的钢笔字：赠给阿禾，愿你此后所见皆是春天。字迹很轻，像怕压坏纸。我问老人这本书多少钱，他说三块。我又问阿禾是谁，他想了想，说不知道，送书的人没讲，只说是替一个朋友处理旧物。</p>
+<p>后来我常去。有时买书，有时只是坐在门口的矮凳上看半本，看到天黑，把书放回原处。老人从不赶人，只在傍晚收摊前把凳子搬回屋里，顺手把门口扫一遍。有一次我问他，这些书卖不掉怎么办。他说，卖不掉就留着，书又不会老。他说这话时正在给一本掉了封面的词典包书皮，动作很慢，很稳。</p>
+<p>书店里有一台旧收音机，下午三点会响，声音沙沙的，多半是评书。老人一边听一边整理书，偶尔跟着念两句，念错了自己笑。我问他为什么总在下午开门，他说上午要照顾院子里的花，书店不急。他说，急着卖书的人开不好书店，急着读书的人也读不进去。</p>
+<p>有一年冬天，店里来了个女孩，要找一本绝版的诗集。老人翻了很久，从最里面那排架子上抽出薄薄一册，封面已经磨白。女孩接过书，忽然哭了。老人没问为什么，只是把门口的灯打开，让她坐下慢慢看。那天雪很大，书店里很安静，只有翻页的声音。</p><!--/C1--></div>
+
+  <!-- 左 c2：图带下 21 行 -->
+  <div class="col" style="left:75.167mm; top:172.9mm; width:53.667mm; height:96.046mm;" id="l2"><!--C2--><p class="cont">我上高中后去得少了。偶尔路过，会看见老人坐在柜台后面，膝盖上摊着一本没读完的书。他总是同一个姿势，像时间在店里走得慢一些。有一次我问他，看了这么多年，最喜欢哪一本。</p>
+<p>他说，说不上来，看过的书都忘得差不多了，倒是记得谁拿走过哪一本。</p>
+<p>后来巷子说要改造，墙上被画了很大的拆字，红漆顺着砖缝往下滴。我赶在动工前去看，门开着，架子上空了大半，地上堆着纸箱。</p>
+<p>老人坐在门口，把最后一摞书装进去，胶带扯得很快，声音很响。他认出我，说来得巧，挑几本吧，不要钱。</p>
+<p>我站在原地，忽然不知道该挑什么。我挑了那本散文集，其实它早就是我的了。</p><!--/C2--></div>
+
+  <!-- 左 c3：图带下 21 行 -->
+  <div class="col" style="left:134.333mm; top:172.9mm; width:53.667mm; height:96.046mm;" id="l3"><!--C3--><p class="cont">老人笑了笑，又从箱底抽出一本旧地图册，说这个也拿走吧，以后巷子没了，至少还能在图上找到它。地图册是一九七九年的，纸已经发黄，折痕很深，翻的时候要轻。我把它夹在腋下，跟老人说了声谢谢。他摆摆手，说书到了你手上，就算没白留。</p>
+<p>书店拆掉那天我没有去。听邻居说，老人把剩下的书捐给了街道的文化站，自己搬去了城北的儿子家。</p><!--/C3--></div>
+
+</div>
+
+<div class="page"><!-- 右页（奇数页 021） -->
+
+  <p class="run" style="left:22mm;">旧书店的下午</p>
+
+  <div class="meta" style="right:16mm;">
+    <p class="h-col">文学</p>
+    <span class="h-folio-wrap"><span class="h-folio">021</span><span class="h-folio-bar"></span></span>
+  </div>
+
+  <!-- 图带右半：同一逻辑框，对开 x75.167–285.667 → 本页 -134.833–75.167 -->
+  <div class="ph" style="left:-134.833mm; top:22mm; width:210.5mm; height:140mm; background-position:26% center;"></div>
+
+  <!-- 右 c1：图带下 23 行 -->
+  <div class="col" style="left:22mm; top:163.8mm; width:53.667mm; height:105.193mm;" id="r1"><!--C4--><p class="cont">临走前把门口的矮凳送给了隔壁修鞋的师傅。后来我经过那里，只看见一排新砌的白墙，墙根种了几株很矮的冬青。巷口的电线杆还在，上面贴着一张褪色的招租纸。</p>
+<p>我把地图册翻到城南那一页，巷子还在，细细的一条线，没有名字。旁边印着几个小字，表示那里曾经有一所学校、一间邮局、一个菜场。没有书店。我拿铅笔在空白处画了一个很小的方框，写了两个字：旧书。</p>
+<p>那本散文集我一直没读完。它放在书架上，和别的书挤在一起，书脊上的胶带越来越黄。偶尔抽出来，翻到扉页，看见那行钢笔字，就会想起老人在灯下包书皮的样子。</p><!--/C4--></div>
+
+  <!-- 右 c2：通高 54 行 -->
+  <div class="col" style="left:81.167mm; top:22mm; width:53.667mm; height:246.974mm;" id="r2"><!--C5--><p class="cont">字是写给阿禾的，可阿禾是谁，也许连送书的人都记不清了。</p>
+<p>今年春天，我在另一条街的新书店里看见同样的散文集，重印本，封面干净，纸张很白。定价五十八元。我翻到扉页，上面什么也没有。我把书放回去，忽然明白，有些书之所以值得买，不是因为内容，而是因为它曾被某个人认真地送出去，又被另一个人认真地留下来。</p>
+<p>旧书有一种味道，不是霉味，更像是纸在很长时间里慢慢呼吸留下的气息。老人说，收来的书要先在院子里晒半天，再一本本擦干净，不然放在架子上会生虫。他做这些事的时候不说话。</p>
+<p>书店的门槛被踩得很低，中间凹下去一块。老人说，这是几十年里所有人一起踩出来的，比任何招牌都实在。我想，一间书店能留下的，大概不是书，而是这些被反复经过的地方。</p>
+<p>现在那里开了一家便利店，灯很亮，货架很整齐。我进去买过一次水，收银台后面的年轻人问我要不要袋子。我说不用。走出来的时候，我忽然想起老人说过的那句话：会有人找不到。</p>
+<p>我在便利店门口站了一会儿，看人进进出出。没有人找书，也没有人问起那间旧书店。但那句话一直留着，像书页里夹着的一枚旧书签。</p>
+<p>我后来在文化站见过那批书。它们被放在靠墙的两排铁架上，按开本大小码齐，书脊朝外，像一堵颜色很旧的墙。管理员说，老人捐书那天特意交代，不要按类别分开，就让它们待在一起。我抽出一本，扉页上还留着别人的名字。</p>
+<p>我问管理员，这些书有人看吗。她说有，附近的中学生常来，坐在窗边翻一下午，也不借走。她说这话时，一个男孩正把一本地理图册摊在膝上，手指沿着一条河慢慢移动。那本图册，我认得，是老人从箱底抽出来的那一类。</p><!--/C5--></div>
+
+  <!-- 右 c3：通高 54 行 -->
+  <div class="col" style="left:140.333mm; top:22mm; width:53.667mm; height:246.974mm;" id="r3"><!--C6--><p class="cont">我从架上抽出一本，扉页上还留着别人的字。有的写名字，有的写日期，还有的只画了一个小小的圈。我想，这些书以前大概也有自己的位置，在某个人的书桌上，在某一排架子的第三层，后来位置被拆掉，就到了这里。管理员说，刚搬来的时候，她按类别重新排过一遍，后来老人来了一趟，站在架子前面看很久。</p>
+<p>那天下午我在文化站坐了很久，窗子朝南，光直接打在书脊上。老人的话说得对，书是不会老的，老的是书被放回去的那排架子。</p>
+<p>那一天我想起老人说过的一句话：放错了，会有人找不到。他当时的语气很平常，像在说一件跟书无关的小事。</p>
+<p>我现在明白了。一本书被放在不该放的地方，找它的人要绕很多路，可能一辈子都绕不到。一间旧书店也是这样，它不在原来的巷子里了，去的人要绕到街道尽头，隔着一扇白天的门，才找得到。</p>
+<p>我把地图册留在家里，把从文化站借来的那本诗集带回了城南。书是旧的，纸发脆，翻的时候要轻。</p>
+<p>巷子还是那样窄，只是没有木门，没有门轴的声音，也没有下午三点评书的响动。我站在原来的门脸前，脚底下的砖好像还是那几块，被踩得很低，中间凹下去一块。门槛没了，凹下去的地方还在。</p>
+<p>我听见便利店的门开了一下，又关上。一个学生模样的孩子抱着一袋东西走出来，沿着白墙走远了。走路的姿势很急，像赶着回家。我想起自己初三那年也是这么急，急着把卷子藏起来，急着在巷口停下来喘一口气，然后推门。</p>
+<p>我把诗集翻到第一篇。前面有一张空白页，空白页上有一行很浅的铅笔字，像是很多年前留下的：书还在，人也会回来。字迹很小，末尾没有落款，也不知道是留给谁的。我站在那里，把这一页看了两遍，才合上书，把它放回包里。</p>
+<p>后来我又去过一次文化站，管理员还认得我。她说，那批书最近被整理了一遍，新添了一个木牌，上面写着“旧书店赠书”，字是她自己写的，写得不好，但念旧的人都看得懂。</p>
+<p>我在木牌前面站了很久。窗外的街上开始落小雨，雨点打在玻璃上，一道一道往下走。书店里的人还在，书还在，只是换了地方。我忽然觉得，老人那句会有人找不到，其实并不难过，它只是说，有些东西要慢慢找，找到了就还在。</p><!--/C6--></div>
+
+</div>
+</body>
+</html>

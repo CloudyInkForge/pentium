@@ -11,14 +11,12 @@
             "id": "f7334911727e3a15",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "template/next_genera/APIofA.md",
-                "mode": "source",
-                "source": false
+                "file": "template/next_genera/b2ob.pdf"
               },
-              "icon": "lucide-file",
-              "title": "APIofA"
+              "icon": "lucide-file-text",
+              "title": "b2ob"
             }
           }
         ]
@@ -191,14 +189,23 @@
   },
   "active": "f7334911727e3a15",
   "lastOpenFiles": [
+    "result/A91r4kuhm_aduh58_11x8.tmp",
+    "result/A96uxixv_aduh52_11x8.tmp",
+    "template/next_genera/b3oa.pdf",
+    "template/next_genera/b2ob.pdf",
+    "template/next_genera/b2oa.pdf",
+    "template/next_genera/b1ob.pdf",
+    "template/next_genera/b1oa.pdf",
+    "result/A9g7j6n9_aduh4j_11x8.tmp",
+    "template/next_genera/_p_b7ob.html",
+    "template/next_genera/_p_b6ob.html",
+    "template/next_genera/_p_b2ob.html",
+    "template/next_genera/APIofB.md",
+    "old/described.md",
+    "template/MIDDLE/readme.md",
+    "template/next_genera/APIofA.md",
     "template/next_genera/described.md",
     "template/next_genera/design.md",
-    "template/next_genera/a2ra.pdf",
-    "template/next_genera/a3ra.pdf",
-    "template/next_genera/a5ra.pdf",
-    "template/next_genera/a6ra.pdf",
-    "template/next_genera/a7rb.pdf",
-    "template/next_genera/APIofA.md",
     "CloudyWork/src/crafts/许秀的22次.md",
     "中古士人政治文化.md"
   ]
