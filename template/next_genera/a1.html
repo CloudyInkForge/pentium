@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>许秀的22次</title>
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+
+.page {
+  width: 210mm; height: 285mm; position: relative;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: device-cmyk(0 0 0 0);
+  page-break-after: always; break-after: page;
+}
+.page:last-child { page-break-after: auto; break-after: auto; }
+
+/* 上半部大图：扩展至 179.7mm */
+.hero {
+  position: relative; flex: 0 0 179.7mm;
+  width: 210mm; height: 179.7mm; overflow: hidden;
+}
+.hero .ph {
+  position: absolute; left: 0; top: 0;
+  width: 210mm; height: 179.7mm;
+  background-image: var(--hero-img, none);
+  background-size: cover; background-position: center center; background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* 封面图蒙版：黑色 62% */
+.hero-mask {
+  position: absolute;
+  left: 0; top: 0;
+  width: 210mm; height: 179.7mm;
+  background-color: #000000;
+  opacity: 0.62;
+  z-index: 1;
+}
+
+.h-head {
+  position: absolute; left: 16mm; top: 12mm; width: 126mm;
+  z-index: 2;
+}
+.h-title {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-weight: normal; font-size: 21pt; line-height: 1.18;
+  letter-spacing: 0.02em; color: device-cmyk(0 0 0 0);
+}
+.h-author {
+  margin-top: 3mm; font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 9.5pt; line-height: 1.4; letter-spacing: 0.08em;
+  color: device-cmyk(0 0 0 0);
+}
+
+/* 栏目名 + 页码 */
+.h-meta {
+  position: absolute; right: 16mm; top: 6mm;
+  display: flex; flex-direction: row; justify-content: flex-end;
+  align-items: baseline; gap: 6mm; text-align: right;
+  z-index: 2;
+}
+.h-col {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+  color: device-cmyk(0 0 0 0);
+}
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+  color: device-cmyk(0 0 0 0);
+}
+.h-folio-bar {
+  display: block; width: 1mm; height: 4mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+/* 编者按 */
+.h-note {
+  position: absolute; left: 16mm; bottom: 22.5mm; width: 100mm;
+  z-index: 2;
+}
+.h-note-k {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em;
+  color: device-cmyk(0 0 0 0); margin-bottom: 1.2mm;
+}
+.h-note-t {
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em;
+  color: device-cmyk(0 0 0 0); text-align: justify;
+}
+
+/* 图注 */
+.cap {
+  flex: 0 0 auto; margin: 2mm 16mm 3mm 16mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+  color: device-cmyk(0 0 0 0.90); text-align: left;
+}
+
+/* 下半部：手动三栏正文 */
+.body {
+  flex: 1 1 auto; min-height: 0;
+  width: 178mm; margin: 0 0 8.8mm 16mm;
+  display: flex; flex-direction: row;
+  gap: 5.5mm;
+  font-family: "SimSun","Songti SC","STSong",serif;
+  font-size: 8.7pt; line-height: 1.49;
+  color: device-cmyk(0 0 0 0.92); text-align: justify;
+}
+
+/* 单栏 */
+.col {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column;
+}
+
+/* 正文段落 */
+.body p {
+  text-indent: 2em;
+  margin: 0;
+  orphans: 2;
+  widows: 2;
+}
+
+/* 续段：手动拆分后，续段首行不缩进 */
+.body p.cont {
+  text-indent: 0;
+}
+
+/* 第一段带竖条 */
+.body p.first-para { position: relative; }
+.body p.first-para .vbar {
+  position: absolute; left: -2.86mm; top: 0;
+  height: 4.5736mm; width: 1mm;
+  background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm;
+}
+
+/* 小标题：黑体、不缩进，保持行数不变 */
+.body p.sub {
+  font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+  font-weight: normal;
+  text-indent: 0;
+  letter-spacing: 0.02em;
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- ===== 上半部：扩展大图 + 黑色蒙版 + 标题/作者/栏目/页码/编者按 ===== -->
+  <div class="hero">
+    <div class="ph" style="--hero-img:url('photos/showmaker.jpeg')"></div>
+    <div class="hero-mask"></div>
+
+    <div class="h-head">
+      <h1 class="h-title">许秀的22次</h1>
+      <p class="h-author">庆云</p>
+    </div>
+
+    <div class="h-meta">
+      <p class="h-col">艺体观察</p>
+      <span class="h-folio-wrap">
+        <span class="h-folio">012</span>
+        <span class="h-folio-bar"></span>
+      </span>
+    </div>
+
+    <div class="h-note">
+      <p class="h-note-k">编者按</p>
+      <p class="h-note-t">许秀，DK中单。从S10捧杯到漫长低谷，从对GENG二十一连败到今春终结，他的职业生涯像一场反复起落的比赛。本文以三次机会为线，记录失败、坚持与得偿所愿。</p>
+    </div>
+  </div>
+
+  <!-- ===== 图注 ===== -->
+  <p class="cap">图注：许秀，DK中单，S10世界冠军。</p>
+
+  <!-- ===== 下半部：手动三栏正文 ===== -->
+  <div class="body">
+
+    <!-- 第一栏 -->
+    <div class="col">
+      <p class="first-para"><span class="vbar"></span>今年春，DK2:0横扫GENG，许秀终结了对郑志勋的大场21连败。</p>
+      <p>如今，许秀带领的四号种子DK与一号种子GENG，在瑞士轮均取得三连胜，进入S16八强，尽管目前淘汰赛的局势尚不明朗，但没有人怀疑，许秀已经在创造新的传奇。</p>
+
+      <p class="sub">我必须考虑这会不会<br>是我此生仅有的机会。</p>
+
+      <p>2020年，许秀率领DWG（DK前身）在夏季赛以常规赛第一名、小比分16:2的成绩进入季后赛决赛，并在3:0横扫DRX，夺得LCK夏季赛冠军，作为LCK一号种子进入世界赛。</p>
+      <p>进入世界赛的DWG同样势不可挡，先以小组第一进入淘汰赛，随后战胜DRX、G2、SN，夺得S10总冠军，此时的许秀，意气风发。</p>
+      <p>在决赛前的宣传片中，他说：“如今奖杯就在眼前，我必须考虑这会不会是我</p>
+    </div>
+
+    <!-- 第二栏 -->
+    <div class="col">
+      <p class="cont">此生仅有的机会。”这一次，他成功地抓住了机会，拿到了召唤师奖杯。</p>
+
+      <p class="sub">失败总是贯穿人生始终。</p>
+
+      <p>新的一年，DK更成熟、更具统治力，以碾压之势先后拿到LCK春冠和夏冠，这一年，许秀拿到了春夏双MVP和赛区最有价值选手，没有人会想到这可能是许秀最后的高光。</p>
+      <p>同样在这一年，携着无敌之势的DK折戟世界赛————在决赛败给了EDG，遗憾获得亚军。</p>
+      <p>赛后，许秀说：“比赛结束之后我感觉大脑空白。但是大家想一想，失败总是贯穿人生始终，这就是人生。”</p>
+      <p>S12，DK阵容进行了痛苦的重组，联赛成绩平平，世界赛止步八强，DK王朝落幕。但对比之后三年，这还算不上惨烈。</p>
+      <p>S13、S14，DK均止步十六强，S15，DK甚至无缘世界赛。</p>
+      <p>这样的失败期太漫长了，以至于很多</p>
+    </div>
+
+    <!-- 第三栏 -->
+    <div class="col">
+      <p class="cont">人以为许秀这一传奇选手已经落幕。</p>
+      <p>由于S15的失利，俱乐部亏损严重，欠薪数月，甚至传出即将打包出售的消息。</p>
+
+      <p class="sub">终有一天会得偿所愿。</p>
+
+      <p>但许秀没有就此颓废，今年，许秀带领四名新人，终结了对GENG的二十一连败。不久后的EWC赛事中，许秀带领DK战胜BLG、GENG、KC，夺得世俱杯冠军。</p>
+      <p>赛后采访中，许秀说：“人生纵然难免遭遇失败，但只要不肯放弃，终有一天会得偿所愿。”</p>
+      <p>在常规赛第三赛段和随后的季后赛，许秀仍在追梦，尽管成绩没有那么耀眼，但成功拿到了世界赛门票。</p>
+      <p>现在，时隔三年，许秀再度晋级八强，追逐冠军奖杯。</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -11,14 +11,10 @@
             "id": "f7334911727e3a15",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "中古士人政治文化.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "中古士人政治文化"
+              "title": "新标签页"
             }
           }
         ]
@@ -189,8 +185,9 @@
       "bases:新建数据库": false
     }
   },
-  "active": "f7334911727e3a15",
+  "active": "12666c03cf52ec5f",
   "lastOpenFiles": [
+    "CloudyWork/src/crafts/许秀的22次.md",
     "中古士人政治文化.md"
   ]
 }
