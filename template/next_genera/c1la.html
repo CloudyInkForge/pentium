@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>城南三记</title>
+<!--
+  c1la / 左页（订口在右） / 偶数页 / c1 三组交错图文型
+  页面 210mm × 285mm（成品尺寸，无出血）；页码 034
+  版心：外侧 16mm 在左、订口 22mm 在右；x 16–188，y 22–269
+  三栏：16 / 75.167 / 134.333，栏宽 53.667，栏距 5.5
+  版心纵向分三组，组间 10.168；每组 图2栏(112.833) + 文本1栏(53.667)
+        组1 左图右文  y22      h83.178（图 h83.178；16 行文本 h73.1776）
+        组2 左文右图  y115.346 h74.030（图 h74.030；14 行文本 h64.0304）
+        组3 左图右文  y199.544 h69.457（图 h69.457；13 行文本 h59.4568）
+  题名块：组顶起 10mm（题名 5.2mm + 绿线 + 间距），正文自组顶 +10mm 起排
+  文字仅用 K；点缀色 CMYK(0.88 0.10 0.92 0.08)。全部元素绝对锚定。
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); page-break-after: always; break-after: page; }
+
+.run { position: absolute; top: 6mm; width: 104mm;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 8pt; line-height: 1.4; letter-spacing: 0.16em;
+       color: device-cmyk(0 0 0 0.95); }
+.meta { position: absolute; top: 6mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+/* 图框：cover 先等比铺满，再按 background-position 裁切 */
+.ph { position: absolute; background-image: url('photos/showmaker.jpeg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat; }
+
+/* 组题：SimHei 12pt，单行；绿线 12×0.7，题下 1.2mm */
+.gt { position: absolute; font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+      font-weight: normal; font-size: 12pt; line-height: 5.2mm; letter-spacing: 0.05em;
+      color: device-cmyk(0 0 0 0.95); white-space: nowrap; }
+.gbar { position: absolute; width: 12mm; height: 0.7mm;
+        background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.35mm; }
+
+/* 正文：SimSun 8.7pt，行高 4.5736mm */
+.col { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 4.5736mm; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.col p { margin: 0; text-indent: 2em; }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <p class="run" style="right:22mm; text-align:right;">城南三记</p>
+
+  <div class="meta" style="left:16mm; justify-content:flex-start; text-align:left;">
+    <span class="h-folio-wrap"><span class="h-folio-bar"></span><span class="h-folio">034</span></span>
+    <p class="h-col">短章</p>
+  </div>
+
+  <!-- 组1：左图（2 栏）右文（1 栏），y22 h83.178 -->
+  <div class="ph" style="left:16mm; top:22mm; width:112.833mm; height:83.178mm; background-position:32% center;"></div>
+
+  <p class="gt" style="left:134.333mm; top:22mm;">门轴一响</p>
+  <span class="gbar" style="left:134.333mm; top:28.4mm;"></span>
+
+  <div class="col" style="left:134.333mm; top:32mm; width:53.667mm; height:73.1776mm;"><p>巷口的旧书店，门轴总是响。风从南边来，木门就轻轻退半寸，再合回去，像有人刚翻过一页。店主说门老了，同人一样，总要出点声音。夏天的下午，光从门缝斜进来，落在最下层那排书上，灰尘浮着，慢慢往上，又慢慢落下去。我头一次推门是初三的秋天，书包里塞着没及格的卷子。店主蹲在地上捆一摞旧杂志，麻绳在书脊上勒出细印。他抬头看我一眼，说随便看，别把书放回去放错了架。我问放错了会怎样，他说，会有人找不到。后来我常去，有时买书，有时只坐在门口的矮凳上看半本。他从不赶人，只在收摊时把凳子搬回屋。</p></div>
+
+  <!-- 组2：左文（1 栏）右图（2 栏），y115.346 h74.030 -->
+  <div class="ph" style="left:75.167mm; top:115.346mm; width:112.833mm; height:74.03mm; background-position:68% center;"></div>
+
+  <p class="gt" style="left:16mm; top:115.346mm;">下午三点</p>
+  <span class="gbar" style="left:16mm; top:121.746mm;"></span>
+
+  <div class="col" style="left:16mm; top:125.346mm; width:53.667mm; height:64.0304mm;"><p>店里有一台旧收音机，下午三点会响，声音沙沙的，多半是评书。老人一边听一边整理书，偶尔跟着念两句，念错了自己笑。我问他为什么总在下午开门，他说上午要照顾院子里的花，书店不急。急着卖书的人开不好书店，急着读书的人也读不进去。他说这话时正给一本掉了封面的词典包书皮，动作很慢，很稳。窗外有人骑车过去，铃声一路响到巷子尽头，又慢慢没了。评书说到一半忽然停了，老人抬手拍了拍机器，声音又回来，像什么都没发生。那天我买走一本诗选，价钱是三块。</p></div>
+
+  <!-- 组3：左图（2 栏）右文（1 栏），y199.544 h69.457 -->
+  <div class="ph" style="left:16mm; top:199.544mm; width:112.833mm; height:69.457mm; background-position:50% 18%;"></div>
+
+  <p class="gt" style="left:134.333mm; top:199.544mm;">地图上的巷子</p>
+  <span class="gbar" style="left:134.333mm; top:205.944mm;"></span>
+
+  <div class="col" style="left:134.333mm; top:209.544mm; width:53.667mm; height:59.4568mm;"><p>后来巷子说要改造，墙上画了很大的拆字，红漆顺着砖缝往下滴。我赶在动工前去看，门开着，架子上空了大半，地上堆着纸箱。老人坐在门口，把最后一摞书装进去，胶带扯得很快，声音很响。他认出我，说来得巧，挑几本吧。我从箱底找到一本一九七九年的地图册，纸已经发黄，折痕很深。翻开城南那一页，巷子还在，细细的一条线，没有名字。旁边印着学校、邮局、菜场，没有书店。我拿铅笔在空白处画了一个小方框，写了两个字：旧书。</p></div>
+
+</div>
+</body>
+</html>

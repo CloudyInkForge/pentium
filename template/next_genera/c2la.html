@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>城市短讯</title>
+<!--
+  c2la / 左页（订口在右） / 偶数页 / c2 三栏纯文本短讯型
+  页面 210mm × 285mm（成品尺寸，无出血）；页码 036
+  版心：外侧 16mm 在左、订口 22mm 在右；x 16–188，y 22–269
+  三栏：16 / 75.167 / 134.333，栏宽 53.667，栏距 5.5；每栏 54 行，通高 247
+  每栏 4 条短讯，条目 = 题名 1 行（h5.9736）+ 正文 n 行（h = n×4.5736）+ 条间距 5.7645
+  行数排列：栏1 12/12/11/10、栏2 11/12/11/11、栏3 12/11/10/12（各栏合计 45 行，齐底 269）
+  题名 SimHei 9.5pt，前置绿条；正文 SimSun 8.7pt。全部元素绝对锚定。
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); page-break-after: always; break-after: page; }
+
+.run { position: absolute; top: 6mm; width: 104mm;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 8pt; line-height: 1.4; letter-spacing: 0.16em;
+       color: device-cmyk(0 0 0 0.95); }
+.meta { position: absolute; top: 6mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+/* 条目：题名 1 行 + 正文 n 行，整条绝对锚定 */
+.it { position: absolute; width: 53.667mm; }
+.itt { position: absolute; left: 0; top: 0; width: 53.667mm; height: 5.9736mm;
+       padding-left: 3.6mm; white-space: nowrap;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 9.5pt; line-height: 4.5736mm; letter-spacing: 0.06em;
+       color: device-cmyk(0 0 0 0.95); }
+.itk { position: absolute; left: 0; top: 0.8mm; width: 0.8mm; height: 3mm;
+       background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.4mm; }
+.itx { position: absolute; left: 0; top: 5.9736mm; width: 53.667mm;
+       font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 4.5736mm; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.itx p { margin: 0; text-indent: 2em; }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <p class="run" style="right:22mm; text-align:right;">城市短讯</p>
+
+  <div class="meta" style="left:16mm; justify-content:flex-start; text-align:left;">
+    <span class="h-folio-wrap"><span class="h-folio-bar"></span><span class="h-folio">036</span></span>
+    <p class="h-col">短讯</p>
+  </div>
+
+  <!-- 第 1 栏：12/12/11/10 行 -->
+  <div class="it" style="left:16mm; top:22mm;">
+    <div class="itt"><span class="itk"></span>早市收摊</div>
+    <div class="itx" style="height:54.8832mm;"><p>六点一过，卖豆腐的推车先撤。摊主把木板一块块码好，剩的半板豆腐用湿布盖着，说留给自己家吃。买菜的人散得很快，地上留下几片菜叶和被踩扁的纸箱。扫地的人来得准时，扫帚一路推过去，声音很轻，像怕吵醒还没开门的人家。卖鱼的把水泼在路边，水顺着坡往井盖那边流，停在低处。早市就这么散了，整条街只剩潮湿的痕迹和一点鱼腥味。等到中午太阳一晒，就什么也闻不出来了。</p></div>
+  </div>
+
+  <div class="it" style="left:16mm; top:88.6213mm;">
+    <div class="itt"><span class="itk"></span>巷口修鞋</div>
+    <div class="itx" style="height:54.8832mm;"><p>修鞋的师傅在巷口摆了二十多年摊，一张矮桌，一台手摇补鞋机，几盒线。他补鞋不看价钱，先看鞋底，说底子好就值得补。雨天没人来，他就坐在帆布棚下磨刀，磨得很慢，磨完再把工具一件件擦干净。有人问他为什么不去开个店面，他说摊子小，认得路的人总能找到。收摊时他把地上的皮屑扫成一堆，装进袋子里带走。他说，鞋修好了还能再走两年，人也是。他补过的鞋，鞋跟都比原来的低一点，走起来更稳。</p></div>
+  </div>
+
+  <div class="it" style="left:16mm; top:155.2426mm;">
+    <div class="itt"><span class="itk"></span>雨天的邮局</div>
+    <div class="itx" style="height:50.3096mm;"><p>邮局在街的尽头，绿色的门，玻璃上贴着一张泛黄的营业时间。下雨的时候里面特别安静，只有叫号的声音，和印章落在纸上的闷响。柜台上放着一摞汇款单，边角被翻得起了毛。寄信的老人先写信封，写得很慢，写完还要再看一遍。走的时候他把伞留在门口，说等雨小了再回来拿。没有人提醒他伞会被人拿走，也没有人拿。雨停以后，伞还在原地。寄完信，他把邮票的边角抚平。</p></div>
+  </div>
+
+  <div class="it" style="left:16mm; top:217.2903mm;">
+    <div class="itt"><span class="itk"></span>夜班公交</div>
+    <div class="itx" style="height:45.736mm;"><p>末班车十一点半从总站出发，车上通常只有四五个人。司机把广播关掉，车厢里只剩发动机的声音。有人靠在窗上睡，有人把包抱在怀里，看窗外的店一家家关灯。到城南这一站，会上来一个卖完花的人，桶里的水晃一路。车再开出去时，街上已经看不到别的车了。有一年下雪，车晚点了二十分钟，站牌下的人都缩着脖子，没有人抱怨。</p></div>
+  </div>
+
+  <!-- 第 2 栏：11/12/11/11 行 -->
+  <div class="it" style="left:75.167mm; top:22mm;">
+    <div class="itt"><span class="itk"></span>旧书摊</div>
+    <div class="itx" style="height:50.3096mm;"><p>周末的旧书摊摆在文化宫门口，一块塑料布，四排书，价签是用铅笔写的。摊主收书不论内容，只论厚薄，厚的贵两块。有人蹲着翻半天，最后只买一本，他也不催，把书钱塞进腰上的布袋里。傍晚收摊，剩下卖不掉的装进纸箱，用绳子捆好，说下周还来。书页被风翻得哗哗响，他用一块砖压住最上面那本。他说，书放着总有人要看，摆出来就多一分机会。</p></div>
+  </div>
+
+  <div class="it" style="left:75.167mm; top:84.0477mm;">
+    <div class="itt"><span class="itk"></span>楼顶的花</div>
+    <div class="itx" style="height:54.8832mm;"><p>对面楼的顶上种了几盆花，从下面看只能看到盆沿和几根枝条。浇水的是个老人，每天傍晚提着塑料壶上到天台，来回三趟。夏天花开的时候，风一吹，花瓣会落到我们这边的窗台上。老人从不收，也不扫，说落下来也算开了。有一回停电，整栋楼都黑着，只有天台上的手电亮着，他在给花搭架子。第二天早上花还在，架子也在，像夜里什么都没发生。入夏以后，花一直开着，浇水的次数也多起来。</p></div>
+  </div>
+
+  <div class="it" style="left:75.167mm; top:150.669mm;">
+    <div class="itt"><span class="itk"></span>面馆的灯</div>
+    <div class="itx" style="height:50.3096mm;"><p>巷子里的面馆只做早午两顿，下午三点准时关门。老板把桌子擦一遍，把没卖完的青菜分给隔壁，然后关灯。灯是那种老式的长条灯管，关掉时会闪两下。有人劝他开到晚上，他说晚上是别人的生意，他只管这一碗面。第二天五点，灯又亮起来，门口摆好两张矮桌。面汤的蒸汽顺着门框往上，把门上的玻璃糊得看不清人。他记得每个熟客要的粗细，不用问。</p></div>
+  </div>
+
+  <div class="it" style="left:75.167mm; top:212.7167mm;">
+    <div class="itt"><span class="itk"></span>送水的人</div>
+    <div class="itx" style="height:50.3096mm;"><p>送水的师傅骑一辆加了后架的三轮，车斗里码着七八桶水。他上楼不上电梯，说电梯慢，扛着反而快。每回进门先把鞋在门口蹭两下，再把水放到厨房门口，从不往里走。天热的时候，他一天要跑四十多户，衣服湿了又干。有人在门口放一杯凉水，他不喝，说怕耽误下一家。走的时候他把空桶拎走，顺手把门带上。他记得哪家的水放在哪，从不用问。一桶水四十斤，他一次扛两桶。</p></div>
+  </div>
+
+  <!-- 第 3 栏：12/11/10/12 行 -->
+  <div class="it" style="left:134.333mm; top:22mm;">
+    <div class="itt"><span class="itk"></span>清晨的报亭</div>
+    <div class="itx" style="height:54.8832mm;"><p>报亭在公交站旁边，铁皮棚子，顶上压着几块砖。五点半开门，先把当天的报纸拆捆，摞在台面上，用一块玻璃压住边角。买报的多是老人，递过来一张整钱，等着找零。有人只站在旁边看标题，看完就走，摊主也不说什么。七点以后，报纸剩得不多，他把剩下的叠整齐，放进棚子后面的箱子里。卖不完的留到下午，按旧报的价格再卖一遍。有人问昨天的报纸还有没有，他就从箱子里翻。雨天他把箱子往里挪，报纸不湿。</p></div>
+  </div>
+
+  <div class="it" style="left:134.333mm; top:88.6213mm;">
+    <div class="itt"><span class="itk"></span>街角的猫</div>
+    <div class="itx" style="height:50.3096mm;"><p>街角有只灰猫，常年睡在五金店门口的纸箱上。五金店老板给它留了个碗，每天添一次水。猫不亲人，也不怕人，谁走近它就抬眼看一下，再睡。冬天下雪，纸箱被搬进店里，它在暖气片旁边趴了一个月。开春以后，它又回到门口，占着原来的位置，像从没离开过。有人想抱回家，抱到半路它跳下来，沿着墙根走回来。它只认这个门，不认人。有人喂它，它就等；没人喂，它也等。</p></div>
+  </div>
+
+  <div class="it" style="left:134.333mm; top:150.669mm;">
+    <div class="itt"><span class="itk"></span>修表铺</div>
+    <div class="itx" style="height:45.736mm;"><p>修表铺在二楼，要走一段很窄的木楼梯，门口的招牌只有巴掌大。师傅戴一只放大镜，桌上摊着细小的零件，镊子尖得像针。他说现在修表的人少，修表的人更少，但总还是有的。一只表要在店里放三天，他只是为了让它在走的时候稳一点。收费不高，找不开的钱就记在本子上。本子已经用了三本，字很小。有人的表不值得修，他也不收钱。</p></div>
+  </div>
+
+  <div class="it" style="left:134.333mm; top:208.1431mm;">
+    <div class="itt"><span class="itk"></span>最后一班轮渡</div>
+    <div class="itx" style="height:54.8832mm;"><p>轮渡九点二十分开最后一班，码头的灯已经亮起来。上船的多是下班的人，自行车靠在一侧，车把上挂着塑料袋。船开出去以后，江风很大，有人到船舷边站着，看对岸的灯一盏盏近过来。船靠岸时大家先让推车的下去，然后才是走路的人。出口处有个卖茶叶蛋的小摊，收摊比轮渡还晚。有一回江上起雾，船开得很慢，没有人急着下船。船票两块，多年没涨。江面上没有别的船，只有灯。靠岸以后，码头的灯很快就灭了。</p></div>
+  </div>
+
+</div>
+</body>
+</html>
+

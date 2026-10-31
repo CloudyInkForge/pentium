@@ -13,10 +13,10 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "template/next_genera/b2ob.pdf"
+                "file": "template/next_genera/c2ra.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "b2ob"
+              "title": "c2ra"
             }
           }
         ]
@@ -189,17 +189,17 @@
   },
   "active": "f7334911727e3a15",
   "lastOpenFiles": [
-    "result/A91r4kuhm_aduh58_11x8.tmp",
-    "result/A96uxixv_aduh52_11x8.tmp",
-    "template/next_genera/b3oa.pdf",
+    "template/next_genera/c2la.pdf",
+    "template/next_genera/c1la.pdf",
+    "template/next_genera/c1ra.pdf",
+    "template/next_genera/APIofC.md",
     "template/next_genera/b2ob.pdf",
-    "template/next_genera/b2oa.pdf",
-    "template/next_genera/b1ob.pdf",
-    "template/next_genera/b1oa.pdf",
-    "result/A9g7j6n9_aduh4j_11x8.tmp",
-    "template/next_genera/_p_b7ob.html",
-    "template/next_genera/_p_b6ob.html",
-    "template/next_genera/_p_b2ob.html",
+    "template/next_genera/c2ra.pdf",
+    "template/next_genera/_old_test.pdf",
+    "template/next_genera/c2la.html",
+    "template/next_genera/c2ra.html",
+    "template/next_genera/c1la.html",
+    "template/next_genera/_measure.html",
     "template/next_genera/APIofB.md",
     "old/described.md",
     "template/MIDDLE/readme.md",
