@@ -3,6 +3,16 @@
 <head>
 <meta charset="utf-8">
 <title>许秀的22次</title>
+<!--
+  a1ra / 右页（订口在左）/ 奇数页 011 / a 亚型（文章首页 - 大图蒙版）
+  页面 210mm × 285mm（成品尺寸，无出血）
+  上图为横向出血图：图框 210×179.7mm（比例 1.168）；原图 1200×800（1.5）。
+  cover 按高铺满，缩放后 269.55×179.7mm，左右各裁约 11.1%（合计 22.1%）；裁切基点 center。
+  页面下方正文为 16mm 对称边距的视觉版心（首页特例），三栏 55.667mm / 栏距 5.5mm。
+  正文 SimSun 8.7pt，行高 1.49（4.5736mm）；文字仅用 K，反白字为 0% 墨。
+  点缀色 CMYK(0.88 0.10 0.92 0.08)。
+  全部元素绝对锚定；替换文案时保持每栏行数一致。
+-->
 <style>
 @page { size: 210mm 285mm; margin: 0; }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,7 +64,7 @@ html, body { background: device-cmyk(0 0 0 0); }
   color: device-cmyk(0 0 0 0);
 }
 
-/* 栏目名 + 页码 */
+/* 栏目名 + 页码（右页：靠外侧右） */
 .h-meta {
   position: absolute; right: 16mm; top: 6mm;
   display: flex; flex-direction: row; justify-content: flex-end;
@@ -165,7 +175,7 @@ html, body { background: device-cmyk(0 0 0 0); }
     <div class="h-meta">
       <p class="h-col">艺体观察</p>
       <span class="h-folio-wrap">
-        <span class="h-folio">012</span>
+        <span class="h-folio">011</span>
         <span class="h-folio-bar"></span>
       </span>
     </div>

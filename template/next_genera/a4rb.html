@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>一次失败的实验</title>
+<!--
+  a4rb / 右页（订口在左） / 奇数页 / b亚型
+  页面 210mm × 285mm（成品尺寸，无出血）；本页为奇数页，页码 019
+  版心：订口 22mm 在左、外侧 16mm 在右
+  正文 SimSun 8.7pt，行高 1.49（4.5736mm）；三栏 53.667mm / 两栏 83.25mm，栏间距 5.5mm
+  文字仅用 K；点缀色 CMYK(0.88 0.10 0.92 0.08)；标题页反白字为 0% 墨
+  全部元素绝对锚定；替换文案时保持每栏行数一致
+-->
+<style>
+@page { size: 210mm 285mm; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: device-cmyk(0 0 0 0); }
+.page { width: 210mm; height: 285mm; position: relative; overflow: hidden;
+        background: device-cmyk(0 0 0 0); page-break-after: always; break-after: page; }
+
+/* 页眉：跑马题名 + 栏目名 + 页码 + 绿色小条（与 a1 同一套字形与尺寸） */
+.run { position: absolute; top: 6mm; width: 104mm;
+       font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+       font-size: 8pt; line-height: 1.4; letter-spacing: 0.16em;
+       color: device-cmyk(0 0 0 0.95); }
+.meta { position: absolute; top: 6mm; display: flex; flex-direction: row;
+        justify-content: flex-end; align-items: baseline; gap: 6mm; text-align: right; }
+.h-col { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+         font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.24em;
+         color: device-cmyk(0 0 0 0.95); }
+.h-folio-wrap { display: inline-flex; flex-direction: row; align-items: center; gap: 6mm; }
+.h-folio { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+           font-size: 8.5pt; line-height: 1.4; letter-spacing: 0.10em;
+           color: device-cmyk(0 0 0 0.95); }
+.h-folio-bar { display: block; width: 1mm; height: 4mm;
+               background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+
+/* 图框：cover 先等比缩放至覆盖框，再按 center 裁切 */
+.ph { position: absolute; background-image: url('photos/showmaker.jpeg');
+      background-size: cover; background-position: center center; background-repeat: no-repeat; }
+
+/* 标题页蒙版（同 a1：黑 62%） */
+.mask { position: absolute; background-color: #000000; opacity: 0.62; }
+
+/* 标题页：题名 / 作者 / 编者按（白色反白字，冲在蒙版上） */
+.tblock { position: absolute; text-align: center; }
+.tblock .tt { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif; font-weight: normal;
+              font-size: 21pt; line-height: 1.18; letter-spacing: 0.02em;
+              color: device-cmyk(0 0 0 0); }
+.tblock .au { margin-top: 3mm; font-family: "SimSun","Songti SC","STSong",serif;
+              font-size: 9.5pt; line-height: 1.4; letter-spacing: 0.08em;
+              color: device-cmyk(0 0 0 0); }
+.note { position: absolute; color: device-cmyk(0 0 0 0); }
+.note .nk { font-family: "SimHei","Heiti SC","Microsoft YaHei",sans-serif;
+            font-size: 7.8pt; line-height: 1.4; letter-spacing: 0.34em; margin-bottom: 1.2mm; }
+.note .nt { font-family: "SimSun","Songti SC","STSong",serif;
+            font-size: 8.2pt; line-height: 1.65; letter-spacing: 0.01em; text-align: justify; }
+
+/* 图注 */
+.cap { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 7.5pt; line-height: 1.4; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.90); text-align: left; }
+
+/* 正文栏：绝对锚定，行高 4.5736mm（8.7pt × 1.49） */
+.col { position: absolute; font-family: "SimSun","Songti SC","STSong",serif;
+       font-size: 8.7pt; line-height: 1.49; letter-spacing: 0.02em;
+       color: device-cmyk(0 0 0 0.92); text-align: justify; overflow: hidden; }
+.col p { margin: 0; text-indent: 2em; }
+.col p.cont { text-indent: 0; }
+
+.tick { position: absolute; width: 1mm; height: 4.5736mm;
+        background: device-cmyk(0.88 0.10 0.92 0.08); border-radius: 0.5mm; }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <!-- 标题页亚型 b：图片蒙版 + 题名/作者/编者按 -->
+  <div class="meta" style="right:16mm;">
+    <p class="h-col">科学</p>
+    <span class="h-folio-wrap"><span class="h-folio">019</span><span class="h-folio-bar"></span></span>
+  </div>
+
+  <!-- 图框 128.833×242.426mm（比例 0.531），原图 1200×800（1.5）。cover 按高铺满，缩放后 363.640×242.426mm，左右各裁约 32.3%（合计 64.6%）。裁切基点 center -->
+  <div class="ph" style="left:81.167mm; top:22mm; width:128.833mm; height:242.4264mm;"></div>
+
+  <div class="mask" style="left:81.167mm; top:22mm; width:128.833mm; height:242.4264mm;"></div>
+
+  <div class="tblock" style="left:93.167mm; top:46mm; width:104.833mm;">
+    <p class="tt">一次失败的实验</p>
+    <p class="au">林知远</p>
+  </div>
+
+  <div class="note" style="left:93.167mm; top:226.4264mm; width:104.833mm;">
+    <p class="nk">编者按</p>
+    <p class="nt">一次失败的实验，往往比一次成功的演示更值得留下来。本期科学栏目回到操场，看三个学生如何把一只水火箭拆开、重做，再写下失败的原因。</p>
+  </div>
+
+  <p class="cap" style="left:81.167mm; top:264.9264mm; width:112.833mm; height:3.9mm;">图注：试射失败的午后，瓶子被留在看台下。</p>
+
+  <span class="tick" style="left:19mm; top:22mm;"></span>
+
+  <!-- 第 1 栏：53.667mm×54 行；文本 51 行 -->
+  <div class="col" style="left:22mm; top:22mm; width:53.667mm; height:246.974mm;">
+    <p>高二那年的科技节，我们组决定做水火箭。方案在纸上写得很漂亮：塑料瓶、打气筒、橡皮塞、三片尾翼，理论上能飞到二十米高。我们甚至在报告封面上画了一枚火箭，尾焰画得很长。</p>
+    <p>第一次试射在操场角落。瓶子里灌了三分之一的水，打气打到第八下，橡皮塞被弹出，水柱喷了前排同学一身，火箭原地转了两圈，倒了。围观的人笑得很响，我们蹲在地上捡瓶子。</p>
+    <p>第二次我们把尾翼粘得更牢，配重也调了。气打到第十五下，瓶身开始发抖，我们退到五米外。它终于飞起来，斜着冲向看台，撞在栏杆上，瓶底凹进去一块。体育老师跑过来，问我们有没有人受伤。</p>
+    <p>那天下午我们没再试。三个人坐在台阶上，把失败的原因写在纸上：重心太靠前、尾翼角度不对、气压不够。写着写着，大家反而不急了。原来失败不是一句“运气不好”就能解释的事，它有很多具体的原因，每一条都能改。</p>
+    <p>科技节那天，我们的水火箭只飞了七米，拿了参与奖。但答辩时，老师问我们最大的收获是什么。组长说，是知道了一个东西为什么飞不起来。老师点点头，说这比飞起来更难。</p>
+    <p>后来我把那只凹了底的瓶子留在书架上。它不好看，也不成功，但每次看见，我都会想起那个下午：喷了一身水，笑成一片，然后认真地把原因一条条写下来。</p>
+    <p>现在想来，科学课上学过的牛顿第三定律，在纸上只有一行字。真正弄懂它，是在操场上被水浇透的那个瞬间：水往下喷，瓶子才往上走。作用力与反作用力，原来这么不讲情面。</p>
+    <p>我们也试过改进。用更厚的瓶壁，换更紧的塞子，把发射角度固定成六十度。第三次试射飞了十四米，落在跑道外的草地上。没有人欢呼，我们只是互相看了一眼，然后把数据记下来。</p>
+    <p>那次实验最后没有拿奖，报告也只得了中等。但组长后来考上了工科，他说填志愿的时候，想起的是那只撞在栏杆上的瓶子，而不是课本上的公式。失败有时候比成功更早地指出方向。</p>
+    <p>我把报告留了一份复印件，封面上的火箭已经褪色。尾焰画得很长，一直画到纸的边缘，像真的会飞出去。现在看，那更像一个愿望，而不是一张图纸。</p>
+  </div>
+
+</div>
+</body>
+</html>
