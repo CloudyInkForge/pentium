@@ -13,10 +13,10 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "template/next_genera/c2ra.pdf"
+                "file": "template/cover.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "c2ra"
+              "title": "cover"
             }
           }
         ]
@@ -187,19 +187,21 @@
       "bases:新建数据库": false
     }
   },
-  "active": "f7334911727e3a15",
+  "active": "12666c03cf52ec5f",
   "lastOpenFiles": [
+    "2611/c1design.md",
+    "template/next_genera/cover.pdf",
+    "template/next_genera/cover.html",
+    "template/next_genera/photos/周在长征.jpg",
+    "template/backcover.pdf",
+    "template/next_genera/c2ra.pdf",
     "template/next_genera/c2la.pdf",
     "template/next_genera/c1la.pdf",
     "template/next_genera/c1ra.pdf",
     "template/next_genera/APIofC.md",
     "template/next_genera/b2ob.pdf",
-    "template/next_genera/c2ra.pdf",
     "template/next_genera/_old_test.pdf",
     "template/next_genera/c2la.html",
-    "template/next_genera/c2ra.html",
-    "template/next_genera/c1la.html",
-    "template/next_genera/_measure.html",
     "template/next_genera/APIofB.md",
     "old/described.md",
     "template/MIDDLE/readme.md",
