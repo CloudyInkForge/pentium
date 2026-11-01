@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>杂志模板体系说明 · A / B / C 系列</title>
+<style>
+  :root{
+    --ink:#1f2933;
+    --muted:#64748b;
+    --line:#d7dde5;
+    --paper:#ffffff;
+    --bg:#f4f6f8;
+    --green:#2f8f5b;
+    --green-soft:#e8f3ec;
+    --img:#c7d0d9;
+    --img-2:#aeb9c5;
+    --guide:#c4ccd6;
+    --shadow:0 8px 24px rgba(15,23,42,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.65;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:34px 20px 70px}
+  a{color:#1f6b42}
+  header.hero{
+    background:linear-gradient(135deg,#101827,#1f2937 55%,#243447);
+    color:#fff;border-radius:22px;padding:34px 30px;box-shadow:var(--shadow);
+  }
+  header.hero h1{margin:0 0 8px;font-size:30px;letter-spacing:.02em}
+  header.hero p{margin:0;max-width:900px;color:#d7dee8;font-size:14.5px}
+  .hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .hero-tags span{
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;
+    padding:4px 10px;font-size:12px;color:#e7edf5;background:rgba(255,255,255,.06)
+  }
+  .section{margin-top:30px}
+  .section>h2{font-size:21px;margin:0 0 6px;letter-spacing:.02em}
+  .section>p.lead{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+  .panel{
+    background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    padding:20px;box-shadow:var(--shadow)
+  }
+  .legend{display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:12px}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#334155}
+  .swatch{width:24px;height:15px;border:1px solid #aeb7c2;display:inline-block;flex:none;background:#fff}
+  .swatch.img{
+    background:
+      repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 2px,transparent 2px 7px),
+      linear-gradient(135deg,#c7d0d9,#aeb9c5);
+  }
+  .swatch.mask{background:#0f172a;opacity:.62}
+  .swatch.txt{
+    background:repeating-linear-gradient(to bottom,#9aa5b1 0 1px,transparent 1px 6px);
+  }
+  .swatch.title{background:#111827}
+  .swatch.cap{background:#aeb7c2;height:2px}
+  .swatch.guide{border:1px dashed var(--guide);background:#fff}
+  .swatch.green{background:var(--green);border-color:var(--green)}
+  .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f8fafc;color:#334155;font-weight:600}
+  tr:last-child td{border-bottom:0}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+  .diagram-row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+  .diagram-note{flex:1;min-width:260px;font-size:13px;color:#475569}
+  .diagram-note h3{margin:0 0 8px;font-size:15px;color:var(--ink)}
+  .diagram-note ul{margin:0;padding-left:18px}
+  .diagram-note li{margin:4px 0}
+  .cards{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+    gap:18px;margin-top:18px
+  }
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;
+  }
+  .card h3{font-size:16px;margin:0;letter-spacing:.01em}
+  .card .files{font-size:11.5px;color:var(--muted);word-break:break-all}
+  .card p{margin:0;font-size:13px;color:#334155}
+  .card ul{margin:0;padding-left:18px;font-size:12.5px;color:#475569}
+  .card li{margin:2px 0}
+  .badge{
+    display:inline-block;background:var(--green-soft);color:#1f6b42;
+    border:1px solid #b7d9c5;border-radius:999px;padding:1px 8px;
+    font-size:11px;white-space:nowrap
+  }
+  .mini{
+    display:flex;justify-content:center;align-items:flex-start;
+    min-height:190px;padding:8px 0 2px
+  }
+  .mini-foot{font-size:11px;color:var(--muted);text-align:center;margin-top:-2px}
+  .page{
+    position:relative;width:126px;height:171px;background:#fff;
+    border:1px solid #b8c0ca;overflow:hidden;flex:none
+  }
+  .spread{
+    position:relative;display:flex;width:252px;height:171px;flex:none
+  }
+  .spread .page:first-child{border-right:0}
+  .spread .page:last-child{border-left:0}
+  .spread::after{
+    content:"";position:absolute;left:125px;top:0;width:2px;height:100%;
+    background:linear-gradient(#64748b,#94a3b8);opacity:.8;pointer-events:none;z-index:20
+  }
+  .content-guide{
+    position:absolute;top:7.7%;bottom:5.6%;border:1px dashed var(--guide);
+    pointer-events:none;z-index:1
+  }
+  .page.left .content-guide{left:7.6%;right:10.5%}
+  .page.right .content-guide{left:10.5%;right:7.6%}
+  .img{
+    position:absolute;z-index:2;overflow:hidden;
+    background:
+      repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 2px,transparent 2px 7px),
+      linear-gradient(135deg,#c7d0d9,#aeb9c5);
+    border:1px solid #9aa7b4
+  }
+  .img.mask::after{
+    content:"";position:absolute;inset:0;background:#0f172a;opacity:.58
+  }
+  .title{position:absolute;z-index:5;background:#111827;border-radius:1px}
+  .title.inv{background:#fff}
+  .txt{
+    position:absolute;z-index:3;
+    background:repeating-linear-gradient(to bottom,#9aa5b1 0 1px,transparent 1px 6px);
+    opacity:.86
+  }
+  .txt.inv{
+    background:repeating-linear-gradient(to bottom,#fff 0 1px,transparent 1px 6px);
+    opacity:.9
+  }
+  .txt.light{opacity:.55}
+  .cap{position:absolute;z-index:4;height:1px;background:#aeb7c2}
+  .note{position:absolute;z-index:4;background:#eef2f6;border:1px solid #d5dce4}
+  .greenbar{position:absolute;z-index:6;background:var(--green);border-radius:1px}
+  .guide-v{position:absolute;z-index:1;top:7.7%;bottom:5.6%;width:1px;background:rgba(196,204,214,.8)}
+  .head-demo{position:absolute;top:2.2%;z-index:7;display:flex;align-items:center;gap:3px;font-size:5px;color:#475569}
+  .head-demo .bar{width:3px;height:7px;background:var(--green);display:block}
+  .head-demo .folio{width:10px;height:3px;background:#7b8794;display:block}
+  .head-demo .col{width:14px;height:3px;background:#c3cad3;display:block}
+  .head-demo.left{left:8%}
+  .head-demo.right{right:8%}
+  .head-demo.right{flex-direction:row}
+  .head-demo.left{flex-direction:row}
+  .small-label{
+    position:absolute;z-index:8;font-size:5.5px;color:#64748b;
+    background:rgba(255,255,255,.82);padding:0 2px;border-radius:2px;pointer-events:none
+  }
+  .footer-note{
+    margin-top:34px;padding:18px 20px;border-radius:16px;background:#eef2f6;
+    color:#475569;font-size:12.5px
+  }
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .toc a{
+    text-decoration:none;border:1px solid var(--line);background:#fff;
+    border-radius:999px;padding:5px 12px;font-size:12.5px;color:#334155
+  }
+  .toc a:hover{border-color:#9ec9b3;background:#f3faf6}
+  .muted{color:var(--muted)}
+  .nowrap{white-space:nowrap}
+  @media (max-width:640px){
+    header.hero{padding:26px 20px}
+    header.hero h1{font-size:24px}
+    .wrap{padding:20px 12px 50px}
+    .card{padding:14px}
+  }
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    header.hero{background:#fff;color:#111;border:1px solid #ccc;box-shadow:none}
+    header.hero p{color:#444}
+    .panel,.card{box-shadow:none}
+    .card{break-inside:avoid}
+    .toc{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>杂志模板体系说明 · A / B / C 系列</h1>
+    <p>
+      这是一份“读模板”的说明页，不是杂志成品页。它用简图表示页面结构、栏格、订口、页眉镜像与图文关系，
+      适合与 PDF 效果页对照阅读。示意图只表达结构比例，不按真实字号；灰色斜纹块代表图片，横线代表正文，
+      黑色粗块代表标题，绿色竖条代表点缀/页码条，虚线代表版心或栏线。
+    </p>
+    <div class="hero-tags">
+      <span>A 系列：单页模板</span>
+      <span>B 系列：对开跨页模板</span>
+      <span>C 系列：单页短文集纳</span>
+      <span>页面 210 × 285mm</span>
+      <span>订口 / 页眉严格镜像</span>
+    </div>
+    <div class="toc">
+      <a href="#basics">基础规则与图例</a>
+      <a href="#series-a">A 系列</a>
+      <a href="#series-b">B 系列</a>
+      <a href="#series-c">C 系列</a>
+      <a href="#checklist">对照 PDF 的检查清单</a>
+    </div>
+  </header>
+
+  <section class="section panel" id="basics">
+    <h2>基础规则与图例</h2>
+    <p class="lead">
+      先建立三个共同概念：<strong>单页 / 对开</strong>、<strong>订口方向</strong>、<strong>版心与栏格</strong>。
+      模板严格区分左页（偶数）与右页（奇数）；B 系列一个 HTML 内是两张 210×285mm 的独立页面，不是一个 420mm 大页。
+    </p>
+
+    <div class="legend">
+      <div class="legend-item"><span class="swatch img"></span>图片 / 图带</div>
+      <div class="legend-item"><span class="swatch mask"></span>黑色蒙版（仅标题型常用）</div>
+      <div class="legend-item"><span class="swatch txt"></span>正文文字（横线示意）</div>
+      <div class="legend-item"><span class="swatch title"></span>标题 / 粗标题块</div>
+      <div class="legend-item"><span class="swatch cap"></span>图注</div>
+      <div class="legend-item"><span class="swatch guide"></span>版心 / 栏线虚线</div>
+      <div class="legend-item"><span class="swatch green"></span>点缀绿条 / 题前绿条</div>
+    </div>
+
+    <div class="diagram-row" style="margin-top:20px">
+      <div>
+        <div class="page right">
+          <div class="content-guide"></div>
+          <div class="guide-v" style="left:38.65%"></div>
+          <div class="guide-v" style="left:66.83%"></div>
+          <div class="head-demo right"><span class="col"></span><span class="folio"></span><span class="bar"></span></div>
+          <div class="txt" style="left:10.5%;top:12%;width:25.6%;height:78%"></div>
+          <div class="txt" style="left:38.6%;top:12%;width:25.6%;height:78%"></div>
+          <div class="txt" style="left:66.8%;top:12%;width:25.6%;height:78%"></div>
+          <span class="small-label" style="left:8%;top:5%">右页：栏目 → 页码 → 绿条</span>
+        </div>
+        <div class="mini-foot">右页三栏网格示意</div>
+      </div>
+      <div class="diagram-note">
+        <h3>版心与栏格</h3>
+        <ul>
+          <li><strong>右页</strong>：版心 x 22–194；订口在左，外侧在右。</li>
+          <li><strong>左页</strong>：版心 x 16–188；外侧在左，订口在右。</li>
+          <li>纵向版心 y 22–269；三栏 53.667mm、栏距 5.5mm；两栏 83.25mm。</li>
+          <li>正文 SimSun 8.7pt，行高 4.5736mm；排满的栏必须底端齐平。</li>
+          <li>页眉镜像：左页“绿条 → 页码 → 栏目名”，右页“栏目名 → 页码 → 绿条”。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="spread">
+          <div class="page left">
+            <div class="content-guide"></div>
+            <div class="head-demo left"><span class="bar"></span><span class="folio"></span><span class="col"></span></div>
+            <span class="small-label" style="left:6%;top:4%">左页（偶）</span>
+          </div>
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="head-demo right"><span class="col"></span><span class="folio"></span><span class="bar"></span></div>
+            <span class="small-label" style="right:6%;top:4%">右页（奇）</span>
+          </div>
+        </div>
+        <div class="mini-foot">对开页：偶左奇右，中间为订口</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:22px">
+      <table>
+        <thead>
+          <tr><th>系列</th><th>文件结构</th><th>页面关系</th><th>主要用途</th><th>读图重点</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A 系列</strong></td>
+            <td><code>a*la.html</code> / <code>a*ra.html</code>，一个 HTML 一张页</td>
+            <td>单页；<code>la</code> 偶数左页，<code>ra</code> 奇数右页</td>
+            <td>常规文章页、图文页、标题页</td>
+            <td>看单页内图片占几栏、正文栏底是否齐平</td>
+          </tr>
+          <tr>
+            <td><strong>B 系列</strong></td>
+            <td><code>b*oa.html</code> / <code>b*ob.html</code>，一个 HTML 两张页</td>
+            <td>对开跨页；左页偶数、右页奇数，订口在内侧</td>
+            <td>跨页大图、组图、跨页标题型</td>
+            <td>看跨订口图是否由左右两页各一份 .ph 拼成；标题型是否有蒙版/正文</td>
+          </tr>
+          <tr>
+            <td><strong>C 系列</strong></td>
+            <td><code>c*la.html</code> / <code>c*ra.html</code>，一个 HTML 一张页</td>
+            <td>单页；与 A 一样分左右页</td>
+            <td>短讯、短章、多条目集纳</td>
+            <td>看每条是否独立绝对锚定、三栏底端是否齐 269</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="font-size:12.5px;margin:12px 0 0">
+      注意：不同组模板是<strong>备选版式</strong>，示例页码可能重复（例如 A 系列与 B 系列都有 020/021），
+      对照 PDF 时请以文件名、版式结构和示例页码共同定位，不要把它理解成同一本书的连续页码。
+    </p>
+  </section>
+
+  <section class="section" id="series-a">
+    <h2>A 系列 · 单页模板</h2>
+    <p class="lead">
+      A 系列每个 HTML 是一张 210×285mm 页面。下面示意图默认画<strong>右页</strong>（订口在左）；
+      对应的 <code>la</code> 左页是镜像关系。卡片中的文件名和页码用于对照 PDF。
+    </p>
+
+    <div class="cards">
+
+      <article class="card">
+        <h3>a1 · 首页大图蒙版</h3>
+        <div class="files"><span class="badge">010 / 011</span> a1la / a1ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img mask" style="left:0;top:0;width:100%;height:63%"></div>
+            <div class="title inv" style="left:8%;top:9%;width:52%;height:4.5%"></div>
+            <div class="txt inv" style="left:8%;top:17%;width:42%;height:17%"></div>
+            <div class="cap" style="left:8%;top:65%;width:54%"></div>
+            <div class="txt" style="left:10.5%;top:70%;width:25.6%;height:24%"></div>
+            <div class="txt" style="left:38.6%;top:70%;width:25.6%;height:24%"></div>
+            <div class="txt" style="left:66.8%;top:70%;width:25.6%;height:24%"></div>
+            <span class="small-label" style="left:6%;top:4%">标题/编者按反白</span>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；左页镜像</div>
+        <p>上半页大图 + 62% 黑蒙版，标题、作者、编者按反白压在图上；下半页三栏正文；图注在图下。标题型不设 <code>.run</code>，只保留 <code>.meta</code>。</p>
+        <ul>
+          <li>看 PDF：上半图是否满宽、反白字是否落在平稳暗部。</li>
+          <li>下半三栏底端是否齐平，图注不压栏。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a2 · 两栏宽图 + 三栏正文</h3>
+        <div class="files"><span class="badge">012 / 013</span> a2la / a2ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img" style="left:10.5%;top:7.7%;width:53.7%;height:35.1%"></div>
+            <div class="cap" style="left:10.5%;top:43.5%;width:53.7%"></div>
+            <div class="txt" style="left:10.5%;top:49%;width:25.6%;height:45%"></div>
+            <div class="txt" style="left:38.6%;top:49%;width:25.6%;height:45%"></div>
+            <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；外侧第 3 栏满高</div>
+        <p>图 112.833×100mm，占两栏宽；图下两栏各 30 行，外侧一栏满高 54 行。图注在图下、两栏宽。</p>
+        <ul>
+          <li>看 PDF：图不压字，外侧栏是否通高。</li>
+          <li>图下两栏底端是否齐平。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a3 · 横向出血图 + 三栏正文</h3>
+        <div class="files"><span class="badge">014 / 015</span> a3la / a3ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img" style="left:38.6%;top:7.7%;width:61.4%;height:35.1%"></div>
+            <div class="cap" style="left:38.6%;top:43.5%;width:53.7%"></div>
+            <div class="txt" style="left:10.5%;top:7.7%;width:25.6%;height:86.6%"></div>
+            <div class="txt" style="left:38.6%;top:49%;width:25.6%;height:45%"></div>
+            <div class="txt" style="left:66.8%;top:49%;width:25.6%;height:45%"></div>
+            <span class="small-label" style="right:2%;top:4%">出血边</span>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；图向外侧出血</div>
+        <p>图 128.833×100mm，从外侧出血到版心内；图下三栏各 30 行，外侧第 1 栏满高 54 行。图注两栏宽。</p>
+        <ul>
+          <li>看 PDF：出血边是否贴页面外缘。</li>
+          <li>图注不得跨订口（单页中即不越出版心）。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a4 · 竖幅大图蒙版 + 单栏正文</h3>
+        <div class="files"><span class="badge">016–019</span> a4la / a4ra / a4lb / a4rb</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img mask" style="left:38.6%;top:7.7%;width:61.4%;height:85.1%"></div>
+            <div class="title inv" style="left:44%;top:16%;width:38%;height:4.5%"></div>
+            <div class="txt inv" style="left:44%;top:24%;width:34%;height:20%"></div>
+            <div class="txt" style="left:10.5%;top:7.7%;width:25.6%;height:86.6%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；图在订口侧或外侧按 l/r 镜像</div>
+        <p>竖幅大图 128.833×242.426mm，带 62% 黑蒙版；标题、作者、编者按反白在图上；另一侧为单栏正文满高。</p>
+        <ul>
+          <li>标题型：反白字整块落在图内。</li>
+          <li>正文单栏不压图，栏底齐平。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a5 · 单栏宽图 + 两栏正文</h3>
+        <div class="files"><span class="badge">020 / 021</span> a5la / a5ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img" style="left:10.5%;top:7.7%;width:39.6%;height:35.1%"></div>
+            <div class="cap" style="left:10.5%;top:43.5%;width:39.6%"></div>
+            <div class="txt" style="left:10.5%;top:49%;width:39.6%;height:45%"></div>
+            <div class="txt" style="left:52.7%;top:7.7%;width:39.6%;height:86.6%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；两栏格</div>
+        <p>图 83.25×100mm，占一栏宽；图下 30 行，另一栏满高 54 行。整体为两栏格。</p>
+        <ul>
+          <li>看 PDF：图宽是否等于一栏，图注是否只随图宽。</li>
+          <li>满高栏与图下栏底端齐平。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a6 · 窄竖图 + 两栏正文</h3>
+        <div class="files"><span class="badge">022 / 023</span> a6la / a6ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img" style="left:52.7%;top:7.7%;width:47.3%;height:35.1%"></div>
+            <div class="cap" style="left:52.7%;top:43.5%;width:47.3%"></div>
+            <div class="txt" style="left:10.5%;top:7.7%;width:39.6%;height:86.6%"></div>
+            <div class="txt" style="left:52.7%;top:49%;width:47.3%;height:35%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；图更窄，正文两栏</div>
+        <p>图 99.25×100mm，图下约 22 行；另一栏满高 54 行。两栏正文围绕窄图组织。</p>
+        <ul>
+          <li>看 PDF：图占一栏但不等宽于栏，注意图注宽度。</li>
+          <li>两栏底端齐平，图不压正文。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>a7 · 窄竖幅蒙版 + 宽单栏正文</h3>
+        <div class="files"><span class="badge">024–027</span> a7la / a7ra / a7lb / a7rb</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="img mask" style="left:52.7%;top:7.7%;width:47.3%;height:85.1%"></div>
+            <div class="title inv" style="left:57%;top:16%;width:32%;height:4.5%"></div>
+            <div class="txt inv" style="left:57%;top:24%;width:28%;height:18%"></div>
+            <div class="txt" style="left:10.5%;top:7.7%;width:39.6%;height:86.6%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；标题型，宽单栏正文</div>
+        <p>窄竖幅大图 99.25×242.426mm，带 62% 蒙版；标题在图上；另一侧 83.25mm 宽单栏正文约 48 行。</p>
+        <ul>
+          <li>标题型：反白字落在图内平稳处。</li>
+          <li>宽单栏正文不压图，栏底齐平。</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section" id="series-b">
+    <h2>B 系列 · 对开跨页模板</h2>
+    <p class="lead">
+      B 系列一个 HTML 内是<strong>两张独立页面</strong>：左页偶数、右页奇数，订口在中间。
+      跨订口的图必须在左右两页各放一份同图、同尺寸、同裁切的 <code>.ph</code>，装订后才无缝。
+      下面简图用中间双线表示订口。
+    </p>
+
+    <div class="cards">
+
+      <article class="card">
+        <h3>b1 · 单图跨页型</h3>
+        <div class="files"><span class="badge">020 / 021</span> b1oa / b1ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="content-guide"></div>
+              <div class="title" style="left:8%;top:14%;width:45%;height:4.5%"></div>
+              <div class="txt" style="left:8%;top:22%;width:25.6%;height:22%"></div>
+              <div class="txt" style="left:38.6%;top:22%;width:25.6%;height:22%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:37%"></div>
+              <div class="img" style="left:35.8%;top:45.3%;width:64.2%;height:49.1%"></div>
+              <div class="cap" style="left:35.8%;top:42.6%;width:53%"></div>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:0;top:45.3%;width:36%;height:49.1%"></div>
+              <div class="txt" style="left:38.6%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <span class="small-label" style="right:4%;top:4%">右页</span>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：2+1、下置图带</div>
+        <p>一张跨页图横跨订口，位于版心上侧或下侧。图带宽度只有 1+1、2+1、1+2、2+2 四种；内容型黑字白底，标题型无 <code>.run</code>、无蒙版。</p>
+        <ul>
+          <li>看 PDF：图带两端是否落在栏线，上/下边是否贴版心。</li>
+          <li>跨订口图左右两页各一份 .ph，订口处无接缝。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b2 · 多图连图型</h3>
+        <div class="files"><span class="badge">022 / 023</span> b2oa / b2ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="content-guide"></div>
+              <div class="txt" style="left:8%;top:22%;width:25.6%;height:22%"></div>
+              <div class="txt" style="left:38.6%;top:22%;width:25.6%;height:22%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:37%"></div>
+              <div class="img" style="left:35.8%;top:45.3%;width:30%;height:49.1%"></div>
+              <div class="img" style="left:66.8%;top:45.3%;width:33.2%;height:49.1%"></div>
+              <div class="cap" style="left:35.8%;top:42.6%;width:53%"></div>
+              <span class="small-label" style="left:66%;top:46%">白缝</span>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:0;top:45.3%;width:36%;height:49.1%"></div>
+              <div class="txt" style="left:38.6%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：多图组成图带，白缝正对订口</div>
+        <p>与 b1 同一套几何，但图带由多张图组成。各图宽 + 2mm 白缝 = 图带总宽；建议一条白缝正对订口。组图注放在图带 2 栏一侧。</p>
+        <ul>
+          <li>看 PDF：白缝是否 2mm 且不描边。</li>
+          <li>图片带两端仍严格对栏。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b3 · 四角跨页图型</h3>
+        <div class="files"><span class="badge">024 / 025</span> b3oa / b3ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="content-guide"></div>
+              <div class="txt" style="left:7.6%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <div class="txt" style="left:35.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <div class="img" style="left:64%;top:7.7%;width:36%;height:63.2%"></div>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:0;top:7.7%;width:92%;height:63.2%"></div>
+              <div class="txt" style="left:10.5%;top:73%;width:25.6%;height:18%"></div>
+              <div class="txt" style="left:38.6%;top:73%;width:25.6%;height:18%"></div>
+              <div class="txt" style="left:66.8%;top:73%;width:25.6%;height:18%"></div>
+              <span class="small-label" style="right:4%;top:4%">图在右上角</span>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：图跨订口占 4 栏</div>
+        <p>图位于对开页右上角，跨订口占多栏。内容型无蒙版；标题型图贴边、加 55% 浅蒙版，标题右对齐。左页 2 栏满高，图下 4 栏各 12 行。</p>
+        <ul>
+          <li>看 PDF：标题型蒙版是否 55% 较浅，标题是否落在暗部。</li>
+          <li>图下四栏底端齐平，图注不跨订口。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b4 · 左图右文型</h3>
+        <div class="files"><span class="badge">026 / 027</span> b4oa / b4ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="img mask" style="left:0;top:0;width:100%;height:100%"></div>
+              <div class="title inv" style="left:7%;top:14%;width:52%;height:4.5%"></div>
+              <div class="txt inv" style="left:7%;top:24%;width:42%;height:16%"></div>
+              <span class="small-label" style="left:4%;top:4%">整页图 / 标题型可加蒙版</span>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:10.5%;top:7.7%;width:53.7%;height:35.1%"></div>
+              <div class="cap" style="left:10.5%;top:43.5%;width:53.7%"></div>
+              <div class="txt" style="left:10.5%;top:49%;width:25.6%;height:45%"></div>
+              <div class="txt" style="left:38.6%;top:49%;width:25.6%;height:45%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：左页整图，右页 a2 式内容页</div>
+        <p>左页整页出血大图；右页是一张完整 a 系列内容页（示例为 a2 式图 + 三栏）。标题型在左页加 62% 蒙版、标题和编者按；内容型左页纯图，页眉反白。</p>
+        <ul>
+          <li>看 PDF：左页图是否真正出血。</li>
+          <li>右页保持完整内容页，可替换为其他 a 页。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b5 · 左图右文加宽型</h3>
+        <div class="files"><span class="badge">028 / 029</span> b5oa / b5ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="img mask" style="left:0;top:0;width:100%;height:100%"></div>
+              <div class="title inv" style="left:7%;top:14%;width:52%;height:4.5%"></div>
+              <div class="txt inv" style="left:7%;top:24%;width:40%;height:15%"></div>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:0;top:0;width:36%;height:100%"></div>
+              <div class="txt" style="left:38.6%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+              <span class="small-label" style="right:4%;top:4%">右页剩两栏</span>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：图跨入右页 1 栏</div>
+        <p>左页整页图向右跨入右页 1 栏，图总宽 285.667mm；右页剩余两栏各 54 行。标题型图幅加 62% 蒙版；页眉让出图区。</p>
+        <ul>
+          <li>看 PDF：右页图区是否占去内侧第 1 栏。</li>
+          <li>右页两栏底端齐平，页眉不压图。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b6 · 组图型（纯标题型）</h3>
+        <div class="files"><span class="badge">030 / 031</span> b6ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="content-guide"></div>
+              <div class="img" style="left:7.6%;top:7.7%;width:84.8%;height:86.6%"></div>
+              <div class="title inv" style="left:14%;top:14%;width:52%;height:4.5%"></div>
+              <div class="txt inv" style="left:14%;top:24%;width:38%;height:14%"></div>
+              <span class="small-label" style="left:8%;top:4%">反白直压图</span>
+            </div>
+            <div class="page right">
+              <div class="content-guide"></div>
+              <div class="img" style="left:10.5%;top:7.7%;width:38%;height:28%"></div>
+              <div class="img" style="left:52.7%;top:7.7%;width:38%;height:28%"></div>
+              <div class="img" style="left:10.5%;top:38%;width:38%;height:28%"></div>
+              <div class="img" style="left:52.7%;top:38%;width:38%;height:28%"></div>
+              <div class="txt" style="left:10.5%;top:70%;width:38%;height:24%"></div>
+              <div class="txt" style="left:52.7%;top:70%;width:38%;height:24%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：左页整图，右页 2×2 组图</div>
+        <p>纯标题型，不设蒙版。左页版心整图，标题/作者/编者按反白直压图，标题块整体右移；右页上侧 2×2 组图，图下两栏各 30 行。</p>
+        <ul>
+          <li>看 PDF：反白字是否落在图心平稳、反差足够处。</li>
+          <li>组图白缝 3mm，整组左右对栏。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>b7 · 超大图型（纯标题型）</h3>
+        <div class="files"><span class="badge">032 / 033</span> b7ob</div>
+        <div class="mini">
+          <div class="spread">
+            <div class="page left">
+              <div class="img" style="left:0;top:0;width:100%;height:100%"></div>
+              <div class="title inv" style="left:7%;top:14%;width:56%;height:4.5%"></div>
+              <div class="txt inv" style="left:7%;top:24%;width:42%;height:16%"></div>
+              <span class="small-label" style="left:4%;top:4%">左页标题/编者按反白</span>
+            </div>
+            <div class="page right">
+              <div class="img" style="left:0;top:0;width:100%;height:100%"></div>
+              <div class="txt inv" style="left:10.5%;top:58%;width:81.9%;height:30%"></div>
+              <span class="small-label" style="right:4%;top:4%">右页下侧宽栏正文</span>
+            </div>
+          </div>
+        </div>
+        <div class="mini-foot">对开示意：整幅图跨两页出血</div>
+        <p>整幅图 420×285mm 跨两页出血，左右两页各放一份；不设蒙版。左页标题/作者/编者按反白；右页正文用一栏宽栏，放在下侧贴版心下界，反白。</p>
+        <ul>
+          <li>看 PDF：整图在订口处是否无缝。</li>
+          <li>右页正文是否为宽栏、不拆成密集三栏。</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section" id="series-c">
+    <h2>C 系列 · 单页短文集纳</h2>
+    <p class="lead">
+      C 系列每页容纳多个短文本。与 A 一样分 <code>la</code> 左页 / <code>ra</code> 右页；
+      示意图默认画右页，左页镜像。C 系列全部元素绝对锚定，不使用自动分栏。
+    </p>
+
+    <div class="cards">
+
+      <article class="card">
+        <h3>c1 · 三组交错图文型</h3>
+        <div class="files"><span class="badge">034 / 035</span> c1la / c1ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="title" style="left:66.8%;top:7.7%;width:22%;height:3%"></div>
+            <div class="greenbar" style="left:66.8%;top:11.2%;width:12%;height:0.7%"></div>
+            <div class="img" style="left:10.5%;top:7.7%;width:53.7%;height:29.2%"></div>
+            <div class="txt" style="left:66.8%;top:13%;width:25.6%;height:25.7%"></div>
+            <div class="title" style="left:10.5%;top:40.5%;width:22%;height:3%"></div>
+            <div class="greenbar" style="left:10.5%;top:44%;width:12%;height:0.7%"></div>
+            <div class="txt" style="left:10.5%;top:46%;width:25.6%;height:22.5%"></div>
+            <div class="img" style="left:38.6%;top:40.5%;width:53.7%;height:26%"></div>
+            <div class="title" style="left:66.8%;top:70%;width:22%;height:3%"></div>
+            <div class="greenbar" style="left:66.8%;top:73.5%;width:12%;height:0.7%"></div>
+            <div class="img" style="left:10.5%;top:70%;width:53.7%;height:24.4%"></div>
+            <div class="txt" style="left:66.8%;top:75.5%;width:25.6%;height:20.8%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；三组左右交替</div>
+        <p>版心纵向切三组，每组“图 2 栏 + 文本 1 栏”，相邻组左右关系交替。组高 = 10 + n×4.5736；组题 12pt + 绿线；图底、文本底、组底同一条线。</p>
+        <ul>
+          <li>看 PDF：三组是否 Σh + 2×10.168 = 247。</li>
+          <li>组题、绿线在文本栏内，不跨图。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h3>c2 · 三栏纯文本短讯型</h3>
+        <div class="files"><span class="badge">036 / 037</span> c2la / c2ra</div>
+        <div class="mini">
+          <div class="page right">
+            <div class="content-guide"></div>
+            <div class="txt" style="left:10.5%;top:7.7%;width:25.6%;height:86.6%"></div>
+            <div class="txt" style="left:38.6%;top:7.7%;width:25.6%;height:86.6%"></div>
+            <div class="txt" style="left:66.8%;top:7.7%;width:25.6%;height:86.6%"></div>
+            <!-- 每栏 4 条：题前绿条 -->
+            <div class="greenbar" style="left:10.5%;top:9%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:10.5%;top:30%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:10.5%;top:51%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:10.5%;top:72%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:38.6%;top:9%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:38.6%;top:30%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:38.6%;top:51%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:38.6%;top:72%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:66.8%;top:9%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:66.8%;top:30%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:66.8%;top:51%;width:1.2%;height:1.8%"></div>
+            <div class="greenbar" style="left:66.8%;top:72%;width:1.2%;height:1.8%"></div>
+          </div>
+        </div>
+        <div class="mini-foot">右页示意；三栏各 4 条短讯</div>
+        <p>无图，三栏通高 54 行。每栏 4 条短讯，每条“题名 1 行 + 正文 n 行 + 条距 5.7645”；题名前置绿条，条目独立绝对锚定。</p>
+        <ul>
+          <li>看 PDF：三栏底端是否齐 269。</li>
+          <li>每栏 4×题名 + 3×条距 + 45 行 = 247。</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section panel" id="checklist">
+    <h2>对照 PDF 的检查清单</h2>
+    <p class="lead">建议按这个顺序看：先判断模板类型，再检查结构和连续关系，最后看细节。</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>顺序</th><th>检查项</th><th>A 系列</th><th>B 系列</th><th>C 系列</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>单页还是对开</td>
+            <td>单页，分 la / ra</td>
+            <td>对开，一个 HTML 两张页</td>
+            <td>单页，分 la / ra</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>订口方向</td>
+            <td>左页订口在右，右页订口在左</td>
+            <td>中间订口，偶左奇右</td>
+            <td>同 A</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>页眉镜像</td>
+            <td>左：绿条→页码→栏目；右：栏目→页码→绿条</td>
+            <td>同 A；标题型只留 .meta</td>
+            <td>同 A</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>图与栏的关系</td>
+            <td>图占几栏、是否出血、是否压图反白</td>
+            <td>图带宽度组合、跨订口是否两页各一份 .ph</td>
+            <td>C1 图占 2 栏；C2 无图</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>栏底齐平</td>
+            <td>排满的栏底端同一 y</td>
+            <td>左右页排满的栏各自齐底；末栏可短</td>
+            <td>C1 组底齐；C2 三栏齐 269</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>图注 / 题名</td>
+            <td>图注不压图、不压栏、不跨订口</td>
+            <td>图注在图带 2 栏一侧，距图 3.5mm，不跨订口</td>
+            <td>组题在文本栏内，题前绿线不跨图</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>标题型特殊规则</td>
+            <td>a1/a4/a7 有蒙版；标题型不设 .run</td>
+            <td>b1/b2 标题型无蒙版；b3/b4/b5 标题型有蒙版；b6/b7 无蒙版反白直压图</td>
+            <td>C 系列无压图文字</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <strong>使用提示：</strong>
+    本页是结构说明，不是最终印刷模板；示意图中的比例、字号、颜色均经过简化。
+    实际 HTML 模板必须按 API 文档使用绝对锚定坐标、手动换栏、CMYK 色值与页眉镜像规则。
+    在 Chromium 预览中 <code>device-cmyk()</code> 不被支持，反白字可能显示为深色；颜色与最终效果以 PEACH PDF 为准。
+  </div>
+
+</div>
+</body>
+</html>
